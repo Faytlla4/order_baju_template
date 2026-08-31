@@ -84,7 +84,12 @@ Route::prefix(SITE_AREA, function(){
     Route::context('master', array('home' => SITE_AREA .'/master/index'));
     Route::context('transaksi', array('home' => SITE_AREA .'/transaksi/index'));
     Route::context('reports', array('home' => SITE_AREA .'/reports/index'));
-    Route::context('backup', array('home' => SITE_AREA .'/backup/index'));
+    Route::any('backup', 'backup/backup/index');
+    Route::any('backup/document', 'backup/backup/document');
+    Route::any('backup/database', 'backup/backup/database_page');
+    Route::any('backup/database/run', 'backup/backup/database');
+    Route::any('backup/download/doc/(:num)', 'backup/backup/download/doc/$1');
+    Route::any('backup/download/db/(:num)', 'backup/backup/download/db/$1');
     Route::context('developer');
     Route::context('settings');
 });

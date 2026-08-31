@@ -91,6 +91,39 @@
                 $navMenus = substr($navMenus, 0, $pos2) . $laporanSection . substr($navMenus, $pos2);
             }
 
+            // --- Section BACKUP (dropdown) ---
+            $isBackup       = ($this->uri->segment(2) == 'backup');
+            $isBackupDoc    = ($this->uri->segment(2) == 'backup' && $this->uri->segment(3) == 'document');
+            $isBackupDb     = ($this->uri->segment(2) == 'backup' && $this->uri->segment(3) == 'database');
+            $backupParentClass = $isBackup ? "nav-item menu-is-opening menu-open" : "nav-item";
+            $backupParentLink  = $isBackup ? ' active' : '';
+            $backupDocActive   = $isBackupDoc ? ' active' : '';
+            $backupDbActive    = $isBackupDb ? ' active' : '';
+
+            $backupSection = "<li class='{$backupParentClass}'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/backup') . "' class='nav-link{$backupParentLink}'>\n"
+                . "<i class='nav-icon fas fa-download'></i>\n"
+                . "<p>\nBackup\n<i class='right fas fa-angle-left'></i>\n</p>\n"
+                . "</a>\n"
+                . "<ul class='nav nav-treeview'>\n"
+                . "<li class='nav-item'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/backup/document') . "' class='nav-link{$backupDocActive}'>\n"
+                . "<i class='nav-icon far fa-circle'></i>\n<p>Backup Dokumen</p>\n"
+                . "</a>\n"
+                . "</li>\n"
+                . "<li class='nav-item'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/backup/database') . "' class='nav-link{$backupDbActive}'>\n"
+                . "<i class='nav-icon far fa-circle'></i>\n<p>Backup Database</p>\n"
+                . "</a>\n"
+                . "</li>\n"
+                . "</ul>\n"
+                . "</li>\n";
+
+            $pos3 = strrpos($navMenus, '</ul>');
+            if ($pos3 !== false) {
+                $navMenus = substr($navMenus, 0, $pos3) . $backupSection . substr($navMenus, $pos3);
+            }
+
             echo $navMenus;
             ?>
         </nav>
