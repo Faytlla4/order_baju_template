@@ -91,20 +91,6 @@
                 $navMenus = substr($navMenus, 0, $pos2) . $laporanSection . substr($navMenus, $pos2);
             }
 
-            // --- Section BACKUP (standalone) ---
-            $isBackup = ($this->uri->segment(2) == 'backup');
-            $backupActive = $isBackup ? ' active' : '';
-            $backupParentClass = $isBackup ? "nav-item menu-is-opening menu-open" : "nav-item";
-            $backupSection = "<li class='{$backupParentClass}'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/backup') . "' class='nav-link{$backupActive}'>\n"
-                . "<i class='nav-icon fas fa-download'></i>\n<p>Backup</p>\n"
-                . "</a>\n"
-                . "</li>\n";
-            $pos3 = strrpos($navMenus, '</ul>');
-            if ($pos3 !== false) {
-                $navMenus = substr($navMenus, 0, $pos3) . $backupSection . substr($navMenus, $pos3);
-            }
-
             echo $navMenus;
             ?>
         </nav>

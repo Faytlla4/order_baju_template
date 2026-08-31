@@ -1,4 +1,5 @@
 <?php
+Assets::add_js('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js', 'external');
 $backupUrl = site_url(SITE_AREA . '/backup');
 $backupDocUrl = site_url(SITE_AREA . '/backup/document');
 $backupDbUrl = site_url(SITE_AREA . '/backup/database');
