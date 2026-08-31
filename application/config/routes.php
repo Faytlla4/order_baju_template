@@ -84,6 +84,7 @@ Route::prefix(SITE_AREA, function(){
     Route::context('master', array('home' => SITE_AREA .'/master/index'));
     Route::context('transaksi', array('home' => SITE_AREA .'/transaksi/index'));
     Route::context('reports', array('home' => SITE_AREA .'/reports/index'));
+    Route::context('backup', array('home' => SITE_AREA .'/backup/index'));
     Route::context('developer');
     Route::context('settings');
 });

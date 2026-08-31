@@ -55,6 +55,7 @@ $config['contexts'] = array(
 	'content',
 	'master',
 	'reports',
+	'backup',
 	'settings',
 	'developer',
 );
@@ -62,6 +63,7 @@ $config['contexts_icon'] = array(
 	'content' => 'fas fa-tachometer-alt',
 	'master' => 'fas fa-database',
 	'reports' => 'fas fa-file-alt',
+	'backup' => 'fas fa-download',
 	'settings' => 'fas fa-cog',
 	'developer' => 'fas fa-tools',
 );
