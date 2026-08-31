@@ -166,6 +166,7 @@ $lang['bf_context_content'] = 'Content';
 $lang['bf_context_master'] = 'Master';
 $lang['bf_context_reports'] = 'Reports';
 $lang['bf_context_settings'] = 'Settings';
+$lang['bf_context_backup'] = 'Backup';
 $lang['bf_context_developer'] = 'Developer';
 
 //------------------------------------------------------------------------------
