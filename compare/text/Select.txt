@@ -1,0 +1,1881 @@
+<html lang="en" style="height: auto;"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        Manage SK Tidak Mampu : My Bonfire    </title>
+
+    <link rel="stylesheet" type="text/css" href="http://localhost/svn/bonfire/public/themes/adminlte/dist/css/source_sans_pro.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://localhost/svn/bonfire/public/themes/adminlte/plugins/fontawesome-free/css/all.min.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://localhost/svn/bonfire/public/themes/adminlte/dist/css/ionicons.min.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://localhost/svn/bonfire/public/themes/adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://localhost/svn/bonfire/public/themes/adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://localhost/svn/bonfire/public/themes/adminlte/plugins/jqvmap/jqvmap.min.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://localhost/svn/bonfire/public/themes/adminlte/dist/css/adminlte.min.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://localhost/svn/bonfire/public/themes/adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://localhost/svn/bonfire/public/themes/adminlte/plugins/daterangepicker/daterangepicker.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://localhost/svn/bonfire/public/themes/adminlte/plugins/summernote/summernote-bs4.min.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://localhost/svn/bonfire/public/themes/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://localhost/svn/bonfire/public/themes/adminlte/plugins/select2/css/select2.min.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://localhost/svn/bonfire/public/themes/adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://localhost/svn/bonfire/public/themes/adminlte/css/app.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://localhost/svn/bonfire/public/themes/default/screen.css" media="screen">
+    <script>
+    var site_url = 'http://localhost/svn/bonfire/public/';
+    </script>
+</head>
+
+<body class="sidebar-mini layout-fixed" style="height: auto;">
+    <noscript>
+        <p>Javascript is required to use site's admin.</p>
+    </noscript>
+    <div class="wrapper">
+
+        <!-- Preloader -->
+        <div class="preloader flex-column justify-content-center align-items-center" style="height: 0px;">
+            <img class="animation__shake" src="http://localhost/svn/bonfire/public/themes/adminlte/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60" style="display: none;">
+        </div>
+
+        <!-- Navbar -->
+<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+        <!-- Messages Dropdown Menu -->
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="fas fa-comments"></i>
+                <span class="badge badge-danger navbar-badge">3</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <a href="#" class="dropdown-item">
+                    <!-- Message Start -->
+                    <div class="media">
+                        <img src="http://localhost/svn/bonfire/public/themes/adminlte/dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                        <div class="media-body">
+                            <h3 class="dropdown-item-title">
+                                Brad Diesel
+                                <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
+                            </h3>
+                            <p class="text-sm">Call me whenever you can...</p>
+                            <p class="text-sm text-muted"><i class="fas fa-clock mr-1"></i> 4 Hours Ago</p>
+                        </div>
+                    </div>
+                    <!-- Message End -->
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                    <!-- Message Start -->
+                    <div class="media">
+                        <img src="http://localhost/svn/bonfire/public/themes/adminlte/dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                        <div class="media-body">
+                            <h3 class="dropdown-item-title">
+                                John Pierce
+                                <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
+                            </h3>
+                            <p class="text-sm">I got your message bro</p>
+                            <p class="text-sm text-muted"><i class="fas fa-clock mr-1"></i> 4 Hours Ago</p>
+                        </div>
+                    </div>
+                    <!-- Message End -->
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                    <!-- Message Start -->
+                    <div class="media">
+                        <img src="http://localhost/svn/bonfire/public/themes/adminlte/dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                        <div class="media-body">
+                            <h3 class="dropdown-item-title">
+                                Nora Silvester
+                                <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
+                            </h3>
+                            <p class="text-sm">The subject goes here</p>
+                            <p class="text-sm text-muted"><i class="fas fa-clock mr-1"></i> 4 Hours Ago</p>
+                        </div>
+                    </div>
+                    <!-- Message End -->
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+            </div>
+        </li>
+        <!-- Notifications Dropdown Menu -->
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="fas fa-bell"></i>
+                <span class="badge badge-warning navbar-badge">15</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <span class="dropdown-item dropdown-header">15 Notifications</span>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                    <i class="fas fa-envelope mr-2"></i> 4 new messages
+                    <span class="float-right text-muted text-sm">3 mins</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                    <i class="fas fa-users mr-2"></i> 8 friend requests
+                    <span class="float-right text-muted text-sm">12 hours</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                    <i class="fas fa-file mr-2"></i> 3 new reports
+                    <span class="float-right text-muted text-sm">2 days</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+            </div>
+        </li>
+        <!-- User Dropdown Menu -->
+        <li class="nav-item dropdown">
+                        <a class="nav-link" data-toggle="dropdown" href="#">
+                <img src="http://localhost/svn/bonfire/public/themes/adminlte/dist/img/user2-160x160.jpg" alt="User Avatar" class="img-size-32 img-circle mr-2">
+                <span>admin</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right pb-2">
+                <a href="http://localhost/svn/bonfire/public/users/profile" class="dropdown-item bg-light" title="My Profile">
+                    <div class="text-center">
+                        <img class="profile-user-img img-fluid img-circle" src="http://localhost/svn/bonfire/public/themes/adminlte/dist/img/user2-160x160.jpg" alt="User profile picture">
+                    </div>
+                    <h3 class="profile-username text-center">admin</h3>
+                    <p class="text-dark text-center">admin@mybonfire.com</p>
+                </a>
+                <div class="dropdown-divider"></div>
+                <span class="dropdown-item p-0">
+                    <div class="float-left mt-2 ml-2">
+                        <a href="http://localhost/svn/bonfire/public/admin/settings/users/edit" class="btn btn-default btn-flat">
+                            <small>My Profile</small>
+                        </a>
+                    </div>
+                    <div class="float-right mt-2 mr-2">
+                        <a href="http://localhost/svn/bonfire/public/logout" class="btn btn-default btn-flat">
+                            <small>Sign Out</small>
+                        </a>
+                    </div>
+                </span>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                <i class="fas fa-expand-arrows-alt"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
+                <i class="fas fa-th-large"></i>
+            </a>
+        </li>
+    </ul>
+</nav>
+<!-- /.navbar --><!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="http://localhost/svn/bonfire/public/" class="brand-link">
+        <img src="http://localhost/svn/bonfire/public/themes/adminlte/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">
+            My Bonfire        </span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar os-host os-theme-light os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-scrollbar-vertical-hidden os-host-transition"><div class="os-resize-observer-host observed"><div class="os-resize-observer" style="left: 0px; right: auto;"></div></div><div class="os-size-auto-observer observed" style="height: calc(100% + 1px); float: left;"><div class="os-resize-observer"></div></div><div class="os-content-glue" style="margin: 0px -8px;"></div><div class="os-padding"><div class="os-viewport os-viewport-native-scrollbars-invisible"><div class="os-content" style="padding: 0px 8px; height: 100%; width: 100%;">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="http://localhost/svn/bonfire/public/themes/adminlte/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                                <a href="#" class="d-block">admin</a>
+            </div>
+        </div>
+
+        <!-- SidebarSearch Form -->
+        <div class="form-inline">
+            <div class="input-group" data-widget="sidebar-search">
+                <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                <div class="input-group-append">
+                    <button class="btn btn-sidebar">
+                        <i class="fas fa-search fa-fw"></i>
+                    </button>
+                </div>
+            </div><div class="sidebar-search-results"><div class="list-group"><a href="#" class="list-group-item"><div class="search-title"><strong class="text-light"></strong>N<strong class="text-light"></strong>o<strong class="text-light"></strong> <strong class="text-light"></strong>e<strong class="text-light"></strong>l<strong class="text-light"></strong>e<strong class="text-light"></strong>m<strong class="text-light"></strong>e<strong class="text-light"></strong>n<strong class="text-light"></strong>t<strong class="text-light"></strong> <strong class="text-light"></strong>f<strong class="text-light"></strong>o<strong class="text-light"></strong>u<strong class="text-light"></strong>n<strong class="text-light"></strong>d<strong class="text-light"></strong>!<strong class="text-light"></strong></div><div class="search-path"></div></a></div></div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+<li class="nav-item menu-is-opening menu-open">
+<a href="http://localhost/svn/bonfire/public/admin/content" id="tb_content" class="nav-link active" title="Content" data-id="content_menu">
+<i class="nav-icon fas fa-tachometer-alt"></i>
+<p>
+Content
+<i class="right fas fa-angle-left"></i>
+</p>
+</a><ul class="nav nav-treeview">
+<li class="nav-item">
+<a href="http://localhost/svn/bonfire/public/admin/content/sk_tidak_mampu" class="nav-link active" title="Modul SK Tidak Mampu">
+<i class="nav-icon far fa-circle"></i><p>SK Tidak Mampu</p></a>
+</li>
+</ul>
+</li>
+<li class="nav-item">
+<a href="http://localhost/svn/bonfire/public/admin/reports" id="tb_reports" class="nav-link" title="Reports" data-id="reports_menu">
+<i class="nav-icon fas fa-file-alt"></i>
+<p>
+Reports
+<i class="right fas fa-angle-left"></i>
+</p>
+</a><ul class="nav nav-treeview">
+<li class="nav-item">
+<a href="http://localhost/svn/bonfire/public/admin/reports/activities" class="nav-link" title="Allows other modules to store user activity information.">
+<i class="nav-icon far fa-circle"></i><p>Activities</p></a>
+</li>
+</ul>
+</li>
+<li class="nav-item">
+<a href="http://localhost/svn/bonfire/public/admin/settings" id="tb_settings" class="nav-link" title="Settings" data-id="settings_menu">
+<i class="nav-icon fas fa-cog"></i>
+<p>
+Settings
+<i class="right fas fa-angle-left"></i>
+</p>
+</a><ul class="nav nav-treeview">
+<li class="nav-item">
+<a href="http://localhost/svn/bonfire/public/admin/settings/users" class="nav-link" title="Allows users to exist in Bonfire.">
+<i class="nav-icon far fa-circle"></i><p>Users</p></a>
+</li>
+<li class="nav-item">
+<a href="#" class="nav-link">
+<i class="nav-icon far fa-circle"></i>
+<p>
+Email Queue
+<i class="right fas fa-angle-left"></i>
+</p>
+</a>
+<ul class="nav nav-treeview">
+    <li class="nav-item">
+        <a href="http://localhost/svn/bonfire/public/admin/settings/emailer" class="nav-link">
+            <i class="nav-icon far fa-dot-circle"></i>
+            <p>Settings</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="http://localhost/svn/bonfire/public/admin/settings/emailer/template" class="nav-link">
+            <i class="nav-icon far fa-dot-circle"></i>
+            <p>Template</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="http://localhost/svn/bonfire/public/admin/settings/emailer/queue" class="nav-link">
+            <i class="nav-icon far fa-dot-circle"></i>
+            <p>View Queue</p>
+        </a>
+    </li>
+</ul>
+</li>
+<li class="nav-item">
+<a href="http://localhost/svn/bonfire/public/admin/settings/ui" class="nav-link" title="Provides helpers for consistent admin UI features.">
+<i class="nav-icon far fa-circle"></i><p>Keyboard Shortcuts</p></a>
+</li>
+<li class="nav-item">
+<a href="http://localhost/svn/bonfire/public/admin/settings/permissions" class="nav-link" title="Manages the Permissions available to the Roles.">
+<i class="nav-icon far fa-circle"></i><p>Permissions</p></a>
+</li>
+<li class="nav-item">
+<a href="http://localhost/svn/bonfire/public/admin/settings/roles" class="nav-link" title="Provides Role-Based Access Control for users.">
+<i class="nav-icon far fa-circle"></i><p>Roles</p></a>
+</li>
+<li class="nav-item">
+<a href="http://localhost/svn/bonfire/public/admin/settings/settings" class="nav-link" title="Site-Wide Settings">
+<i class="nav-icon far fa-circle"></i><p>Settings</p></a>
+</li>
+</ul>
+</li>
+<li class="nav-item">
+<a href="http://localhost/svn/bonfire/public/admin/developer" id="tb_developer" class="nav-link" title="Developer" data-id="developer_menu">
+<i class="nav-icon fas fa-tools"></i>
+<p>
+Developer
+<i class="right fas fa-angle-left"></i>
+</p>
+</a><ul class="nav nav-treeview">
+<li class="nav-item">
+<a href="#" class="nav-link">
+<i class="nav-icon far fa-circle"></i>
+<p>
+Database Tools
+<i class="right fas fa-angle-left"></i>
+</p>
+</a>
+<ul class="nav nav-treeview">
+    <li class="nav-item">
+        <a href="http://localhost/svn/bonfire/public/admin/developer/database" class="nav-link">
+            <i class="nav-icon far fa-dot-circle"></i>
+            <p>Maintenance</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="http://localhost/svn/bonfire/public/admin/developer/database/backups" class="nav-link">
+            <i class="nav-icon far fa-dot-circle"></i>
+            <p>Backups</p>
+        </a>
+    </li>
+<li class="nav-item">
+<a href="http://localhost/svn/bonfire/public/admin/developer/migrations" class="nav-link" title="Helps maintain database versioning.">
+<i class="nav-icon far fa-circle"></i><p>Migrations</p></a>
+</li>
+</ul>
+</li>
+<li class="nav-item">
+<a href="http://localhost/svn/bonfire/public/admin/developer/builder" class="nav-link" title="Speeds up creating the core code for new modules.">
+<i class="nav-icon far fa-circle"></i><p>Code Builder</p></a>
+</li>
+<li class="nav-item">
+<a href="http://localhost/svn/bonfire/public/admin/developer/logs" class="nav-link" title="Allows viewing of log files and adjusting log level.">
+<i class="nav-icon far fa-circle"></i><p>Logs</p></a>
+</li>
+<li class="nav-item">
+<a href="http://localhost/svn/bonfire/public/admin/developer/sysinfo" class="nav-link" title="Allows users to create translations for any language.">
+<i class="nav-icon far fa-circle"></i><p>System Information</p></a>
+</li>
+<li class="nav-item">
+<a href="http://localhost/svn/bonfire/public/admin/developer/translate" class="nav-link" title="Allows users to create translations for any language.">
+<i class="nav-icon far fa-circle"></i><p>Translate</p></a>
+</li>
+</ul>
+</li>
+</ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div></div></div><div class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden"><div class="os-scrollbar-track"><div class="os-scrollbar-handle" style="width: 100%; transform: translate(0px, 0px);"></div></div></div><div class="os-scrollbar os-scrollbar-vertical os-scrollbar-unusable os-scrollbar-auto-hidden"><div class="os-scrollbar-track"><div class="os-scrollbar-handle" style="height: 100%; transform: translate(0px, 0px);"></div></div></div><div class="os-scrollbar-corner"></div></div>
+    <!-- /.sidebar -->
+</aside>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper" style="min-height: 624px;">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                                                        <h1 class="m-0">Manage SK Tidak Mampu</h1>
+                                                    </div><!-- /.col -->
+                        <div class="col-sm-6" id="sub-menu">
+                            <div class="float-sm-right">
+    <a href="http://localhost/svn/bonfire/public/admin/content/sk_tidak_mampu" id="list" class="btn btn-flat btn-primary">
+        List    </a>
+        <a href="http://localhost/svn/bonfire/public/admin/content/sk_tidak_mampu/create" id="create_new" class="btn btn-flat btn-default">
+        New    </a>
+    </div>                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">SK Tidak Mampu</h3>
+            </div>
+            <div class="card-body">
+                <table id="sk_tidak_mampu_table" class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Alamat</th>
+                            <th>Jenis Surat</th>
+                            <th>No Telepon</th>
+                            <th>Tanggal</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>                </div><!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <!-- Footer -->
+<footer class="main-footer">
+    <strong>Copyright © 2022 <a href="https://adminlte.io">AdminLTE.io</a></strong>
+    Executed in 0.3309 seconds, using 4MB.
+    <div class="float-right d-none d-sm-inline-block">
+        <b>Bonfire</b> v0.9.0-dev    </div>
+</footer>
+<!-- /.footer -->
+        <!-- Control Sidebar -->
+        <!-- <aside class="control-sidebar control-sidebar-dark"> -->
+        <!-- Control sidebar content goes here -->
+        <!-- </aside> -->
+        <!-- /.control-sidebar -->
+    <div id="sidebar-overlay"></div></div>
+    <!-- ./wrapper -->
+
+    <!-- jQuery -->
+    <script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/jquery/jquery.min.js"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+    $.widget.bridge('uibutton', $.ui.button)
+    </script>
+    <script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/chart.js/Chart.min.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/sparklines/sparkline.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/jqvmap/jquery.vmap.min.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/jqvmap/maps/jquery.vmap.usa.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/jquery-knob/jquery.knob.min.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/moment/moment.min.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/daterangepicker/daterangepicker.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/summernote/summernote-bs4.min.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/plugins/lodash/lodash.min.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/dist/js/adminlte.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/js/app.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/themes/adminlte/js/global.js" type="text/javascript"></script>
+<script src="http://localhost/svn/bonfire/public/assets/cache/adminlte_sk_tidak_mampu_content_mod_137e57a0fa9b2e1dcd48fdd835498b1c.min.js?_dt=1664897754" type="text/javascript"></script>
+<style type="text/css">
+#ci-profiler-menu-open{background-color:#141722;position:fixed;left:0;bottom:0;padding:5px 7px;}
+#ci-profiler-menu-open img{display:block;}
+#ci-profiler-menu-open:hover{background-color:#5a8616;}
+#codeigniter-profiler{background-color:#141722;clear:both;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;position:fixed;bottom:0;left:0;width:100%;z-index:1000;}
+#profiler-panel{background-color:#1f2332;padding:0 5px;}
+#profiler-panel .main{font-family:Monaco,'Lucida Console','Courier New',monospace;}
+.ci-profiler-box{padding:0 10px 10px 10px;margin:0 0 10px 0;max-height:300px;overflow:auto;color:#fff;font-size:11px!important;}
+.ci-profiler-box h2{color:#fff;font-weight:bolder;font-size:16px!important;padding:0 0 0 5px;line-height:2.0;}
+#ci-profiler-menu a{display:inline-block;font-size:13px;font-weight:200;line-height:25px;padding:3px 7px;color:#fff;text-decoration:none;cursor:pointer;}
+#ci-profiler-menu a:first-child img{vertical-align:middle;margin-bottom:2px;cursor:default;}
+#ci-profiler-menu a:first-child:hover,#ci-profiler-menu a:last-child:hover{background-color:transparent!important;}
+#ci-profiler-menu a span{background-color:#fff;border-radius:4px;font-size:11px;font-weight:600;padding:2px 5px;vertical-align:bottom;}
+#ci-profiler-menu > a.current{padding-bottom:4px;}
+#ci-profiler-menu-time:hover,#ci-profiler-menu-time:focus,#ci-profiler-menu-time.current,#ci-profiler-benchmarks h2{background-color:#b72f09}
+#ci-profiler-menu-time span{color:#b72f09;}
+#ci-profiler-menu-memory:hover,#ci-profiler-menu-memory:focus,#ci-profiler-menu-memory.current,#ci-profiler-memory h2{background-color:#953fa1;}
+#ci-profiler-menu-memory span{color:#953fa1;}
+#ci-profiler-menu-queries:hover,#ci-profiler-menu-queries:focus,#ci-profiler-menu-queries.current,#ci-profiler-queries h2{background-color:#3769a0;}
+#ci-profiler-menu-queries span{color:#3769a0;}
+#ci-profiler-menu-vars:hover,#ci-profiler-menu-vars:focus,#ci-profiler-menu-vars.current,#ci-profiler-vars h2{background-color:#d28c00;}
+#ci-profiler-menu-vars span{color:#d28c00;}
+#ci-profiler-menu-files:hover,#ci-profiler-menu-files:focus,#ci-profiler-menu-files.current,#ci-profiler-files h2{background-color:#5a8616;}
+#ci-profiler-menu-files span{color:#5a8616;} #ci-profiler-menu-console:hover,#ci-profiler-menu-console:focus,#ci-profiler-menu-console.current,#ci-profiler-console h2{background-color:#5a8616;}
+#ci-profiler-menu-console span{color:#5a8616;}
+.ci-profiler-db-explain{display:block;}
+.ci-profiler-db-explain em,#ci-profiler-queries b,#ci-profiler-queries .hilight{font-weight:bolder;color:#3769a0!important;font-style:normal;}
+#ci-profiler-vars .hilight{color:#d28c00!important;}
+#ci-profiler-memory .hilight{color:#953fa1!important;}
+#ci-profiler-benchmarks .hilight{color:#b72f09!important;}
+#ci-profiler-console .hilight{color:#5a8616!important;}
+#codeigniter-profiler table{width:100%;}
+#codeigniter-profiler table.main td{padding:7px 15px;text-align:left;vertical-align:top;color:#000;line-height:1.5;background-color:#f0f0f0!important;font-size:12px!important;}
+#codeigniter-profiler table.main tr:hover td{background-color:#cdd1d4!important;}
+#codeigniter-profiler table.main code{padding:0;background:transparent;border:0;color:#fff;}
+#codeigniter-profiler table .faded{color:#aaa!important;}
+#codeigniter-profiler table .small{font-size:10px;letter-spacing:1px;font-weight:lighter;}
+#ci-profiler-menu-exit{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkQwQUYxNjIzQkNGOTExRTM4OTY3QzU4NjQ2QzdDQkMzIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkQwQUYxNjI0QkNGOTExRTM4OTY3QzU4NjQ2QzdDQkMzIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6RDBBRjE2MjFCQ0Y5MTFFMzg5NjdDNTg2NDZDN0NCQzMiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6RDBBRjE2MjJCQ0Y5MTFFMzg5NjdDNTg2NDZDN0NCQzMiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz6BRWmSAAABa0lEQVR42lzTzyuEURTG8TtjzDSKjEayUBbU/AWymZ0s/KghG2xkwcZCrKSklGzskGJrR6MsZEGRiIUNC0tRo8mGIUS8vrd5bl3vrU/dc885t/ed804kCIKEMSaKH3yZ8upBB+rwjCPsKhdHBX4NzUnEYfddeMQHbnCOa7zjCTnVVdo+4zVOB+W1ibTOnBRWlZ91F7hkTomBUFM8FHerbtjG7tCuDe1rsYaM4mbFDYqXVR81uiXwbj9QfIt2XCk+9WrsGrebHVzqMIJeFIL/q4g+5W3dCfbtiNIoemPYQ7/5v4aQR0JxAfW2+RU1OvxGCxZCzXPIeN9BCiX7CFOaq3ufQz1qCWOar10XXs0L5uymSslJJdpwjE7FWb1jVvGo6lPuphkdtIbmmgjFTapbdHOOKbGlxEiowRlUPq845r5tN4J5FdxrhOvYxp3Ol7zLkhHvX/UJnsU0YgJZVOMNZ1jBg37tpP1X/QkwAM/DSXbJEwZhAAAAAElFTkSuQmCC) 0% 0% no-repeat;position:absolute;right:5px;top:9px;height:2.1em;width:2em;}
+.ci-profiler-box .hilight{width:9em;}
+div.ci-profiler-box{display:none;}
+</style>
+<script type="text/javascript">
+var ci_profiler_bar = {
+    /** Current toolbar section open */
+    current: null,
+    /** Current vars and config section open */
+    currentvar: null,
+    /** Current config section open */
+    currentli: null,
+    /** The class name used for the active section */
+    currentClass: 'current',
+    /** The id of the icon used to open the profiler */
+    openIconId: 'ci-profiler-menu-open',
+    /** The id of the profiler itself */
+    profilerId: 'codeigniter-profiler',
+    /** Toggle a toolbar section */
+    show: function(obj, el) {
+        if (obj == ci_profiler_bar.current) {
+            this.off(obj, el);
+            this.current = null;
+            this.currentvar = null;
+        } else {
+            this.off(this.current, this.currentvar);
+            this.current = obj;
+            this.currentvar = el;
+            this.on(this.current, this.currentvar);
+        }
+    },
+    /** Turn an element on */
+    on: function(obj, el) {
+        if (document.getElementById(obj) != null) {
+            document.getElementById(obj).style.display = 'block';
+        }
+        this.add_class(el, this.currentClass);
+    },
+    /** Turn an element off */
+    off: function(obj, el) {
+        if (document.getElementById(obj) != null) {
+            document.getElementById(obj).style.display = 'none';
+        }
+        this.remove_class(el, this.currentClass);
+    },
+    /** Toggle an element */
+    toggle: function(obj) {
+        if (typeof obj == 'string') {
+            obj = document.getElementById(obj);
+        }
+        if (obj) {
+            obj.style.display = obj.style.display == 'none' ? 'block' : 'none';
+        }
+    },
+    /** Open the toolbar */
+    open: function() {
+        document.getElementById(this.openIconId).style.display = 'none';
+        document.getElementById(this.profilerId).style.display = 'block';
+        this.set_cookie('open');
+    },
+    /** Close the toolbar */
+    close : function() {
+        document.getElementById(this.profilerId).style.display = 'none';
+        document.getElementById(this.openIconId).style.display = 'block';
+        this.set_cookie('closed');
+    },
+    /** Add class to element */
+    add_class: function(obj, a_class) {
+        document.getElementById(obj).className += " " + a_class;
+    },
+    /** Remove class from element */
+    remove_class : function(obj, r_class) {
+        if (undefined != obj) {
+            document.getElementById(obj).className = document.getElementById(obj).className.replace(r_class, '');
+        }
+    },
+    /** Read the cookie */
+    read_cookie: function() {
+        var nameEQ = "Profiler=",
+            ca = document.cookie.split(';'),
+            i = 0,
+            c;
+        for (i = 0; i < ca.length; i++) {
+            c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1, c.length);
+            }
+            if (c.indexOf(nameEQ) == 0) {
+                return c.substring(nameEQ.length, c.length);
+            }
+        }
+        return null;
+    },
+    /** Set the cookie. */
+    set_cookie: function(value) {
+        var expires = "; expires=",
+            date = new Date();
+        date.setTime(date.getTime() + (365*24*60*60*1000));
+        expires += date.toGMTString();
+        document.cookie = "Profiler=" + value + expires + "; path=/";
+    },
+    /** Set the load state */
+    set_load_state: function() {
+        var cookie_state = this.read_cookie();
+        if (cookie_state == 'open') {
+            this.open();
+        } else {
+            this.close();
+        }
+    },
+    /** Toggle a data table */
+    toggle_data_table: function(obj) {
+        if (typeof obj == 'string') {
+            obj = document.getElementById(obj + '_table');
+        }
+        if (obj) {
+            obj.style.display = obj.style.display == 'none' ? 'block' : 'none';
+        }
+    }
+};
+window.onload = function() {
+    ci_profiler_bar.set_load_state();
+}
+</script>
+<a href="#codeigniter-profiler" id="ci-profiler-menu-open" onclick="ci_profiler_bar.open(); return false;" style="display: block;"><img width="22" height="22" alt="Profiler" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA3NpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo5YmMwMzhkZi0xZGNjLTRhNGYtYjI0ZC0zN2RhYjAzZGNiMjYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NkJFRjQxMDhCQ0Y4MTFFMzg5NjdDNTg2NDZDN0NCQzMiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NkJFRjQxMDdCQ0Y4MTFFMzg5NjdDNTg2NDZDN0NCQzMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OWJjMDM4ZGYtMWRjYy00YTRmLWIyNGQtMzdkYWIwM2RjYjI2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjliYzAzOGRmLTFkY2MtNGE0Zi1iMjRkLTM3ZGFiMDNkY2IyNiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgSqUnYAAAHjSURBVHjarJRLKEVBGMe/43G7XQt5lM2VkhARFhaUkpVHibIXSSIWFrKyoaxYKBsLwsZCFmJjjY2FEll4LAhJHuV1cc74z5w5t3HOnOvKnfqdme873/znO9/MHIMxRqJZH/RLC4MgOIkZlRSwO4q/5YHReIP/IhwBXaAh0cJdsu9NpHAT6JPjokQJ14ANxTYTIdwCtl2+8/8Kt4N1jX/3P8LFYNXnnZNxRqx6+wm7M31Watsv+3xwDNq0CvzmCcyIwyRgLjrAg2JHJI7dHZ0v9QzXlc4BN8RdRnTtV5AGOsG8PjsRX4nnvvdKM8oCA2JsKBMsFiKT5WK8AKucmdYpfCRwkrLjp0C1t8YGNYJWO3t8zpdlY/IysWE+hv+ALCqAPSP9JP08iXrMbPYKM6pCQAn75ILMzpboDXxhwSG+SVxIZGfQoMCZKhbhSVhhjzBWDiAg+UcpiOqU41UWLY/dZsCSq3QvuuN2CM4UexzsgRGwA+Y02zatjK9kvEd4BSwrtnNB1kAtuHZ9DW+3yngWLOqE78EYuCDSSOhboeyPwIT6InqOWeTd8aWDR7Cp7rLPUpcgE2TL805GIOh7pZ8A38RU0BMj2y1wB0KOaDz/ChxOcaZ5XVM070vlP7rCb9VvAQYARSbvijTk29UAAAAASUVORK5CYII="></a>
+<div id="codeigniter-profiler" style="display: none;">
+    <div id="ci-profiler-menu">
+        <!-- CI Logo -->
+        <a><img width="22" height="22" alt="Profiler" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA3NpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo5YmMwMzhkZi0xZGNjLTRhNGYtYjI0ZC0zN2RhYjAzZGNiMjYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NkJFRjQxMDhCQ0Y4MTFFMzg5NjdDNTg2NDZDN0NCQzMiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NkJFRjQxMDdCQ0Y4MTFFMzg5NjdDNTg2NDZDN0NCQzMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OWJjMDM4ZGYtMWRjYy00YTRmLWIyNGQtMzdkYWIwM2RjYjI2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjliYzAzOGRmLTFkY2MtNGE0Zi1iMjRkLTM3ZGFiMDNkY2IyNiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgSqUnYAAAHjSURBVHjarJRLKEVBGMe/43G7XQt5lM2VkhARFhaUkpVHibIXSSIWFrKyoaxYKBsLwsZCFmJjjY2FEll4LAhJHuV1cc74z5w5t3HOnOvKnfqdme873/znO9/MHIMxRqJZH/RLC4MgOIkZlRSwO4q/5YHReIP/IhwBXaAh0cJdsu9NpHAT6JPjokQJ14ANxTYTIdwCtl2+8/8Kt4N1jX/3P8LFYNXnnZNxRqx6+wm7M31Watsv+3xwDNq0CvzmCcyIwyRgLjrAg2JHJI7dHZ0v9QzXlc4BN8RdRnTtV5AGOsG8PjsRX4nnvvdKM8oCA2JsKBMsFiKT5WK8AKucmdYpfCRwkrLjp0C1t8YGNYJWO3t8zpdlY/IysWE+hv+ALCqAPSP9JP08iXrMbPYKM6pCQAn75ILMzpboDXxhwSG+SVxIZGfQoMCZKhbhSVhhjzBWDiAg+UcpiOqU41UWLY/dZsCSq3QvuuN2CM4UexzsgRGwA+Y02zatjK9kvEd4BSwrtnNB1kAtuHZ9DW+3yngWLOqE78EYuCDSSOhboeyPwIT6InqOWeTd8aWDR7Cp7rLPUpcgE2TL805GIOh7pZ8A38RU0BMj2y1wB0KOaDz/ChxOcaZ5XVM070vlP7rCb9VvAQYARSbvijTk29UAAAAASUVORK5CYII="></a>
+                <!-- Console -->
+        <a href="#ci-profiler-console" id="ci-profiler-menu-console" onclick="ci_profiler_bar.show('ci-profiler-console', 'ci-profiler-menu-console'); return false;">
+            Console            <span>0</span>
+        </a>
+                <!-- Benchmarks -->
+        <a href="#ci-profiler-benchmarks" id="ci-profiler-menu-time" onclick="ci_profiler_bar.show('ci-profiler-benchmarks', 'ci-profiler-menu-time'); return false;">
+            Load Time            <span>330.9ms</span>
+        </a>
+        <a href="#ci-profiler-memory" id="ci-profiler-menu-memory" onclick="ci_profiler_bar.show('ci-profiler-memory', 'ci-profiler-menu-memory'); return false;">
+            Memory Used            <span>4.17 MB</span>
+        </a>
+                <!-- Queries -->
+        <a href="#ci-profiler-queries" id="ci-profiler-menu-queries" onclick="ci_profiler_bar.show('ci-profiler-queries', 'ci-profiler-menu-queries'); return false;">
+            Database            <span>5                Queries            </span>
+        </a>
+                <!-- Vars and Config -->
+        <a href="#ci-profiler-vars" id="ci-profiler-menu-vars" onclick="ci_profiler_bar.show('ci-profiler-vars', 'ci-profiler-menu-vars'); return false;">
+            <span>vars</span> &amp; Config        </a>
+                <!-- Files -->
+        <a href="#ci-profiler-files" id="ci-profiler-menu-files" onclick="ci_profiler_bar.show('ci-profiler-files', 'ci-profiler-menu-files'); return false;">
+            Files            <span>115</span>
+        </a>
+                <a href="#ci-profiler-menu-open" id="ci-profiler-menu-exit" onclick="ci_profiler_bar.close(); return false;"></a>
+    </div>
+    <!-- Profiler Panel -->
+    <div id="profiler-panel">
+                <!-- Console -->
+        <div id="ci-profiler-console" class="ci-profiler-box">
+            <h2>Console</h2>
+                        <table class="main">
+                            </table>
+                    </div>
+        <!-- Memory -->
+        <div id="ci-profiler-memory" class="ci-profiler-box">
+            <h2>Memory Usage</h2>
+                        <table class="main">
+                            </table>
+                    </div>
+                <!-- Benchmarks -->
+        <div id="ci-profiler-benchmarks" class="ci-profiler-box">
+            <h2>Benchmarks</h2>
+                        <table class="main">
+                                <tbody><tr>
+                    <td class="hilight">37 ms</td>
+                    <td>Loading Time: Base Classes</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">145 ms</td>
+                    <td>Controller Execution Time ( Content / Index )</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">331 ms</td>
+                    <td>Total Execution Time</td>
+                </tr>
+                            </tbody></table>
+                    </div>
+                <!-- Queries -->
+        <div id="ci-profiler-queries" class="ci-profiler-box">
+            <h2>Queries</h2>
+                        <table class="main">
+                                <tbody><tr>
+                    <td class="hilight">0.0161</td>
+                    <td><strong>SELECT</strong> "table_name" <strong>FROM</strong> "information_schema"."tables" <strong>WHERE</strong> "table_schema" = 'public'</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">0.0029</td>
+                    <td><strong>SELECT</strong> *
+<strong>FROM</strong> "settings"</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">0.0063</td>
+                    <td><strong>SELECT</strong> "users".*, "role_name"
+<strong>FROM</strong> "users"
+<strong>LEFT JOIN</strong> "roles"<strong> ON</strong> "roles"."role_id" = "users"."role_id"
+<strong>WHERE</strong> "users"."id" = '1'</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">0.0027</td>
+                    <td><strong>SELECT</strong> *
+<strong>FROM</strong> "permissions"</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">0.0026</td>
+                    <td><strong>SELECT</strong> "permission_id"
+<strong>FROM</strong> "role_permissions"
+<strong>WHERE</strong> "role_id" = 1</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">0.0306</td>
+                    <td>Total Query Execution Time</td>
+                </tr>
+                            </tbody></table>
+                    </div>
+                <!-- Vars and Config -->
+        <div id="ci-profiler-vars" class="ci-profiler-box">
+                        <!-- User Data -->
+            <a href="#" onclick="ci_profiler_bar.toggle_data_table('userdata'); return false;">
+                <h2>Session User Data</h2>
+            </a>
+                        <table class="main" id="userdata_table">
+                                <tbody><tr>
+                    <td class="hilight">requested_page</td>
+                    <td>http://localhost/svn/bonfire/public/admin/content/sk_tidak_mampu</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">previous_page</td>
+                    <td>http://localhost/svn/bonfire/public/admin/content/sk_tidak_mampu</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">user_id</td>
+                    <td>1</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">auth_custom</td>
+                    <td>admin</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">user_token</td>
+                    <td>40792280c82b9e00a5bad238f7bbf9c895d0c3d4</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">identity</td>
+                    <td>admin</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">role_id</td>
+                    <td>1</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">logged_in</td>
+                    <td>true</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">language</td>
+                    <td>english</td>
+                </tr>
+                            </tbody></table>
+                        <!-- The Rest -->
+                        <a href="#get_table" onclick="ci_profiler_bar.toggle_data_table('get'); return false;">
+                <h2>GET DATA</h2>
+            </a>
+            <table class="main" id="get_table">
+                                <tbody><tr>
+                    <td>No GET data exists</td>
+                </tr>
+                            </tbody></table>
+                        <a href="#post_table" onclick="ci_profiler_bar.toggle_data_table('post'); return false;">
+                <h2>POST DATA</h2>
+            </a>
+            <table class="main" id="post_table">
+                                <tbody><tr>
+                    <td>No POST data exists</td>
+                </tr>
+                            </tbody></table>
+                        <a href="#uri_string_table" onclick="ci_profiler_bar.toggle_data_table('uri_string'); return false;">
+                <h2>URI STRING</h2>
+            </a>
+            <table class="main" id="uri_string_table">
+                                <tbody><tr>
+                    <td>admin/content/sk_tidak_mampu</td>
+                </tr>
+                            </tbody></table>
+                        <a href="#controller_info_table" onclick="ci_profiler_bar.toggle_data_table('controller_info'); return false;">
+                <h2>CLASS/METHOD</h2>
+            </a>
+            <table class="main" id="controller_info_table">
+                                <tbody><tr>
+                    <td>content/index</td>
+                </tr>
+                            </tbody></table>
+                        <a href="#headers_table" onclick="ci_profiler_bar.toggle_data_table('headers'); return false;">
+                <h2>HTTP HEADERS</h2>
+            </a>
+            <table class="main" id="headers_table">
+                                <tbody><tr>
+                    <td class="hilight">HTTP_ACCEPT</td>
+                    <td>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">HTTP_USER_AGENT</td>
+                    <td>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.125 Safari/537.36</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">HTTP_CONNECTION</td>
+                    <td>close</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">SERVER_PORT</td>
+                    <td>80</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">SERVER_NAME</td>
+                    <td>localhost</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">REMOTE_ADDR</td>
+                    <td>::1</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">SERVER_SOFTWARE</td>
+                    <td>Apache/2.4.54 (Win64) mod_fcgid/2.3.10-dev</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">HTTP_ACCEPT_LANGUAGE</td>
+                    <td>en-US,en;q=0.9,id;q=0.8</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">SCRIPT_NAME</td>
+                    <td>/svn/bonfire/public/index.php</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">REQUEST_METHOD</td>
+                    <td>GET</td>
+                </tr>
+                                <tr>
+                    <td class="hilight"> HTTP_HOST</td>
+                    <td></td>
+                </tr>
+                                <tr>
+                    <td class="hilight">REMOTE_HOST</td>
+                    <td></td>
+                </tr>
+                                <tr>
+                    <td class="hilight">CONTENT_TYPE</td>
+                    <td></td>
+                </tr>
+                                <tr>
+                    <td class="hilight">SERVER_PROTOCOL</td>
+                    <td>HTTP/1.1</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">QUERY_STRING</td>
+                    <td></td>
+                </tr>
+                                <tr>
+                    <td class="hilight">HTTP_ACCEPT_ENCODING</td>
+                    <td>gzip, deflate, br</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">HTTP_X_FORWARDED_FOR</td>
+                    <td></td>
+                </tr>
+                            </tbody></table>
+                        <a href="#config_table" onclick="ci_profiler_bar.toggle_data_table('config'); return false;">
+                <h2>CONFIG VARIABLES</h2>
+            </a>
+            <table class="main" id="config_table">
+                                <tbody><tr>
+                    <td class="hilight">base_url</td>
+                    <td>http://localhost/svn/bonfire/public</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">index_page</td>
+                    <td></td>
+                </tr>
+                                <tr>
+                    <td class="hilight">uri_protocol</td>
+                    <td>AUTO</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">url_suffix</td>
+                    <td></td>
+                </tr>
+                                <tr>
+                    <td class="hilight">language</td>
+                    <td>english</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">charset</td>
+                    <td>UTF-8</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">enable_hooks</td>
+                    <td>true</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">subclass_prefix</td>
+                    <td>MY_</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">composer_autoload</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">permitted_uri_chars</td>
+                    <td>a-z 0-9~%.:_-</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">allow_get_array</td>
+                    <td>true</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">enable_query_strings</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">controller_trigger</td>
+                    <td>c</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">function_trigger</td>
+                    <td>m</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">directory_trigger</td>
+                    <td>d</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">log_threshold</td>
+                    <td>0</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">log_path</td>
+                    <td>C:etcapachehtdocsSVNbonfireapplicationlogs/</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">log_file_extension</td>
+                    <td></td>
+                </tr>
+                                <tr>
+                    <td class="hilight">log_file_permissions</td>
+                    <td>420</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">log_date_format</td>
+                    <td>Y-m-d H:i:s</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">error_views_path</td>
+                    <td></td>
+                </tr>
+                                <tr>
+                    <td class="hilight">cache_path</td>
+                    <td>C:etcapachehtdocsSVNbonfireapplicationcache/</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">cache_query_string</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">encryption_key</td>
+                    <td>58f62e7a5c072527eb00fad7ccb6f547</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">sess_driver</td>
+                    <td>files</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">sess_cookie_name</td>
+                    <td>app_session</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">sess_expiration</td>
+                    <td>0</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">sess_save_path</td>
+                    <td>C:Windows</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">sess_match_ip</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">sess_time_to_update</td>
+                    <td>0</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">sess_regenerate_destroy</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">cookie_prefix</td>
+                    <td></td>
+                </tr>
+                                <tr>
+                    <td class="hilight">cookie_domain</td>
+                    <td></td>
+                </tr>
+                                <tr>
+                    <td class="hilight">cookie_path</td>
+                    <td>/</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">cookie_secure</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">cookie_httponly</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">standardize_newlines</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">global_xss_filtering</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">csrf_protection</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">csrf_token_name</td>
+                    <td>ci_csrf_token</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">csrf_cookie_name</td>
+                    <td>ci_csrf_token</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">csrf_expire</td>
+                    <td>0</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">csrf_regenerate</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">csrf_exclude_uris</td>
+                    <td>Array
+(
+)
+</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">compress_output</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">time_reference</td>
+                    <td>utc</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">rewrite_short_tags</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">proxy_ips</td>
+                    <td></td>
+                </tr>
+                                <tr>
+                    <td class="hilight">bonfire.installed</td>
+                    <td>1</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">site.default_user_timezone</td>
+                    <td>UM8</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">modules_locations</td>
+                    <td>Array
+(
+    [C:etcapachehtdocsSVNbonfireapplication/modules/] =&amp;gt; ../../application/modules/
+    [C:etcapachehtdocsSVNbonfirebonfire/modules/] =&amp;gt; ../../bonfire/modules/
+)
+</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">site.backup_folder</td>
+                    <td>archives/</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">contexts</td>
+                    <td>Array
+(
+    [0] =&amp;gt; content
+    [1] =&amp;gt; reports
+    [2] =&amp;gt; settings
+    [3] =&amp;gt; developer
+)
+</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">contexts_icon</td>
+                    <td>Array
+(
+    [content] =&amp;gt; fas fa-tachometer-alt
+    [reports] =&amp;gt; fas fa-file-alt
+    [settings] =&amp;gt; fas fa-cog
+    [developer] =&amp;gt; fas fa-tools
+)
+</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">enable_activity_logging</td>
+                    <td>true</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">sparks_path</td>
+                    <td>../sparks/</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">template.site_path</td>
+                    <td>C:etcapachehtdocsSVNbonfirepublic/</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">template.theme_paths</td>
+                    <td>Array
+(
+    [0] =&amp;gt; themes
+)
+</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">template.default_layout</td>
+                    <td>index</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">template.ajax_layout</td>
+                    <td>ajax</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">template.use_mobile_themes</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">template.default_theme</td>
+                    <td>default/</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">template.admin_theme</td>
+                    <td>admin</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">template.adminlte_theme</td>
+                    <td>adminlte</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">template.message_template</td>
+                    <td> &amp;lt;div class=&amp;quot;alert alert-{type} alert-dismissable&amp;quot;&amp;gt;
+		&amp;lt;button type=&amp;quot;button&amp;quot; class=&amp;quot;close&amp;quot; data-dismiss=&amp;quot;alert&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;amp;times;&amp;lt;/button&amp;gt;
+		&amp;lt;div&amp;gt;{message}&amp;lt;/div&amp;gt;
+	&amp;lt;/div&amp;gt;</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">template.breadcrumb_symbol</td>
+                    <td> : </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">template.parse_views</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">assets.directories</td>
+                    <td>Array
+(
+    [base] =&amp;gt; assets
+    [cache] =&amp;gt; cache
+    [css] =&amp;gt; css
+    [image] =&amp;gt; images
+    [js] =&amp;gt; js
+    [module] =&amp;gt; module
+)
+</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">assets.js_opener</td>
+                    <td>$(document).ready(function() {</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">assets.js_closer</td>
+                    <td>});</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">assets.css_combine</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">assets.js_combine</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">assets.css_minify</td>
+                    <td>true</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">assets.js_minify</td>
+                    <td>true</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">assets.encrypt_name</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">assets.encode</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">auth.log_failed_login_activity</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">ui.current_shortcuts</td>
+                    <td>Array
+(
+    [form_save] =&amp;gt; Array
+        (
+            [description] =&amp;gt; Save any form in the admin area.
+            [action] =&amp;gt; $(&amp;quot;input[name=save]&amp;quot;).click();return false;
+        )
+
+    [create_new] =&amp;gt; Array
+        (
+            [description] =&amp;gt; Create a new record in the module.
+            [action] =&amp;gt; window.location.href=$(&amp;quot;a#create_new&amp;quot;).attr(&amp;quot;href&amp;quot;);
+        )
+
+    [select_all] =&amp;gt; Array
+        (
+            [description] =&amp;gt; Select all records in an index page.
+            [action] =&amp;gt; $(&amp;quot;table input[type=checkbox]&amp;quot;).click();return false;
+        )
+
+    [delete] =&amp;gt; Array
+        (
+            [description] =&amp;gt; Delete the record(s).
+            [action] =&amp;gt; $(&amp;quot;#delete-me.btn-danger&amp;quot;).click();
+        )
+
+    [module_index] =&amp;gt; Array
+        (
+            [description] =&amp;gt; Return to the index of the current module.
+            [action] =&amp;gt; window.location.href=$(&amp;quot;a#list&amp;quot;).attr(&amp;quot;href&amp;quot;);
+        )
+
+    [goto_content] =&amp;gt; Array
+        (
+            [description] =&amp;gt; Jump to the Content context.
+            [action] =&amp;gt; window.location.href=$(&amp;quot;#tb_content&amp;quot;).attr(&amp;quot;href&amp;quot;)
+        )
+
+    [goto_reports] =&amp;gt; Array
+        (
+            [description] =&amp;gt; Jump to the Reports context.
+            [action] =&amp;gt; window.location.href=$(&amp;quot;#tb_reports&amp;quot;).attr(&amp;quot;href&amp;quot;)
+        )
+
+    [goto_settings] =&amp;gt; Array
+        (
+            [description] =&amp;gt; Jump to the Settings context.
+            [action] =&amp;gt; window.location.href=$(&amp;quot;#tb_settings&amp;quot;).attr(&amp;quot;href&amp;quot;)
+        )
+
+    [goto_developer] =&amp;gt; Array
+        (
+            [description] =&amp;gt; Jump to the Developer context.
+            [action] =&amp;gt; window.location.href=$(&amp;quot;#tb_developer&amp;quot;).attr(&amp;quot;href&amp;quot;)
+        )
+
+)
+</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">emailer.write_to_file</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">migrate.auto_core</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">migrate.auto_app</td>
+                    <td>false</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">commonmark.valid_drivers</td>
+                    <td>Array
+(
+    [0] =&amp;gt; Parsedown
+    [1] =&amp;gt; Markdown
+    [2] =&amp;gt; MarkdownExtra
+    [3] =&amp;gt; LeagueCommonMark
+)
+</td>
+                </tr>
+                                <tr>
+                    <td class="hilight">commonmark.driver</td>
+                    <td>MarkdownExtended</td>
+                </tr>
+                            </tbody></table>
+                    </div>
+                <!-- Files -->
+        <div id="ci-profiler-files" class="ci-profiler-box">
+            <h2>Files</h2>
+                        <table class="main">
+                                <tbody><tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\config\application.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\config\application.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\config\autoload.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\config\autoload.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\config\config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\config\config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\config\constants.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\config\constants.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\config\database.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\config\database.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\config\events.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\config\events.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\config\hooks.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\config\hooks.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\config\mimes.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\config\mimes.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\config\profiler.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\config\profiler.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\config\routes.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\config\routes.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\config\user_agents.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\config\user_agents.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\core\App_Controller.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\core\App_Controller.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\core\Authenticated_Controller.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\core\Authenticated_Controller.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\core\Base_Controller.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\core\Base_Controller.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\core\DT_Model.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\core\DT_Model.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\hooks\App_hooks.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\hooks\App_hooks.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\language\english\application_lang.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\language\english\application_lang.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\libraries\Profiler.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\libraries\Profiler.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\modules\sk_tidak_mampu\config\config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\modules\sk_tidak_mampu\config\config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\modules\sk_tidak_mampu\controllers\Content.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\modules\sk_tidak_mampu\controllers\Content.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\modules\sk_tidak_mampu\language\english\sk_tidak_mampu_lang.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\modules\sk_tidak_mampu\language\english\sk_tidak_mampu_lang.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\modules\sk_tidak_mampu\models\Sk_tidak_mampu_model.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\modules\sk_tidak_mampu\models\Sk_tidak_mampu_model.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\modules\sk_tidak_mampu\views\content\_sub_nav.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\modules\sk_tidak_mampu\views\content\_sub_nav.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\modules\sk_tidak_mampu\views\content\index.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\modules\sk_tidak_mampu\views\content\index.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\third_party\MX\Base.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\third_party\MX\Base.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\third_party\MX\Config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\third_party\MX\Config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\third_party\MX\Controller.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\third_party\MX\Controller.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\third_party\MX\Lang.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\third_party\MX\Lang.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\application\third_party\MX\Loader.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\application\third_party\MX\Loader.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Benchmark.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Benchmark.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\CodeIgniter.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\CodeIgniter.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Common.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Common.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Controller.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Controller.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Hooks.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Hooks.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Input.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Input.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Lang.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Lang.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Loader.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Loader.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Log.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Log.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Model.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Model.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Output.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Output.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Router.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Router.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Security.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Security.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\URI.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\URI.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Utf8.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\Utf8.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\compat\hash.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\compat\hash.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\compat\mbstring.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\compat\mbstring.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\compat\password.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\compat\password.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\compat\standard.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\core\compat\standard.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\database\DB.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\database\DB.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\database\DB_driver.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\database\DB_driver.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\database\DB_query_builder.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\database\DB_query_builder.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\database\DB_result.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\database\DB_result.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\database\drivers\postgre\postgre_driver.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\database\drivers\postgre\postgre_driver.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\database\drivers\postgre\postgre_result.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\database\drivers\postgre\postgre_result.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\helpers\cookie_helper.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\helpers\cookie_helper.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\helpers\directory_helper.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\helpers\directory_helper.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\helpers\form_helper.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\helpers\form_helper.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\helpers\language_helper.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\helpers\language_helper.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\helpers\url_helper.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\helpers\url_helper.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\language\english\profiler_lang.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\language\english\profiler_lang.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Cache\Cache.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Cache\Cache.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Cache\drivers\Cache_dummy.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Cache\drivers\Cache_dummy.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Driver.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Driver.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Form_validation.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Form_validation.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Session\CI_Session_driver_interface.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Session\CI_Session_driver_interface.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Session\OldSessionWrapper.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Session\OldSessionWrapper.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Session\Session.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Session\Session.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Session\Session_driver.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Session\Session_driver.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Session\drivers\Session_files_driver.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\Session\drivers\Session_files_driver.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\User_agent.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\ci3\libraries\User_agent.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\core\BF_Lang.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\core\BF_Lang.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\core\BF_Loader.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\core\BF_Loader.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\core\BF_Model.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\core\BF_Model.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\core\BF_Router.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\core\BF_Router.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\core\BF_Security.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\core\BF_Security.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\helpers\BF_directory_helper.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\helpers\BF_directory_helper.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\helpers\BF_form_helper.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\helpers\BF_form_helper.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\helpers\application_helper.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\helpers\application_helper.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\helpers\config_file_helper.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\helpers\config_file_helper.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\libraries\Assets.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\libraries\Assets.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\libraries\BF_Form_validation.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\libraries\BF_Form_validation.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\libraries\Console.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\libraries\Console.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\libraries\Events.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\libraries\Events.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\libraries\Modules.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\libraries\Modules.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\libraries\Route.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\libraries\Route.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\libraries\Template.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\libraries\Template.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\activities\config\config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\activities\config\config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\builder\config\config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\builder\config\config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\database\config\config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\database\config\config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\database\views\developer\menu.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\database\views\developer\menu.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\emailer\config\config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\emailer\config\config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\emailer\views\settings\menu.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\emailer\views\settings\menu.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\logs\config\config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\logs\config\config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\migrations\config\config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\migrations\config\config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\permissions\config\config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\permissions\config\config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\permissions\models\Permission_model.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\permissions\models\Permission_model.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\roles\config\config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\roles\config\config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\roles\models\Role_permission_model.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\roles\models\Role_permission_model.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\settings\config\config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\settings\config\config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\settings\libraries\Settings_lib.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\settings\libraries\Settings_lib.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\settings\models\Settings_model.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\settings\models\Settings_model.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\sysinfo\config\config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\sysinfo\config\config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\translate\config\config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\translate\config\config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\ui\config\config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\ui\config\config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\ui\libraries\Contextslte.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\ui\libraries\Contextslte.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\users\config\config.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\users\config\config.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\users\language\english\users_lang.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\users\language\english\users_lang.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\users\libraries\Auth.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\users\libraries\Auth.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\users\models\User_model.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\bonfire\modules\users\models\User_model.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\public\index.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\public\index.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\public\themes\adminlte\footer.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\public\themes\adminlte\footer.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\public\themes\adminlte\header.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\public\themes\adminlte\header.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\public\themes\adminlte\index.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\public\themes\adminlte\index.php</span>
+                    </td>
+                </tr>
+                                <tr>
+                    <td class="hilight">C:\etc\apache\htdocs\SVN\bonfire\public\themes\adminlte\sidebar.php<br>
+                        <span class="faded small">C:\etc\apache\htdocs\SVN\bonfire\public\themes\adminlte\sidebar.php</span>
+                    </td>
+                </tr>
+                            </tbody></table>
+                    </div>
+            </div><!-- /profiler_panel -->
+</div><!-- /codeigniter_profiler --><div style="position: static !important;"></div></body></html>
