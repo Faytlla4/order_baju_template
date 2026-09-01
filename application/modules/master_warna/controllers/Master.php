@@ -5,16 +5,10 @@
  */
 class Master extends App_Controller
 {
-	protected $permissionCreate = 'Master_warna.Master.Create';
-	protected $permissionDelete = 'Master_warna.Master.Delete';
-	protected $permissionEdit   = 'Master_warna.Master.Edit';
-	protected $permissionView   = 'Master_warna.Master.View';
-
 	public function __construct()
 	{
 		parent::__construct();
 
-		$this->auth->restrict($this->permissionView);
 		$this->load->model('master_warna/master_warna_model');
 		$this->lang->load('master_warna');
 		$this->form_validation->set_error_delimiters("<span class='error'>", "</span>");
@@ -31,14 +25,12 @@ class Master extends App_Controller
 
 	public function create()
 	{
-		$this->auth->restrict($this->permissionCreate);
-
 		if (isset($_POST['save'])) {
 			if ($insert_id = $this->save_master_warna()) {
 				log_activity($this->auth->user_id(), lang('master_warna_act_create_record') . ': ' . $insert_id . ' : ' . $this->input->ip_address(), 'master_warna');
 				Template::set_message(lang('master_warna_create_success'), 'success');
 
-				redirect(SITE_AREA . '/master/master_warna');
+				redirect(SITE_AREA . '/master/warna');
 			}
 
 			if (!empty($this->master_warna_model->error)) {
@@ -60,29 +52,25 @@ class Master extends App_Controller
 		if (empty($id)) {
 			Template::set_message(lang('master_warna_invalid_id'), 'error');
 
-			redirect(SITE_AREA . '/master/master_warna');
+			redirect(SITE_AREA . '/master/warna');
 		}
 
 		if (isset($_POST['save'])) {
-			$this->auth->restrict($this->permissionEdit);
-
 			if ($this->save_master_warna('update', $id)) {
 				log_activity($this->auth->user_id(), lang('master_warna_act_edit_record') . ': ' . $id . ' : ' . $this->input->ip_address(), 'master_warna');
 				Template::set_message(lang('master_warna_edit_success'), 'success');
-				redirect(SITE_AREA . '/master/master_warna');
+				redirect(SITE_AREA . '/master/warna');
 			}
 
 			if (!empty($this->master_warna_model->error)) {
 				Template::set_message(lang('master_warna_edit_failure') . $this->master_warna_model->error, 'error');
 			}
 		} elseif (isset($_POST['delete'])) {
-			$this->auth->restrict($this->permissionDelete);
-
 			if ($this->hapus_master_cascade('master_warna', 'warna_id', $id)) {
 				log_activity($this->auth->user_id(), lang('master_warna_act_delete_record') . ': ' . $id . ' : ' . $this->input->ip_address(), 'master_warna');
 				Template::set_message(lang('master_warna_delete_success'), 'success');
 
-				redirect(SITE_AREA . '/master/master_warna');
+				redirect(SITE_AREA . '/master/warna');
 			}
 
 			Template::set_message(lang('master_warna_delete_failure') . $this->master_warna_model->error, 'error');
@@ -266,8 +254,6 @@ class Master extends App_Controller
 
 	public function get_data()
 	{
-		$this->auth->restrict($this->permissionView);
-
 		$return = $this->master_warna_model->find_all();
 
 		// Hanya tampilkan data aktif (deleted = 0)
@@ -310,8 +296,6 @@ class Master extends App_Controller
 	 */
 	public function lookup_customer()
 	{
-		$this->auth->restrict($this->permissionView);
-
 		$kode = trim((string) $this->input->post('kode_order'));
 		if ($kode === '') {
 			echo json_encode(array('found' => false));

@@ -69,6 +69,153 @@ class Backup_model extends CI_Model
 		return $this->db->get('report')->result();
 	}
 
+	/**
+	 * Ambil daftar dokumen yang diupload user pada transaksi
+	 * (per file, dari kolom dokumen JSON), difilter tanggal transaksi.
+	 *
+	 * @param string $tgl_mulai YYYY-MM-DD
+	 * @param string $tgl_akhir YYYY-MM-DD
+	 * @return array
+	 */
+	public function get_dokumen_transaksi($tgl_mulai = '', $tgl_akhir = '')
+	{
+		$sql = "SELECT id, dokumen,
+				to_char(created_on, 'DD-MM-YYYY HH24:MI') AS created_on_str
+			FROM transaksi
+			WHERE dokumen IS NOT NULL
+			  AND dokumen <> ''
+			  AND dokumen <> '[]'
+			  AND dokumen <> '[[]]'";
+
+		$params = array();
+		$conditions = array();
+
+		if ($tgl_mulai !== '') {
+			$conditions[] = 'created_on::date >= ?';
+			$params[] = $tgl_mulai;
+		}
+		if ($tgl_akhir !== '') {
+			$conditions[] = 'created_on::date <= ?';
+			$params[] = $tgl_akhir;
+		}
+
+		if (!empty($conditions)) {
+			$sql .= ' AND ' . implode(' AND ', $conditions);
+		}
+
+		$sql .= ' ORDER BY created_on DESC, id DESC';
+
+		$rows = empty($params)
+			? $this->db->query($sql)->result()
+			: $this->db->query($sql, $params)->result();
+
+		$out = array();
+		foreach ($rows as $r) {
+			$files = json_decode($r->dokumen, true);
+			if (!is_array($files)) {
+				continue;
+			}
+			foreach ($files as $f) {
+				$f = basename(trim((string) $f));
+				if ($f === '' || $f === 'null') {
+					continue;
+				}
+				$out[] = (object) array(
+					'id'             => (int) $r->id,
+					'source'         => 'transaksi',
+					'tipe_report'    => 'transaksi',
+					'nama_file'      => $f,
+					'path_file'      => 'dokumen_transaksi/' . (int) $r->id . '/' . $f,
+					'created_on_str' => $r->created_on_str,
+					'jumlah_transaksi' => 1,
+				);
+			}
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Validasi & ambil dokumen transaksi terpilih dari input "id:nama_file".
+	 * Hanya mengembalikan file yang BENAR-BENAR terdaftar di kolom dokumen
+	 * transaksi tersebut (mencegah path/file sewenang-wenang).
+	 *
+	 * @param array $pairs Contoh: array("60:20260901_abc.pdf", ...).
+	 *
+	 * @return array of objects (id, nama_file)
+	 */
+	public function get_transaksi_docs_selected($pairs)
+	{
+		$out = array();
+		if (empty($pairs)) {
+			return $out;
+		}
+
+		$ids = array();
+		foreach ($pairs as $p) {
+			$p = (string) $p;
+			if ($p === '') {
+				continue;
+			}
+			$parts = explode(':', $p, 2);
+			if (count($parts) === 2) {
+				$id = (int) $parts[0];
+				if ($id > 0) {
+					$ids[$id] = true;
+				}
+			}
+		}
+
+		if (empty($ids)) {
+			return $out;
+		}
+
+		$id_list = array_keys($ids);
+		$this->db->select('id, dokumen');
+		$this->db->where_in('id', $id_list);
+		$rows = $this->db->get('transaksi')->result();
+
+		$map = array();
+		foreach ($rows as $row) {
+			$files = json_decode($row->dokumen, true);
+			if (!is_array($files)) {
+				continue;
+			}
+			foreach ($files as $f) {
+				$f = basename(trim((string) $f));
+				if ($f === '' || $f === 'null') {
+					continue;
+				}
+				$map[(int) $row->id . ':' . $f] = (int) $row->id;
+			}
+		}
+
+		foreach ($pairs as $p) {
+			$p = (string) $p;
+			if ($p === '') {
+				continue;
+			}
+			$parts = explode(':', $p, 2);
+			if (count($parts) !== 2) {
+				continue;
+			}
+			$id = (int) $parts[0];
+			$file = basename(trim($parts[1]));
+			if ($id <= 0 || $file === '') {
+				continue;
+			}
+			if (!isset($map[$id . ':' . $file])) {
+				continue;
+			}
+			$out[] = (object) array(
+				'id' => $id,
+				'nama_file' => $file,
+			);
+		}
+
+		return $out;
+	}
+
 	// --- Database Config ---
 
 	public function get_database_config()

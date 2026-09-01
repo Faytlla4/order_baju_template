@@ -12,6 +12,7 @@
                             <th><?php echo lang('master_jenis_baju_field_urutan'); ?></th>
                             <th><?php echo lang('master_jenis_baju_field_keterangan'); ?></th>
                             <th><?php echo lang('master_jenis_baju_field_status'); ?></th>
+                            <th width="150">Aksi</th>
                         </tr>
                     </thead>
                 </table>

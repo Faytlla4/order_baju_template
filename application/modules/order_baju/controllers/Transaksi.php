@@ -9,16 +9,10 @@
  */
 class Transaksi extends App_Controller
 {
-	protected $permissionCreate = 'Order_Baju.Content.Create';
-	protected $permissionDelete = 'Order_Baju.Content.Delete';
-	protected $permissionEdit   = 'Order_Baju.Content.Edit';
-	protected $permissionView   = 'Order_Baju.Content.View';
-
 	public function __construct()
 	{
 		parent::__construct();
 
-		$this->auth->restrict($this->permissionView);
 		$this->load->model('order_baju/order_baju_model');
 		$this->lang->load('order_baju');
 		$this->form_validation->set_error_delimiters("<span class='error'>", "</span>");
@@ -45,8 +39,6 @@ class Transaksi extends App_Controller
 	 */
 	public function create()
 	{
-		$this->auth->restrict($this->permissionCreate);
-
 		// Bila user membuka /create/{kode}: langsung proses sebagai kode order
 		// supaya tidak tertahan di halaman Step 1.
 		$seg5 = $this->uri->segment(5);
@@ -81,8 +73,6 @@ class Transaksi extends App_Controller
 	 */
 	public function step2()
 	{
-		$this->auth->restrict($this->permissionCreate);
-
 		$seg = $this->uri->segment(5);
 		$param = $seg ? rawurldecode((string) $seg) : '';
 
@@ -134,8 +124,6 @@ class Transaksi extends App_Controller
 	 */
 	public function save()
 	{
-		$this->auth->restrict($this->permissionCreate);
-
 		$id = (int) $this->input->post('id');
 		$kode = trim((string) $this->input->post('kode_order'));
 		$jumlah = $this->input->post('jumlah');

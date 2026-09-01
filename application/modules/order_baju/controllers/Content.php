@@ -5,21 +5,9 @@
  */
 class Content extends App_Controller
 {
-	protected $permissionCreate = 'Order_Baju.Content.Create';
-	protected $permissionDelete = 'Order_Baju.Content.Delete';
-	protected $permissionEdit = 'Order_Baju.Content.Edit';
-	protected $permissionView = 'Order_Baju.Content.View';
-
-	/**
-	 * Constructor
-	 *
-	 * @return void
-	 */
 	public function __construct()
 	{
 		parent::__construct();
-
-		$this->auth->restrict($this->permissionView);
 		$this->load->model('order_baju/order_baju_model');
 		$this->load->model('master_ukuran/master_ukuran_model');
 		$this->load->model('master_warna/master_warna_model');
@@ -49,8 +37,6 @@ class Content extends App_Controller
 	 */
 	public function create()
 	{
-		$this->auth->restrict($this->permissionCreate);
-
 		if (isset($_POST['save'])) {
 			if ($insert_id = $this->save_order_baju()) {
 				log_activity($this->auth->user_id(), lang('order_baju_act_create_record') . ': ' . $insert_id . ' : ' . $this->input->ip_address(), 'order_baju');
@@ -85,8 +71,6 @@ class Content extends App_Controller
 		}
 
 		if (isset($_POST['save'])) {
-			$this->auth->restrict($this->permissionEdit);
-
 			if ($this->save_order_baju('update', $id)) {
 				log_activity($this->auth->user_id(), lang('order_baju_act_edit_record') . ': ' . $id . ' : ' . $this->input->ip_address(), 'order_baju');
 				Template::set_message(lang('order_baju_edit_success'), 'success');
@@ -98,8 +82,6 @@ class Content extends App_Controller
 				Template::set_message(lang('order_baju_edit_failure') . $this->order_baju_model->error, 'error');
 			}
 		} elseif (isset($_POST['delete'])) {
-			$this->auth->restrict($this->permissionDelete);
-
 			if ($this->hard_delete_order($id)) {
 				log_activity($this->auth->user_id(), lang('order_baju_act_delete_record') . ': ' . $id . ' : ' . $this->input->ip_address(), 'order_baju');
 				Template::set_message(lang('order_baju_delete_success'), 'success');

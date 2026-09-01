@@ -1,0 +1,34 @@
+Saya punya website CI3 + Bonfire (SI-Reklame) di Windows Laragon + PostgreSQL. Website sudah bisa dibuka, database sudah terhubung, tapi:
+
+1. Beberapa halaman tampilannya BEDA dari seharusnya (kayak tampilan lama)
+2. Beberapa halaman ada error
+
+Tolong analisis dan perbaiki semua halaman web ini:
+
+- Login ke http://apktemplate.test/admin (admin / password)
+- Buka SETIAP halaman di sidebar satu per satu
+- Untuk setiap halaman, cek:
+  - Apakah ada error? Screenshot / copy error-nya
+  - Apakah tampilannya benar? Bandingkan dengan source code di folder application/modules/
+  - Pastikan semua tabel data muncul
+  - Pastikan tombol Create, Edit, Delete muncul di halaman master
+  - Pastikan form input bisa diakses
+  - Pastikan fitur cetak PDF dan Excel bisa diakses
+  - Pastikan fitur upload dokumen di transaksi bisa diakses
+
+List halaman yang wajib dicek:
+1. /admin/content/order_baju (Content - Order Baju)
+2. /admin/master/master_jenis_baju (Master - Jenis Baju)
+3. /admin/master/master_ukuran (Master - Ukuran)
+4. /admin/master/master_warna (Master - Warna)
+5. /admin/transaksi/transaksi (Transaksi)
+6. /admin/reports/report_pdf (Laporan PDF)
+7. /admin/reports/report_excel (Laporan Excel)
+8. /admin/backup (Backup)
+9. /admin/backup/database (Backup Database)
+
+Kalau tampilan beda, cek file view yang dipanggil controller-nya di folder application/modules/{nama_module}/views/ — pastikan file view-nya sudah versi terbaru (sudah di-pull dari git).
+
+Kalau ada error, cek error log di application/logs/ dan fix error-nya.
+
+Kasih tau saya hasilnya: mana yang sudah benar, mana yang masih error, mana yang tampilannya beda beserta cara fix-nya.

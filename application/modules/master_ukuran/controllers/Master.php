@@ -5,16 +5,10 @@
  */
 class Master extends App_Controller
 {
-	protected $permissionCreate = 'Master_ukuran.Master.Create';
-	protected $permissionDelete = 'Master_ukuran.Master.Delete';
-	protected $permissionEdit   = 'Master_ukuran.Master.Edit';
-	protected $permissionView   = 'Master_ukuran.Master.View';
-
 	public function __construct()
 	{
 		parent::__construct();
 
-		$this->auth->restrict($this->permissionView);
 		$this->load->model('master_ukuran/master_ukuran_model');
 		$this->lang->load('master_ukuran');
 		$this->form_validation->set_error_delimiters("<span class='error'>", "</span>");
@@ -31,14 +25,12 @@ class Master extends App_Controller
 
 	public function create()
 	{
-		$this->auth->restrict($this->permissionCreate);
-
 		if (isset($_POST['save'])) {
 			if ($insert_id = $this->save_master_ukuran()) {
 				log_activity($this->auth->user_id(), lang('master_ukuran_act_create_record') . ': ' . $insert_id . ' : ' . $this->input->ip_address(), 'master_ukuran');
 				Template::set_message(lang('master_ukuran_create_success'), 'success');
 
-				redirect(SITE_AREA . '/master/master_ukuran');
+				redirect(SITE_AREA . '/master/ukuran');
 			}
 
 			if (!empty($this->master_ukuran_model->error)) {
@@ -60,29 +52,25 @@ class Master extends App_Controller
 		if (empty($id)) {
 			Template::set_message(lang('master_ukuran_invalid_id'), 'error');
 
-			redirect(SITE_AREA . '/master/master_ukuran');
+			redirect(SITE_AREA . '/master/ukuran');
 		}
 
 		if (isset($_POST['save'])) {
-			$this->auth->restrict($this->permissionEdit);
-
 			if ($this->save_master_ukuran('update', $id)) {
 				log_activity($this->auth->user_id(), lang('master_ukuran_act_edit_record') . ': ' . $id . ' : ' . $this->input->ip_address(), 'master_ukuran');
 				Template::set_message(lang('master_ukuran_edit_success'), 'success');
-				redirect(SITE_AREA . '/master/master_ukuran');
+				redirect(SITE_AREA . '/master/ukuran');
 			}
 
 			if (!empty($this->master_ukuran_model->error)) {
 				Template::set_message(lang('master_ukuran_edit_failure') . $this->master_ukuran_model->error, 'error');
 			}
 		} elseif (isset($_POST['delete'])) {
-			$this->auth->restrict($this->permissionDelete);
-
 			if ($this->hapus_master_cascade('master_ukuran', 'ukuran_id', $id)) {
 				log_activity($this->auth->user_id(), lang('master_ukuran_act_delete_record') . ': ' . $id . ' : ' . $this->input->ip_address(), 'master_ukuran');
 				Template::set_message(lang('master_ukuran_delete_success'), 'success');
 
-				redirect(SITE_AREA . '/master/master_ukuran');
+				redirect(SITE_AREA . '/master/ukuran');
 			}
 
 			Template::set_message(lang('master_ukuran_delete_failure') . $this->master_ukuran_model->error, 'error');
@@ -267,8 +255,6 @@ class Master extends App_Controller
 
 	public function get_data()
 	{
-		$this->auth->restrict($this->permissionView);
-
 		$return = $this->master_ukuran_model->find_all();
 
 		// Hanya tampilkan data aktif (deleted = 0)
@@ -311,8 +297,6 @@ class Master extends App_Controller
 	 */
 	public function lookup_customer()
 	{
-		$this->auth->restrict($this->permissionView);
-
 		$kode = trim((string) $this->input->post('kode_order'));
 		if ($kode === '') {
 			echo json_encode(array('found' => false));

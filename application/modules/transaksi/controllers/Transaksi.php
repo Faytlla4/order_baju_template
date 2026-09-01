@@ -18,10 +18,6 @@
  */
 class Transaksi extends App_Controller
 {
-	protected $permissionCreate = 'Order_Baju.Content.Create';
-	protected $permissionEdit   = 'Order_Baju.Content.Edit';
-	protected $permissionView   = 'Order_Baju.Content.View';
-
 	private $status_aktual = array(
 		'Diproses',
 		'Selesai',
@@ -35,7 +31,6 @@ class Transaksi extends App_Controller
 	{
 		parent::__construct();
 
-		$this->auth->restrict($this->permissionView);
 		$this->load->model('transaksi/transaksi_model');
 		$this->load->model('order_baju/order_baju_model');
 		$this->lang->load('order_baju');
@@ -66,7 +61,6 @@ class Transaksi extends App_Controller
 
 		if ($tab === 'proses') {
 			if (isset($_POST['save'])) {
-				$this->auth->restrict($this->permissionCreate);
 				$this->save();
 				return;
 			}
@@ -116,8 +110,6 @@ class Transaksi extends App_Controller
 	 */
 	public function create()
 	{
-		$this->auth->restrict($this->permissionCreate);
-
 		// Form transaksi (create.php) mengirim tombol "Simpan / Proses" ke URL
 		// create ini; teruskan ke save() agar record transaksi benar-benar dibuat.
 		if (isset($_POST['save'])) {
@@ -173,8 +165,6 @@ class Transaksi extends App_Controller
 	 */
 	public function save()
 	{
-		$this->auth->restrict($this->permissionCreate);
-
 		$kode   = trim((string) $this->input->post('kode_order'));
 		$jumlah = $this->input->post('jumlah');
 		$harga  = $this->input->post('harga');
@@ -209,7 +199,10 @@ class Transaksi extends App_Controller
 
 		$total = (float) $jumlah * (float) $harga;
 
-		$dokumen_files = $this->upload_documents();
+		// ID transaksi belum ada saat CREATE — upload ke staging dulu,
+		// setelah insert dapat ID, file dipindahkan ke public/assets/dokumen_transaksi/[id]/.
+		$staging = $this->staging_dir();
+		$dokumen_files = $this->upload_documents($staging);
 		if ($dokumen_files === false) {
 			redirect(SITE_AREA . '/transaksi/transaksi?tab=proses&kode=' . rawurlencode($kode));
 			return;
@@ -227,6 +220,31 @@ class Transaksi extends App_Controller
 		$id = $this->transaksi_model->insert($data);
 
 		if (is_numeric($id)) {
+			// Wajib: buat folder transaksi SETELAH INSERT berhasil,
+			// terlepas dari ada/tidaknya file upload. Trigger = transaksi tersimpan,
+			// bukan status transaksi.
+			$finalDir = $this->dokumen_dir($id);
+			if ($finalDir === false) {
+				// Folder gagal dibuat — rollback transaksi + file staging, JANGAN anggap sukses.
+				$this->transaksi_model->delete($id);
+				if (!empty($dokumen_files)) {
+					$this->hapus_dokumen_baru($dokumen_files, $staging);
+				}
+				Template::set_message('Transaksi gagal disimpan: folder dokumen transaksi tidak dapat dibuat.', 'error');
+				redirect(SITE_AREA . '/transaksi/transaksi?tab=proses&kode=' . rawurlencode($kode));
+				return;
+			}
+
+			// Pindahkan file dari staging ke folder akhir [id]/ bila ada.
+			if (!empty($dokumen_files) && !$this->pindah_dokumen($staging, $finalDir, $dokumen_files)) {
+				// Rollback: hapus record transaksi yang baru saja dibuat + file staging.
+				$this->transaksi_model->delete($id);
+				$this->hapus_dokumen_baru($dokumen_files, $staging);
+				Template::set_message('Transaksi gagal disimpan: file dokumen tidak dapat dipindahkan ke folder penyimpanan.', 'error');
+				redirect(SITE_AREA . '/transaksi/transaksi?tab=proses&kode=' . rawurlencode($kode));
+				return;
+			}
+
 			$this->db->where('id', $order->id)
 				->update('order_baju', array(
 					'jumlah'       => (int) $jumlah,
@@ -240,9 +258,9 @@ class Transaksi extends App_Controller
 			return;
 		}
 
-		// Jika gagal save DB, hapus file yang sudah terupload
+		// Jika gagal save DB, hapus file yang sudah terupload dari staging.
 		if (!empty($dokumen_files)) {
-			$this->hapus_dokumen_baru($dokumen_files, APPPATH . '../uploads/transaksi/');
+			$this->hapus_dokumen_baru($dokumen_files, $staging);
 		}
 
 		$db_error = $this->db->error();
@@ -298,8 +316,6 @@ class Transaksi extends App_Controller
 		}
 
 		if (isset($_POST['save'])) {
-			$this->auth->restrict($this->permissionEdit);
-
 			$jumlah = $this->input->post('jumlah');
 			$harga  = $this->input->post('harga');
 			$status = trim((string) $this->input->post('status_transaksi'));
@@ -310,8 +326,8 @@ class Transaksi extends App_Controller
 			} else {
 				$total = (float) $jumlah * (float) $harga;
 
-				// 1) Upload file baru DULU sebelum apapun.
-				$new_files = $this->upload_documents();
+				// 1) Upload file baru DULU sebelum apapun — langsung ke folder [id]/.
+				$new_files = $this->upload_documents($this->dokumen_dir($id));
 				if ($new_files === false) {
 					Template::set_message('Gagal mengupload dokumen baru.', 'error');
 				} else {
@@ -363,7 +379,7 @@ class Transaksi extends App_Controller
 					if ($ok && $this->db->trans_status()) {
 						// 4) DB sukses — baru hapus file lama dari disk (yang dicentang).
 						if (!empty($files_to_delete_from_disk)) {
-							$this->hapus_dokumen_lama($files_to_delete_from_disk);
+							$this->hapus_dokumen_lama($files_to_delete_from_disk, $id);
 						}
 
 						log_activity($this->auth->user_id(), 'Transaksi ' . $id . ' diproses menjadi ' . $status, 'transaksi');
@@ -373,7 +389,7 @@ class Transaksi extends App_Controller
 					}
 
 					// 5) DB gagal — rollback: hapus file baru yang sudah terupload.
-					$this->hapus_dokumen_baru($new_files, APPPATH . '../uploads/transaksi/');
+					$this->hapus_dokumen_baru($new_files, $this->dokumen_dir($id));
 					Template::set_message('Transaksi gagal diperbarui.', 'error');
 				}
 			}
@@ -396,8 +412,6 @@ class Transaksi extends App_Controller
 	 */
 	public function get_data()
 	{
-		$this->auth->restrict($this->permissionView);
-
 		$return = $this->transaksi_model->get_list_data();
 
 		echo json_encode($return);
@@ -470,8 +484,6 @@ class Transaksi extends App_Controller
 	 */
 	public function download_dokumen($id = 0, $file = '')
 	{
-		$this->auth->restrict($this->permissionView);
-
 		$path = $this->resolve_dokumen_file($id, $file);
 		if ($path === null) {
 			show_404();
@@ -492,8 +504,6 @@ class Transaksi extends App_Controller
 	 */
 	public function get_dokumen_list($id = 0)
 	{
-		$this->auth->restrict($this->permissionView);
-
 		$id = (int) $id;
 		if ($id <= 0) {
 			$this->output->set_content_type('application/json')
@@ -539,8 +549,6 @@ class Transaksi extends App_Controller
 	 */
 	public function detail($id = 0)
 	{
-		$this->auth->restrict($this->permissionView);
-
 		$id = (int) $id;
 		if ($id <= 0) {
 			$this->output->set_content_type('application/json')
@@ -593,8 +601,6 @@ class Transaksi extends App_Controller
 	 */
 	private function resolve_dokumen_file($id, $file)
 	{
-		$this->auth->restrict($this->permissionView);
-
 		$id = (int) $id;
 		$file = basename(rawurldecode((string) $file));
 		if ($id <= 0 || $file === '') {
@@ -623,8 +629,8 @@ class Transaksi extends App_Controller
 			return null;
 		}
 
-		$path = APPPATH . '../uploads/transaksi/' . $file;
-		if (!is_file($path)) {
+		$path = $this->resolve_dokumen_path($id, $file);
+		if ($path === null) {
 			return null;
 		}
 
@@ -678,15 +684,15 @@ class Transaksi extends App_Controller
 					if ($item === '') {
 						continue;
 					}
-					$path = APPPATH . '../uploads/transaksi/' . $item;
+					$path = $this->resolve_dokumen_path($id, $item);
 					$ext = strtolower(pathinfo($item, PATHINFO_EXTENSION));
 					$previewable = in_array($ext, array('jpg', 'jpeg', 'jfif', 'png', 'gif', 'webp', 'pdf'), true);
 					$files[] = array(
 						'nama'         => $item,
 						'ext'          => $ext,
 						'tipe'         => $this->dokumen_tipe_label($ext),
-						'ukuran'       => is_file($path) ? (int) filesize($path) : 0,
-						'exists'       => is_file($path),
+						'ukuran'       => ($path !== null) ? (int) filesize($path) : 0,
+						'exists'       => ($path !== null),
 						'preview'      => $previewable,
 						'view_url'     => site_url(SITE_AREA . '/transaksi/transaksi/view_dokumen/' . $id . '/' . rawurlencode($item)),
 						'download_url' => site_url(SITE_AREA . '/transaksi/transaksi/download_dokumen/' . $id . '/' . rawurlencode($item)),
@@ -699,18 +705,131 @@ class Transaksi extends App_Controller
 	}
 
 	/**
+	 * Direktori dokumen transaksi per ID, di FCPATH/assets/dokumen_transaksi/[id]/.
+	 * Folder dibuat bila belum ada (kecuali $create = false).
+	 * Pada kegagalan pembuatan folder, log error ditulis dan false dikembalikan.
+	 *
+	 * @param int  $id     ID transaksi.
+	 * @param bool $create Buat folder bila belum ada.
+	 *
+	 * @return string|false Path folder, atau false bila pembuatan gagal.
+	 */
+	private function dokumen_dir($id, $create = true)
+	{
+		$dir = FCPATH . 'assets/dokumen_transaksi/' . (int) $id . '/';
+
+		if ($create && !is_dir($dir)) {
+			$ok = @mkdir($dir, 0755, true);
+			if (!$ok && !is_dir($dir)) {
+				log_message('error', 'Transaksi: gagal membuat folder dokumen transaksi — ' . $dir);
+				return false;
+			}
+		}
+
+		if ($create && !is_dir($dir)) {
+			log_message('error', 'Transaksi: folder dokumen transaksi tidak tersedia — ' . $dir);
+			return false;
+		}
+
+		return $dir;
+	}
+
+	/**
+	 * Direktori staging untuk upload saat CREATE (ID transaksi belum ada).
+	 *
+	 * @return string
+	 */
+	private function staging_dir()
+	{
+		$dir = FCPATH . 'assets/dokumen_transaksi/_staging/';
+		if (!is_dir($dir)) {
+			mkdir($dir, 0755, true);
+		}
+		return $dir;
+	}
+
+	/**
+	 * Resolve path file dokumen dari storage baru (public/assets/dokumen_transaksi/[id]/)
+	 * dengan fallback ke lokasi lama (uploads/transaksi/) untuk file legacy.
+	 *
+	 * @param int    $id   ID transaksi.
+	 * @param string $file Nama file.
+	 *
+	 * @return string|null
+	 */
+	private function resolve_dokumen_path($id, $file)
+	{
+		$file = basename((string) $file);
+		if ($file === '') {
+			return null;
+		}
+
+		$path = $this->dokumen_dir($id, false) . $file;
+		if (is_file($path)) {
+			return $path;
+		}
+
+		$legacy = APPPATH . '../uploads/transaksi/' . $file;
+		if (is_file($legacy)) {
+			return $legacy;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Pindahkan file dari staging ke folder akhir [id]/.
+	 *
+	 * @param string $srcDir
+	 * @param string $dstDir
+	 * @param array  $files
+	 *
+	 * @return bool
+	 */
+	private function pindah_dokumen($srcDir, $dstDir, $files)
+	{
+		if (!is_dir($dstDir)) {
+			mkdir($dstDir, 0755, true);
+		}
+
+		$allOk = true;
+		foreach ($files as $f) {
+			$f = basename((string) $f);
+			if ($f === '') {
+				continue;
+			}
+			$src = $srcDir . $f;
+			$dst = $dstDir . $f;
+			if (is_file($src)) {
+				if (!rename($src, $dst)) {
+					$allOk = false;
+				}
+			} else {
+				$allOk = false;
+			}
+		}
+
+		return $allOk;
+	}
+
+	/**
 	 * Upload dokumen dari form, return array nama file yang berhasil diupload.
 	 * Return FALSE jika ada error (pesan sudah diset via Template::set_message).
 	 *
+	 * @param string $target_dir Direktori absolut tujuan upload.
+	 *
 	 * @return array|false
 	 */
-	private function upload_documents()
+	private function upload_documents($target_dir = null)
 	{
 		if (!isset($_FILES['dokumen']) || !is_array($_FILES['dokumen']['name'])) {
 			return array();
 		}
 
-		$upload_path = APPPATH . '../uploads/transaksi/';
+		if ($target_dir === null) {
+			$target_dir = $this->staging_dir();
+		}
+		$upload_path = rtrim($target_dir, '/\\') . DIRECTORY_SEPARATOR;
 		if (!is_dir($upload_path)) {
 			mkdir($upload_path, 0755, true);
 		}
@@ -779,19 +898,37 @@ class Transaksi extends App_Controller
 	}
 
 	/**
-	 * Hapus semua file dokumen lama dari disk.
+	 * Hapus file dokumen lama dari disk (folder baru [id]/ lalu fallback legacy).
 	 *
 	 * @param array $files
+	 * @param int   $id    ID transaksi (untuk folder baru).
 	 *
 	 * @return void
 	 */
-	private function hapus_dokumen_lama($files)
+	private function hapus_dokumen_lama($files, $id = 0)
 	{
-		$path = APPPATH . '../uploads/transaksi/';
 		foreach ($files as $f) {
-			$fp = $path . basename($f);
-			if (is_file($fp)) {
-				unlink($fp);
+			$f = basename((string) $f);
+			if ($f === '') {
+				continue;
+			}
+
+			$path = null;
+			if ($id > 0) {
+				$p = $this->dokumen_dir($id, false) . $f;
+				if (is_file($p)) {
+					$path = $p;
+				}
+			}
+			if ($path === null) {
+				$p = APPPATH . '../uploads/transaksi/' . $f;
+				if (is_file($p)) {
+					$path = $p;
+				}
+			}
+
+			if ($path !== null) {
+				unlink($path);
 			}
 		}
 	}

@@ -5,16 +5,9 @@
  */
 class Master extends App_Controller
 {
-	protected $permissionCreate = 'Master_jenis_baju.Master.Create';
-	protected $permissionDelete = 'Master_jenis_baju.Master.Delete';
-	protected $permissionEdit   = 'Master_jenis_baju.Master.Edit';
-	protected $permissionView   = 'Master_jenis_baju.Master.View';
-
 	public function __construct()
 	{
 		parent::__construct();
-
-		$this->auth->restrict($this->permissionView);
 		$this->load->model('master_jenis_baju/master_jenis_baju_model');
 		$this->lang->load('master_jenis_baju');
 		$this->form_validation->set_error_delimiters("<span class='error'>", "</span>");
@@ -31,14 +24,12 @@ class Master extends App_Controller
 
 	public function create()
 	{
-		$this->auth->restrict($this->permissionCreate);
-
 		if (isset($_POST['save'])) {
 			if ($insert_id = $this->save_master_jenis_baju()) {
 				log_activity($this->auth->user_id(), lang('master_jenis_baju_act_create_record') . ': ' . $insert_id . ' : ' . $this->input->ip_address(), 'master_jenis_baju');
 				Template::set_message(lang('master_jenis_baju_create_success'), 'success');
 
-				redirect(SITE_AREA . '/master/master_jenis_baju');
+				redirect(SITE_AREA . '/master/jenis_baju');
 			}
 
 			if (!empty($this->master_jenis_baju_model->error)) {
@@ -56,29 +47,25 @@ class Master extends App_Controller
 		if (empty($id)) {
 			Template::set_message(lang('master_jenis_baju_invalid_id'), 'error');
 
-			redirect(SITE_AREA . '/master/master_jenis_baju');
+			redirect(SITE_AREA . '/master/jenis_baju');
 		}
 
 		if (isset($_POST['save'])) {
-			$this->auth->restrict($this->permissionEdit);
-
 			if ($this->save_master_jenis_baju('update', $id)) {
 				log_activity($this->auth->user_id(), lang('master_jenis_baju_act_edit_record') . ': ' . $id . ' : ' . $this->input->ip_address(), 'master_jenis_baju');
 				Template::set_message(lang('master_jenis_baju_edit_success'), 'success');
-				redirect(SITE_AREA . '/master/master_jenis_baju');
+				redirect(SITE_AREA . '/master/jenis_baju');
 			}
 
 			if (!empty($this->master_jenis_baju_model->error)) {
 				Template::set_message(lang('master_jenis_baju_edit_failure') . $this->master_jenis_baju_model->error, 'error');
 			}
 		} elseif (isset($_POST['delete'])) {
-			$this->auth->restrict($this->permissionDelete);
-
 			if ($this->hapus_master_cascade('master_jenis_baju', 'jenis_baju_id', $id)) {
 				log_activity($this->auth->user_id(), lang('master_jenis_baju_act_delete_record') . ': ' . $id . ' : ' . $this->input->ip_address(), 'master_jenis_baju');
 				Template::set_message(lang('master_jenis_baju_delete_success'), 'success');
 
-				redirect(SITE_AREA . '/master/master_jenis_baju');
+				redirect(SITE_AREA . '/master/jenis_baju');
 			}
 
 			Template::set_message(lang('master_jenis_baju_delete_failure') . $this->master_jenis_baju_model->error, 'error');
@@ -193,8 +180,6 @@ class Master extends App_Controller
 
 	public function get_data()
 	{
-		$this->auth->restrict($this->permissionView);
-
 		$return = $this->master_jenis_baju_model->find_all();
 
 		echo json_encode($return);

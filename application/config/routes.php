@@ -1,55 +1,6 @@
 <?php
 defined('BASEPATH') || exit('No direct script access allowed');
 
-/*
-| -------------------------------------------------------------------------
-| URI ROUTING
-| -------------------------------------------------------------------------
-| This file lets you re-map URI requests to specific controller functions.
-|
-| Typically there is a one-to-one relationship between a URL string
-| and its corresponding controller class/method. The segments in a
-| URL normally follow this pattern:
-|
-|   example.com/class/method/id/
-|
-| In some instances, however, you may want to remap this relationship
-| so that a different class/function is called than the one
-| corresponding to the URL.
-|
-| Please see the user guide for complete details:
-|
-|	https://codeigniter.com/user_guide/general/routing.html
-|
-| -------------------------------------------------------------------------
-| RESERVED ROUTES
-| -------------------------------------------------------------------------
-|
-| There are three reserved routes:
-|
-|   $route['default_controller'] = 'welcome';
-|
-| This route indicates which controller class should be loaded if the
-| URI contains no data. In the above example, the "welcome" class
-| would be loaded.
-|
-|   $route['404_override'] = 'errors/page_missing';
-|
-| This route will tell the Router which controller/method to use if those
-| provided in the URL cannot be matched to a valid route.
-|
-|	$route['translate_uri_dashes'] = FALSE;
-|
-| This is not exactly a route, but allows you to automatically route
-| controller and method names that contain dashes. '-' isn't a valid
-| class or method name character, so it requires translation.
-| When you set this option to TRUE, it will replace ALL dashes in the
-| controller and method URI segments.
-|
-| Examples:	my-controller/index	-> my_controller/index
-|		my-controller/my-method	-> my_controller/my_method
-*/
-
 $route['default_controller'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = false;
@@ -69,45 +20,67 @@ Route::any('activate', 'users/activate');
 Route::any('activate/(:any)', 'users/activate/$1');
 Route::any('resend_activation', 'users/resend_activation');
 
-// Contexts
-//
-// Blokir access ke module Transaksi lama (order_baju/Transaksi) sehingga
-// New/Save selalu memakai module transaksi yang baru (transaksi/transaksi).
-// Module / file lama tetap ada tetapi tidak lagi dapat dijangkau lewat URL.
 Route::prefix(SITE_AREA, function(){
+    // Block old transaksi/order_baju route
     Route::block('transaksi/order_baju', 'transaksi/order_baju/(:any)', 'transaksi/order_baju/(:any)/(:any)');
+
+    // --- Content / Order Baju ---
+    Route::any('content', 'order_baju/content/index');
+    Route::any('content/order_baju', 'order_baju/content/index');
+    Route::any('content/order_baju/create', 'order_baju/content/create');
+    Route::any('content/order_baju/edit/(:num)', 'order_baju/content/edit/$1');
+    Route::any('content/order_baju/get_data', 'order_baju/content/get_data');
+
+    // --- Master Jenis Baju ---
+    Route::any('master', 'master_jenis_baju/master/index');
+    Route::any('master/jenis_baju', 'master_jenis_baju/master/index');
+    Route::any('master/jenis_baju/create', 'master_jenis_baju/master/create');
+    Route::any('master/jenis_baju/edit/(:num)', 'master_jenis_baju/master/edit/$1');
+    Route::any('master/jenis_baju/get_data', 'master_jenis_baju/master/get_data');
+
+    // --- Master Ukuran ---
+    Route::any('master/ukuran', 'master_ukuran/master/index');
+    Route::any('master/ukuran/create', 'master_ukuran/master/create');
+    Route::any('master/ukuran/edit/(:num)', 'master_ukuran/master/edit/$1');
+    Route::any('master/ukuran/get_data', 'master_ukuran/master/get_data');
+    Route::any('master/ukuran/lookup_customer', 'master_ukuran/master/lookup_customer');
+
+    // --- Master Warna ---
+    Route::any('master/warna', 'master_warna/master/index');
+    Route::any('master/warna/create', 'master_warna/master/create');
+    Route::any('master/warna/edit/(:num)', 'master_warna/master/edit/$1');
+    Route::any('master/warna/get_data', 'master_warna/master/get_data');
+    Route::any('master/warna/lookup_customer', 'master_warna/master/lookup_customer');
+
+    // --- Transaksi ---
+    Route::any('transaksi', 'transaksi/transaksi/index');
+    Route::any('transaksi/transaksi', 'transaksi/transaksi/index');
+    Route::any('transaksi/transaksi/create', 'transaksi/transaksi/create');
+    Route::any('transaksi/transaksi/create/(:any)', 'transaksi/transaksi/create/$1');
+    Route::any('transaksi/transaksi/save', 'transaksi/transaksi/save');
+    Route::any('transaksi/transaksi/edit/(:num)', 'transaksi/transaksi/edit/$1');
+    Route::any('transaksi/transaksi/detail/(:num)', 'transaksi/transaksi/detail/$1');
+    Route::any('transaksi/transaksi/get_data', 'transaksi/transaksi/get_data');
     Route::any('transaksi/transaksi/dokumen/(:num)/(:any)', 'transaksi/transaksi/dokumen/$1/$2');
     Route::any('transaksi/transaksi/view_dokumen/(:num)/(:any)', 'transaksi/transaksi/view_dokumen/$1/$2');
     Route::any('transaksi/transaksi/download_dokumen/(:num)/(:any)', 'transaksi/transaksi/download_dokumen/$1/$2');
     Route::any('transaksi/transaksi/get_dokumen_list/(:num)', 'transaksi/transaksi/get_dokumen_list/$1');
 
-    // Content context
-    Route::any('content', 'content/content/index');
-    Route::any('content/order_baju', 'content/content/order_baju');
-    Route::any('content/order_baju_save', 'content/content/order_baju_save');
-    Route::any('content/order_baju_delete/(:num)', 'content/content/order_baju_delete/$1');
+    // --- Reports PDF ---
+    Route::any('reports', 'report_pdf/reports/index');
+    Route::any('reports/report_pdf', 'report_pdf/reports/index');
+    Route::any('reports/report_pdf/filter', 'report_pdf/reports/filter');
+    Route::any('reports/report_pdf/pdf', 'report_pdf/reports/pdf');
+    Route::any('reports/report_pdf/view/(:num)', 'report_pdf/reports/view/$1');
+    Route::any('reports/report_pdf/download/(:num)', 'report_pdf/reports/download/$1');
 
-    // Master context
-    Route::any('master', 'master/master/index');
-    Route::any('master/jenis_baju', 'master/master/jenis_baju');
-    Route::any('master/jenis_baju_save', 'master/master/jenis_baju_save');
-    Route::any('master/jenis_baju_delete/(:num)', 'master/master/jenis_baju_delete/$1');
-    Route::any('master/ukuran', 'master/master/ukuran');
-    Route::any('master/ukuran_save', 'master/master/ukuran_save');
-    Route::any('master/ukuran_delete/(:num)', 'master/master/ukuran_delete/$1');
-    Route::any('master/warna', 'master/master/warna');
-    Route::any('master/warna_save', 'master/master/warna_save');
-    Route::any('master/warna_delete/(:num)', 'master/master/warna_delete/$1');
+    // --- Reports Excel ---
+    Route::any('reports/report_excel', 'report_excel/reports/index');
+    Route::any('reports/report_excel/filter', 'report_excel/reports/filter');
+    Route::any('reports/report_excel/excel', 'report_excel/reports/excel');
+    Route::any('reports/report_excel/download_excel/(:num)', 'report_excel/reports/download_excel/$1');
 
-    Route::context('transaksi', array('home' => SITE_AREA .'/transaksi/index'));
-
-    // Reports context (module)
-    Route::any('reports', 'reports/reports/index');
-    Route::any('reports/report_pdf', 'reports/reports/report_pdf');
-    Route::any('reports/report_excel', 'reports/reports/report_excel');
-    Route::any('reports/download_pdf', 'reports/reports/download_pdf');
-    Route::any('reports/download_excel', 'reports/reports/download_excel');
-
+    // --- Backup ---
     Route::any('backup', 'backup/backup/index');
     Route::any('backup/filter', 'backup/backup/filter');
     Route::any('backup/document', 'backup/backup/document');
@@ -115,6 +88,7 @@ Route::prefix(SITE_AREA, function(){
     Route::any('backup/database/run', 'backup/backup/database');
     Route::any('backup/download/doc/(:num)', 'backup/backup/download/doc/$1');
     Route::any('backup/download/db/(:num)', 'backup/backup/download/db/$1');
+
     Route::context('developer');
     Route::context('settings');
 });

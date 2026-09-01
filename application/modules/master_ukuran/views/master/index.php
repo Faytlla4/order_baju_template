@@ -11,6 +11,7 @@
                             <th>Kode Order</th>
                             <th>Customer</th>
                             <th>Nama</th>
+                            <th width="150">Aksi</th>
                         </tr>
                     </thead>
                 </table>

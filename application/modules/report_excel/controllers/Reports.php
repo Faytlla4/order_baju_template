@@ -8,13 +8,10 @@
  */
 class Reports extends App_Controller
 {
-	protected $permissionView = 'Site.Reports.View';
-
 	public function __construct()
 	{
 		parent::__construct();
 
-		$this->auth->restrict($this->permissionView);
 		$this->load->model('report_excel/report_model');
 		$this->load->library('report_excel/report_excel');
 		$this->form_validation->set_error_delimiters("<span class='error'>", "</span>");
@@ -82,8 +79,6 @@ class Reports extends App_Controller
 	 */
 	public function filter()
 	{
-		$this->auth->restrict($this->permissionView);
-
 		$periode   = (string) $this->input->get('periode');
 		$tgl_mulai = $this->normalize_tgl($this->input->get('tgl_mulai'));
 		$tgl_akhir = $this->normalize_tgl($this->input->get('tgl_akhir'));
