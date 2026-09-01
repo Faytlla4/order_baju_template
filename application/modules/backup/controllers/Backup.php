@@ -322,6 +322,7 @@ class Backup extends App_Controller
 			'--no-owner',
 			'--no-privileges',
 			'--no-password',
+			'--inserts',
 			'-f', $tmpSql,
 		);
 
@@ -411,20 +412,23 @@ class Backup extends App_Controller
 			file_put_contents($tmpSql, $cleaned);
 		}
 
-		// --- Test restore ke database temporary ---
-		$testDb = 'backup_test_' . uniqid('', true);
-		$restoreOk = $this->test_restore($testDb, $tmpSql, $cfg, $pgDump, $pass);
+		// --- Test restore ke database temporary (skip if BACKUP_SKIP_TEST=1) ---
+		$skipTest = getenv('BACKUP_SKIP_TEST') === '1';
+		if (!$skipTest) {
+			$testDb = 'backup_test_' . uniqid('', true);
+			$restoreOk = $this->test_restore($testDb, $tmpSql, $cfg, $pgDump, $pass);
 
-		if (!$restoreOk) {
-			$this->cleanup_tmp($tmpDir);
-			$msg = 'Backup database lolos validasi pg_dump tetapi gagal saat test restore. File tidak disimpan.';
-			if ($this->input->is_ajax_request()) {
-				echo json_encode(array('success' => false, 'message' => $msg));
-				exit;
+			if (!$restoreOk) {
+				$this->cleanup_tmp($tmpDir);
+				$msg = 'Backup database lolos validasi pg_dump tetapi gagal saat test restore. File tidak disimpan.';
+				if ($this->input->is_ajax_request()) {
+					echo json_encode(array('success' => false, 'message' => $msg));
+					exit;
+				}
+				Template::set_message($msg, 'error');
+				redirect(SITE_AREA . '/backup/database');
+				return;
 			}
-			Template::set_message($msg, 'error');
-			redirect(SITE_AREA . '/backup/database');
-			return;
 		}
 
 		// --- Create ZIP ---
@@ -492,9 +496,10 @@ class Backup extends App_Controller
 		$this->cleanup_tmp($tmpDir);
 
 		if ($this->input->is_ajax_request()) {
+			$msg = $skipTest ? 'Backup database berhasil dibuat.' : 'Backup database berhasil dibuat. Test restore: lulus.';
 			echo json_encode(array(
 				'success' => true,
-				'message' => 'Backup database berhasil dibuat. Test restore: lulus.',
+				'message' => $msg,
 				'download_url' => site_url(SITE_AREA . '/backup/download/db/' . $this->db->insert_id()),
 			));
 			exit;
