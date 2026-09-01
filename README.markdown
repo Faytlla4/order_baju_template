@@ -1,73 +1,202 @@
-# Faster Development of CodeIgniter Apps
+# SI-Reklame (Sistem Informasi Reklame)
 
-<div style="float: right; margin: 0 20px 20px 0">
-	<a href='http://www.pledgie.com/campaigns/15326'><img alt='Click here to lend your support to: Bonfire - faster CodeIgniter development and make a donation at www.pledgie.com !' src='http://pledgie.com/campaigns/15326.png?skin_name=chrome' border='0' /></a>
-</div>
+Aplikasi pengelolaan konveksi berbasis web dengan CodeIgniter 3 + Bonfire HMVC.
 
-That's Bonfire's goal: provide a solid base off of which to build your new web applications.
-It's not a CMS.
-Instead, it's a springboard to build off of with many of the tools you wish you had on projects but never took the time to build.
+## Requirements
 
-All wrapped up in an elegant interface that will make you proud when you hand the project over to your client.
+- PHP >= 7.4 (tested with PHP 7.4.33)
+- PostgreSQL >= 12
+- Composer
+- Apache with mod_rewrite (or Laragon/XAMPP)
+- `pg_dump` utility (for database backup feature)
 
-## Current Features
+## Installation
 
-- CodeIgniter 3.x included.
-- Very flexible template/theme system, capable of Wordpress-like parent/child themes.
-- Uses Twitter Bootstrap 2.x for the Admin and Default themes
-- Fully modular and built around HMVC
-- 4 ‘contexts’ ready for your code: Content, Reports, Settings and Developer Tools
-- Database backup and maintenance interface
-- Role-based access control
-- Built-in users/auth system
-- Code Builder with CRUD generation
-- Simple email queue system
-- 2-step installer
-- Uses multiple-environment config files.
-- Migration-ready (using either raw SQL or Database Forge commands)
-- Log view/maintenance
+### 1. Clone Repository
 
-## Road Map
+```bash
+git clone <repository-url>
+cd apktemplate
+```
 
-Check out our online [road map](https://trello.com/board/bonfire-roadmap/4f21de254768c8463f09c85b) where you can comment and vote on items in the lists.
+### 2. Install Dependencies
 
-## Stay Up To Date
+```bash
+composer install
+```
 
-Follow Bonfire's progress and commits at Twitter by following [cibonfire](http://twitter.com/#!/cibonfire).
+### 3. Setup Environment
 
-## Lend A Hand
+```bash
+cp .env.example .env
+```
 
-If you're interested in helping out, fork the project and start coding! I'd love to have you on board. You can always shoot me an email at lonnieje@gmail.com and we can talk about how you'll best fit it and what the best place to start coding would be.
+Edit `.env` with your database credentials:
 
-Let's make this the best kick-start to any CodeIgniter project.
+```env
+DB_HOSTNAME=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=your_password
+DB_NAME=nama_db
+DB_DRIVER=postgre
+DB_DEBUG=false
 
-### Branches
+APP_BASE_URL=http://localhost/
+APP_ENCRYPTION_KEY=your-random-32-char-key
+```
 
-Due to the shift from CI2 to CI3, there are 2 branches containing recent releases and 3 development branches.
+Generate an encryption key:
 
-- The releases are in the 0.8.x (v0.8.x) and 0.7.x (v0.7.x) branches.
-- The development branches are develop (v0.9+), 0.8-dev (v0.8.x), and 0.7-dev (v0.7.x).
+```bash
+php -r "echo bin2hex(random_bytes(16));"
+```
 
-Bug fixes are currently being made to all three development branches, but 0.7-dev and 0.8-dev are now bugfix-only branches.
+### 4. Setup Database
 
-- v0.7.x uses CodeIgniter 2 by default. CI3 is supported, but not included.
-- v0.8.x uses CodeIgniter 3 by default. CI2 is supported, but not included.
-- v0.9+ uses CodeIgniter 3, and will not continue to support CI2.
+Create the PostgreSQL database:
 
-The develop branch will be the only branch receiving new features and/or major code changes.
+```sql
+CREATE DATABASE nama_db;
+```
 
-## Bug Reports
+### 5. Import Database Schema
 
-We strive to make Bonfire a solid base to work with. In doing so your Bug Reports are very vital to us. Before making a Bug Report please check the existing
-[Issue Tracker](https://github.com/ci-bonfire/Bonfire/issues) , if the bug you have found does not exist in the issue tracker already, please text a minute to read the [guide lines](http://cibonfire.com/docs/developer/issue_tracking_and_pull_requests) to making a Good Bug report.
+```bash
+psql -U postgres -d nama_db -f database/schema.sql
+```
 
+Or use Bonfire's built-in migration:
 
-## The Team
+```bash
+php public/index.php migrate
+```
 
-The Bonfire Team is made up of developers from around the world interested in making Bonfire a better kickstart for your [CodeIgniter](http://codeigniter.com) projects.
+### 6. Configure Web Server
 
-- [Lonnie Ezell](http://lonnieezell.com) - Lead Developer
-- [Mat Whitney](https://github.com/mwhitneysdsu)
-- [Alan Jenkins](https://github.com/sourcejedi)
+**Apache Virtual Host:**
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ci-bonfire/bonfire/trend.png)](https://bitdeli.com/free "Bitdeli Badge").
+```apache
+<VirtualHost *:80>
+    DocumentRoot "/path/to/apktemplate/public"
+    ServerName apktemplate.test
+</VirtualHost>
+```
+
+**Laragon:**
+
+Create a site with:
+- Domain: `apktemplate.test`
+- Document Root: `public`
+
+### 7. Run Application
+
+Open in browser: `http://apktemplate.test`
+
+Default login:
+- Username: `admin`
+- Password: `password`
+
+## Modules
+
+| Module | Description |
+|--------|-------------|
+| `order_baju` | Manajemen pesanan baju |
+| `transaksi` | Transaksi penjualan |
+| `master_jenis_baju` | Master data jenis baju |
+| `master_ukuran` | Master data ukuran |
+| `master_warna` | Master data warna |
+| `report_pdf` | Laporan dalam format PDF |
+| `report_excel` | Laporan dalam format Excel |
+| `backup` | Backup dokumen & database |
+| `sk_tidak_mampu` | Surat keterangan tidak mampu |
+
+## Backup Module
+
+### Backup Dokumen
+
+Creates a ZIP archive containing PDF and Excel reports based on filter criteria.
+
+### Backup Database
+
+Creates a ZIP archive containing a SQL dump of the PostgreSQL database.
+
+**Requirements:**
+- `pg_dump` must be available in system PATH or in a common installation directory
+- The module auto-detects `pg_dump` from:
+  - System PATH (`where pg_dump` on Windows, `which pg_dump` on Linux)
+  - Common PostgreSQL installation paths
+
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DB_HOSTNAME` | Database host | `localhost` |
+| `DB_PORT` | Database port | `5432` |
+| `DB_USERNAME` | Database username | `postgres` |
+| `DB_PASSWORD` | Database password | (empty) |
+| `DB_NAME` | Database name | `nama_db` |
+| `DB_DRIVER` | Database driver | `postgre` |
+| `DB_DEBUG` | Show DB errors | `false` |
+| `APP_BASE_URL` | Application base URL | `http://localhost/` |
+| `APP_ENCRYPTION_KEY` | Encryption key (32 chars) | (must be set) |
+
+## Project Structure
+
+```
+apktemplate/
+├── application/           # CI3 application directory
+│   ├── config/           # Configuration files
+│   ├── core/             # Core controllers (Base, Authenticated)
+│   ├── modules/          # HMVC modules
+│   │   ├── backup/       # Backup module (tracked in git)
+│   │   ├── order_baju/   # Order management
+│   │   ├── transaksi/    # Transactions
+│   │   └── ...
+│   └── uploads/          # Uploaded files (not in git)
+├── bonfire/              # Bonfire framework (CI3 HMVC)
+├── public/               # Web root (DocumentRoot)
+│   ├── assets/           # CSS, JS, images
+│   ├── themes/           # AdminLTE theme
+│   └── index.php         # Entry point
+├── vendor/               # Composer dependencies (not in git)
+├── .env.example          # Environment template
+├── .env                  # Your local environment (not in git)
+└── composer.json
+```
+
+## Troubleshooting
+
+### pg_dump not found
+
+Ensure PostgreSQL is installed and `pg_dump` is in your system PATH.
+
+**Windows:**
+```bash
+# Check if pg_dump is in PATH
+where pg_dump
+```
+
+**Linux:**
+```bash
+# Check if pg_dump is installed
+which pg_dump
+sudo apt install postgresql-client
+```
+
+### Database connection failed
+
+1. Ensure PostgreSQL is running
+2. Check `.env` credentials match your PostgreSQL setup
+3. Verify the database `nama_db` exists
+
+### Session errors
+
+Ensure the temp directory is writable:
+```bash
+chmod -R 777 application/cache
+```
+
+## License
+
+MIT License

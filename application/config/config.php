@@ -25,7 +25,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 $config['base_url'] = isset($_SERVER['HTTP_HOST'])
     ? 'http://' . $_SERVER['HTTP_HOST'] . '/'
-    : 'http://fiksapk.test/';
+    : (getenv('APP_BASE_URL') ?: 'http://localhost/');
 
 /*
 |--------------------------------------------------------------------------
@@ -318,7 +318,7 @@ $config['cache_query_string'] = false;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
  */
-$config['encryption_key'] = "58f62e7a5c072527eb00fad7ccb6f547";
+$config['encryption_key'] = getenv('APP_ENCRYPTION_KEY') ?: '58f62e7a5c072527eb00fad7ccb6f547';
 
 /*
 |--------------------------------------------------------------------------

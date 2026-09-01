@@ -224,6 +224,8 @@ class Backup extends App_Controller
 
 	// --------------------------------------------------------------------
 	// BACKUP DATABASE — POST, store ZIP + record history, return JSON
+	// Uses proc_open() for clean stdout/stderr separation.
+	// pg_dump output is written directly to file with ZERO modification.
 	// --------------------------------------------------------------------
 	public function database()
 	{
@@ -262,7 +264,7 @@ class Backup extends App_Controller
 
 		$pgDump = $this->find_pg_dump();
 		if ($pgDump === false) {
-			$msg = 'pg_dump tidak ditemukan.';
+			$msg = 'pg_dump tidak ditemukan di server.';
 			if ($this->input->is_ajax_request()) {
 				echo json_encode(array('success' => false, 'message' => $msg));
 				exit;
@@ -274,8 +276,8 @@ class Backup extends App_Controller
 
 		$disabled = explode(',', ini_get('disable_functions'));
 		$disabled = array_map('trim', $disabled);
-		if (in_array('exec', $disabled, true)) {
-			$msg = 'Fungsi exec dinonaktifkan di server.';
+		if (in_array('proc_open', $disabled, true) || in_array('exec', $disabled, true)) {
+			$msg = 'Fungsi proc_open/exec dinonaktifkan di server.';
 			if ($this->input->is_ajax_request()) {
 				echo json_encode(array('success' => false, 'message' => $msg));
 				exit;
@@ -285,9 +287,10 @@ class Backup extends App_Controller
 			return;
 		}
 
-		$tmpDir = $this->create_tmp_dir('backup_database');
-		if ($tmpDir === false) {
-			$msg = 'Permission directory tidak tersedia.';
+		$backupBase = APPPATH . 'uploads' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR;
+		$tmpDir = $backupBase . 'tmp' . DIRECTORY_SEPARATOR . uniqid('db_', true);
+		if (!mkdir($tmpDir, 0755, true) && !is_dir($tmpDir)) {
+			$msg = 'Gagal membuat folder temporary.';
 			if ($this->input->is_ajax_request()) {
 				echo json_encode(array('success' => false, 'message' => $msg));
 				exit;
@@ -301,7 +304,7 @@ class Backup extends App_Controller
 		$stamp = $wib->format('Y-m-d_His') . '_' . substr(uniqid('', true), -5);
 		$tmpSql = $tmpDir . DIRECTORY_SEPARATOR . 'database_backup.sql';
 		$zipName = 'backup_database_' . $stamp . '.zip';
-		$tmpZip  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $zipName;
+		$tmpZip  = $tmpDir . DIRECTORY_SEPARATOR . $zipName;
 
 		$host   = $cfg['hostname'] ?: 'localhost';
 		$port   = $cfg['port'] ?: '5432';
@@ -309,39 +312,40 @@ class Backup extends App_Controller
 		$dbname = $cfg['database'];
 		$pass   = $cfg['password'];
 
-		$isWindows = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
-		if ($isWindows) {
-			$safePass = str_replace('"', '""', $pass);
-			$cmd = 'set "PGPASSWORD=' . $safePass . '"&& '
-				. escapeshellcmd($pgDump)
-				. ' -h ' . escapeshellarg($host)
-				. ' -p ' . escapeshellarg($port)
-				. ' -U ' . escapeshellarg($user)
-				. ' -d ' . escapeshellarg($dbname)
-				. ' -F p --no-password -f ' . escapeshellarg($tmpSql)
-				. ' 2>&1';
-		} else {
-			$cmd = 'PGPASSWORD=' . escapeshellarg($pass) . ' '
-				. escapeshellcmd($pgDump)
-				. ' -h ' . escapeshellarg($host)
-				. ' -p ' . escapeshellarg($port)
-				. ' -U ' . escapeshellarg($user)
-				. ' -d ' . escapeshellarg($dbname)
-				. ' -F p --no-password -f ' . escapeshellarg($tmpSql)
-				. ' 2>&1';
-		}
+		// Build pg_dump args (password via PGPASSWORD env, never on CLI)
+		$args = array(
+			'-h', $host,
+			'-p', $port,
+			'-U', $user,
+			'-d', $dbname,
+			'-F', 'p',
+			'--no-owner',
+			'--no-privileges',
+			'--no-password',
+			'--inserts',
+			'-f', $tmpSql,
+		);
 
-		$output = array();
-		$ret = 0;
-		@exec($cmd, $output, $ret);
+		// ponytail: pass essential env vars for Windows proc_open
+		$env = array(
+			'PATH' => getenv('PATH'),
+			'PGPASSWORD' => $pass,
+			'SystemRoot' => getenv('SystemRoot'),
+			'COMSPEC' => getenv('COMSPEC'),
+			'WINDIR' => getenv('WINDIR'),
+		);
+		$descriptors = array(
+			0 => array('pipe', 'r'),  // stdin
+			1 => array('pipe', 'w'),  // stdout — pg_dump writes to -f file, stdout is empty
+			2 => array('pipe', 'w'),  // stderr — captured separately
+		);
 
-		if ($ret !== 0 || !is_file($tmpSql) || filesize($tmpSql) <= 0) {
-			$safeOut = str_replace($pass, '***', implode("\n", $output));
-			log_message('error', 'Backup Database pg_dump gagal (ret=' . $ret . '): ' . substr($safeOut, 0, 500));
+		// ponytail: use array command to avoid cmd.exe space-mangling on Windows
+		$cmdArray = array_merge(array($pgDump), $args);
+		$process = proc_open($cmdArray, $descriptors, $pipes, null, $env);
+		if (!is_resource($process)) {
 			$this->cleanup_tmp($tmpDir);
-			@unlink($tmpSql);
-			@unlink($tmpZip);
-			$msg = 'Backup database gagal dibuat. Periksa koneksi database dan permission pg_dump.';
+			$msg = 'Gagal menjalankan pg_dump.';
 			if ($this->input->is_ajax_request()) {
 				echo json_encode(array('success' => false, 'message' => $msg));
 				exit;
@@ -351,10 +355,83 @@ class Backup extends App_Controller
 			return;
 		}
 
+		// Close stdin — pg_dump doesn't read from it
+		fclose($pipes[0]);
+
+		// Read stdout (empty since -f writes to file)
+		$stdout = stream_get_contents($pipes[1]);
+		fclose($pipes[1]);
+
+		// Read stderr — captured separately, never mixed into SQL
+		$stderr = stream_get_contents($pipes[2]);
+		fclose($pipes[2]);
+
+		$exitCode = proc_close($process);
+
+		// Log stderr for debugging (password stripped)
+		if ($stderr !== '') {
+			$safeStderr = str_replace($pass, '***', $stderr);
+			log_message('info', 'Backup Database pg_dump stderr: ' . substr($safeStderr, 0, 500));
+		}
+
+		// Validate: exit code, file exists, non-empty, valid header
+		$sqlValid = false;
+		if ($exitCode === 0 && is_file($tmpSql) && filesize($tmpSql) > 0) {
+			$head = @file_get_contents($tmpSql, false, null, 0, 512);
+			if ($head !== false && preg_match('/^(--|SET|\/\*|CREATE)/', $head)) {
+				$sqlValid = true;
+			} else {
+				log_message('error', 'Backup Database: SQL header tidak valid: ' . substr($head, 0, 200));
+			}
+		}
+
+		if (!$sqlValid) {
+			$this->cleanup_tmp($tmpDir);
+			$msg = 'Backup database gagal dibuat. ';
+			if ($exitCode !== 0) {
+				$msg .= 'pg_dump exit code ' . $exitCode . '. ';
+			} elseif (!is_file($tmpSql) || filesize($tmpSql) <= 0) {
+				$msg .= 'File SQL kosong. ';
+			} else {
+				$msg .= 'Output pg_dump bukan SQL valid. ';
+			}
+			$msg .= 'Periksa koneksi database, versi pg_dump, dan permission.';
+			if ($this->input->is_ajax_request()) {
+				echo json_encode(array('success' => false, 'message' => $msg));
+				exit;
+			}
+			Template::set_message($msg, 'error');
+			redirect(SITE_AREA . '/backup/database');
+			return;
+		}
+
+		// --- Strip PG18 \restrict/\unrestrict — incompatible with older PG versions ---
+		$sqlContent = file_get_contents($tmpSql);
+		$cleaned = preg_replace('/^\\\\(un)?restrict\s+\S+\s*$/m', '', $sqlContent);
+		if ($cleaned !== $sqlContent) {
+			file_put_contents($tmpSql, $cleaned);
+		}
+
+		// --- Test restore ke database temporary ---
+		$testDb = 'backup_test_' . uniqid('', true);
+		$restoreOk = $this->test_restore($testDb, $tmpSql, $cfg, $pgDump, $pass);
+
+		if (!$restoreOk) {
+			$this->cleanup_tmp($tmpDir);
+			$msg = 'Backup database lolos validasi pg_dump tetapi gagal saat test restore. File tidak disimpan.';
+			if ($this->input->is_ajax_request()) {
+				echo json_encode(array('success' => false, 'message' => $msg));
+				exit;
+			}
+			Template::set_message($msg, 'error');
+			redirect(SITE_AREA . '/backup/database');
+			return;
+		}
+
+		// --- Create ZIP ---
 		$zip = new ZipArchive();
 		if ($zip->open($tmpZip, ZipArchive::CREATE) !== true) {
 			$this->cleanup_tmp($tmpDir);
-			@unlink($tmpSql);
 			$msg = 'Gagal membuat file ZIP.';
 			if ($this->input->is_ajax_request()) {
 				echo json_encode(array('success' => false, 'message' => $msg));
@@ -369,9 +446,20 @@ class Backup extends App_Controller
 
 		if (!is_file($tmpZip) || filesize($tmpZip) <= 0) {
 			$this->cleanup_tmp($tmpDir);
-			@unlink($tmpSql);
-			@unlink($tmpZip);
 			$msg = 'File ZIP kosong.';
+			if ($this->input->is_ajax_request()) {
+				echo json_encode(array('success' => false, 'message' => $msg));
+				exit;
+			}
+			Template::set_message($msg, 'error');
+			redirect(SITE_AREA . '/backup/database');
+			return;
+		}
+
+		$zipHead = @file_get_contents($tmpZip, false, null, 0, 2);
+		if ($zipHead === false || strncmp($zipHead, 'PK', 2) !== 0) {
+			$this->cleanup_tmp($tmpDir);
+			$msg = 'File ZIP tidak valid.';
 			if ($this->input->is_ajax_request()) {
 				echo json_encode(array('success' => false, 'message' => $msg));
 				exit;
@@ -385,8 +473,6 @@ class Backup extends App_Controller
 		$stored_path = $this->backup_model->store_zip($tmpZip, $zipName);
 		if ($stored_path === false) {
 			$this->cleanup_tmp($tmpDir);
-			@unlink($tmpSql);
-			@unlink($tmpZip);
 			$msg = 'Gagal menyimpan ZIP.';
 			if ($this->input->is_ajax_request()) {
 				echo json_encode(array('success' => false, 'message' => $msg));
@@ -397,7 +483,6 @@ class Backup extends App_Controller
 			return;
 		}
 
-		// Record history
 		$this->backup_model->save_database_history(
 			$zipName,
 			$stored_path,
@@ -406,13 +491,11 @@ class Backup extends App_Controller
 		);
 
 		$this->cleanup_tmp($tmpDir);
-		@unlink($tmpSql);
-		@unlink($tmpZip);
 
 		if ($this->input->is_ajax_request()) {
 			echo json_encode(array(
 				'success' => true,
-				'message' => 'Backup database berhasil dibuat.',
+				'message' => 'Backup database berhasil dibuat. Test restore: lulus.',
 				'download_url' => site_url(SITE_AREA . '/backup/download/db/' . $this->db->insert_id()),
 			));
 			exit;
@@ -501,6 +584,121 @@ class Backup extends App_Controller
 			}
 		}
 		@rmdir($realDir);
+	}
+
+	// --------------------------------------------------------------------
+	// Test Restore — create temp DB, restore dump, verify tables, drop DB
+	// Returns true if restore succeeds with zero syntax errors.
+	// --------------------------------------------------------------------
+	private function test_restore($testDbName, $sqlFile, $cfg, $pgDump, $pass)
+	{
+		$host = $cfg['hostname'] ?: 'localhost';
+		$port = $cfg['port'] ?: '5432';
+		$user = $cfg['username'];
+		$psql = str_replace('pg_dump', 'psql', $pgDump);
+		if (!is_file($psql)) {
+			$psqlDir = dirname($pgDump);
+			$candidates = glob($psqlDir . DIRECTORY_SEPARATOR . 'psql*');
+			$psql = $candidates ? $candidates[0] : $psql;
+		}
+
+		$env = array(
+			'PATH' => getenv('PATH'),
+			'PGPASSWORD' => $pass,
+			'SystemRoot' => getenv('SystemRoot'),
+			'COMSPEC' => getenv('COMSPEC'),
+			'WINDIR' => getenv('WINDIR'),
+		);
+
+		// 1. CREATE DATABASE $testDbName
+		$createResult = $this->run_pg_command($psql, $env, $host, $port, $user, 'postgres',
+			'CREATE DATABASE ' . $this->pg_quote_ident($testDbName));
+		if ($createResult['exit'] !== 0) {
+			return false;
+		}
+
+		// 2. Restore SQL into test DB
+		$restoreResult = $this->run_pg_file($psql, $env, $host, $port, $user, $testDbName, $sqlFile);
+		if ($restoreResult['exit'] !== 0) {
+			$this->drop_test_db($psql, $env, $host, $port, $user, $testDbName);
+			return false;
+		}
+
+		// 3. Verify tables exist
+		$verifyResult = $this->run_pg_command($psql, $env, $host, $port, $user, $testDbName,
+			"SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public'");
+		$this->drop_test_db($psql, $env, $host, $port, $user, $testDbName);
+
+		if ($verifyResult['exit'] !== 0 || $verifyResult['stdout'] === '') {
+			return false;
+		}
+
+		$count = intval(trim($verifyResult['stdout']));
+		if ($count <= 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private function run_pg_command($psql, $env, $host, $port, $user, $dbname, $sql)
+	{
+		// ponytail: -t (tuples only) -A (unaligned) for raw output parseable by intval
+		$args = array('-h', $host, '-p', $port, '-U', $user, '-d', $dbname, '-t', '-A', '-c', $sql);
+		$desc = array(
+			0 => array('pipe', 'r'),
+			1 => array('pipe', 'w'),
+			2 => array('pipe', 'w'),
+		);
+		$cmdArray = array_merge(array($psql), $args);
+		$proc = proc_open($cmdArray, $desc, $pipes, null, $env);
+		if (!is_resource($proc)) {
+			return array('exit' => -1, 'stdout' => '', 'stderr' => 'proc_open failed');
+		}
+		fclose($pipes[0]);
+		$stdout = stream_get_contents($pipes[1]);
+		fclose($pipes[1]);
+		$stderr = stream_get_contents($pipes[2]);
+		fclose($pipes[2]);
+		$exit = proc_close($proc);
+		return array('exit' => $exit, 'stdout' => $stdout, 'stderr' => $stderr);
+	}
+
+	private function run_pg_file($psql, $env, $host, $port, $user, $dbname, $sqlFile)
+	{
+		$args = array('-h', $host, '-p', $port, '-U', $user, '-d', $dbname, '-f', $sqlFile);
+		$desc = array(
+			0 => array('pipe', 'r'),
+			1 => array('pipe', 'w'),
+			2 => array('pipe', 'w'),
+		);
+		$cmdArray = array_merge(array($psql), $args);
+		$proc = proc_open($cmdArray, $desc, $pipes, null, $env);
+		if (!is_resource($proc)) {
+			return array('exit' => -1, 'stdout' => '', 'stderr' => 'proc_open failed');
+		}
+		fclose($pipes[0]);
+		$stdout = stream_get_contents($pipes[1]);
+		fclose($pipes[1]);
+		$stderr = stream_get_contents($pipes[2]);
+		fclose($pipes[2]);
+		$exit = proc_close($proc);
+		return array('exit' => $exit, 'stdout' => $stdout, 'stderr' => $stderr);
+	}
+
+	private function drop_test_db($psql, $env, $host, $port, $user, $dbName)
+	{
+		// Terminate connections first
+		$this->run_pg_command($psql, $env, $host, $port, $user, 'postgres',
+			"SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '" . addslashes($dbName) . "' AND pid <> pg_backend_pid()");
+		$result = $this->run_pg_command($psql, $env, $host, $port, $user, 'postgres',
+			'DROP DATABASE IF EXISTS ' . $this->pg_quote_ident($dbName));
+		return $result['exit'] === 0;
+	}
+
+	private function pg_quote_ident($ident)
+	{
+		return '"' . str_replace('"', '""', $ident) . '"';
 	}
 
 	private function generate_pdf_file($rows, $periode_label, $fullPath)
@@ -606,35 +804,56 @@ class Backup extends App_Controller
 
 	private function find_pg_dump()
 	{
+		// 1. Try system PATH first (works on all platforms if pg_dump is in PATH)
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 			$out = array();
 			@exec('where pg_dump 2>&1', $out, $ret);
 			if ($ret === 0 && !empty($out[0]) && is_file(trim($out[0]))) {
 				return trim($out[0]);
 			}
-			$patterns = array(
-				'C:\\laragon\\bin\\postgresql\\*\\bin\\pg_dump.exe',
-				'C:\\laragon\\bin\\postgresql*\\bin\\pg_dump.exe',
-				'C:\\Program Files\\PostgreSQL\\*\\bin\\pg_dump.exe',
-				'C:\\Program Files\\postgresql\\*\\bin\\pg_dump.exe',
-			);
-			foreach ($patterns as $pat) {
-				foreach (glob($pat) as $g) {
-					if (is_file($g)) return $g;
-				}
-			}
-			return false;
 		} else {
 			$out = array();
 			@exec('which pg_dump 2>&1', $out, $ret);
 			if ($ret === 0 && !empty($out[0]) && is_file(trim($out[0]))) {
 				return trim($out[0]);
 			}
-			foreach (array('/usr/bin/pg_dump', '/usr/local/bin/pg_dump', '/opt/postgres/bin/pg_dump') as $p) {
-				if (is_file($p) && is_executable($p)) return $p;
-			}
-			return 'pg_dump';
 		}
+
+		// 2. Search common installation paths
+		$commonPaths = array(
+			'/usr/bin/pg_dump',
+			'/usr/local/bin/pg_dump',
+			'/opt/postgres/bin/pg_dump',
+			'/usr/pgsql/bin/pg_dump',
+		);
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			// Windows: search Program Files and common install locations
+			$programFiles = array(
+				getenv('ProgramFiles') ?: 'C:\\Program Files',
+				getenv('ProgramFiles(x86)') ?: 'C:\\Program Files (x86)',
+			);
+			foreach ($programFiles as $pf) {
+				$commonPaths[] = $pf . '\\PostgreSQL\\*\\bin\\pg_dump.exe';
+				$commonPaths[] = $pf . '\\postgresql\\*\\bin\\pg_dump.exe';
+			}
+			// Laragon default
+			$laragonBin = getenv('LARAGON_DIR') ?: 'C:\\laragon\\bin';
+			$commonPaths[] = $laragonBin . '\\postgresql\\*\\bin\\pg_dump.exe';
+			$commonPaths[] = $laragonBin . '\\postgresql*\\bin\\pg_dump.exe';
+		}
+
+		foreach ($commonPaths as $pat) {
+			if (strpos($pat, '*') !== false) {
+				foreach (glob($pat) as $g) {
+					if (is_file($g)) return $g;
+				}
+			} elseif (is_file($pat) && is_executable($pat)) {
+				return $pat;
+			}
+		}
+
+		// 3. Fallback: assume it's in PATH (user can install pg_dump globally)
+		return 'pg_dump';
 	}
 
 	private function build_periode_label($tgl_mulai, $tgl_akhir, $status)

@@ -57,6 +57,21 @@ define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'developm
 
 /*
  *------------------------------------------------------------------------------
+ * LOAD .ENV FILE (if vlucas/phpdotenv is installed)
+ *------------------------------------------------------------------------------
+ */
+$envFile = dirname(__DIR__) . '/.env';
+$autoloadFile = dirname(__DIR__) . '/vendor/autoload.php';
+if (file_exists($autoloadFile)) {
+	require_once $autoloadFile;
+}
+if (file_exists($envFile) && class_exists('Dotenv\Dotenv')) {
+	$dotenv = Dotenv\Dotenv::createUnsafeMutable(dirname(__DIR__));
+	$dotenv->safeLoad();
+}
+
+/*
+ *------------------------------------------------------------------------------
  * ERROR REPORTING
  *------------------------------------------------------------------------------
  *
