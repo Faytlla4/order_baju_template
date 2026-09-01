@@ -77,8 +77,18 @@ $(function() {
         pageLength: 10, order: [[0, 'desc']], destroy: true
     });
 
-    if ($('#dp_mulai').length && $.fn.datetimepicker) { $('#dp_mulai').datetimepicker({ format: 'DD-MM-YYYY' }); }
-    if ($('#dp_akhir').length && $.fn.datetimepicker) { $('#dp_akhir').datetimepicker({ format: 'DD-MM-YYYY' }); }
+    if ($('#dp_mulai').length && $.fn.datetimepicker) {
+        $('#dp_mulai').datetimepicker({ format: 'DD-MM-YYYY', useCurrent: false });
+        $('#dp_mulai').on('change.datetimepicker', function(e) {
+            $('#filter-tgl_mulai').val(e.date ? e.date.format('DD-MM-YYYY') : '');
+        });
+    }
+    if ($('#dp_akhir').length && $.fn.datetimepicker) {
+        $('#dp_akhir').datetimepicker({ format: 'DD-MM-YYYY', useCurrent: false });
+        $('#dp_akhir').on('change.datetimepicker', function(e) {
+            $('#filter-tgl_akhir').val(e.date ? e.date.format('DD-MM-YYYY') : '');
+        });
+    }
 
     // AJAX Filter
     $('#btn-filter').on('click', function(e) {
