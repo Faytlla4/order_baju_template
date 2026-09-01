@@ -1,0 +1,41 @@
+Saya perlu bantuan setup project CI3 + Bonfire di Windows (Laragon) dengan PostgreSQL. Tolong bantu saya step by step.
+
+Project ini adalah aplikasi admin panel bernama "SI-Reklame" dengan stack:
+- CodeIgniter 3 + Bonfire 0.9.0-dev HMVC
+- PostgreSQL 18.4
+- PHP 7.4
+- AdminLTE theme
+- Virtual host: apktemplate.test
+
+Yang perlu saya lakukan:
+
+1. Clone dari https://github.com/Faytlla4/order_baju_template.git, branch main
+
+2. Jalankan composer install
+
+3. Buat database PostgreSQL bernama nama_db
+
+4. Import backup database dari server asli (file .sql) ke database baru. JANGAN pakai database/schema.sql karena isinya cuma struktur kosong.
+
+5. Buat file .env di root project dengan isi:
+   - APP_ENV=development
+   - APP_DEBUG=true
+   - DB_HOSTNAME=localhost
+   - DB_PORT=5432
+   - DB_USERNAME=postgres
+   - DB_PASSWORD=postgres
+   - DB_DATABASE=nama_db
+   - BACKUP_SKIP_TEST=1
+
+6. Setup virtual host di Laragon untuk domain apktemplate.test pointing ke folder public/
+
+7. Buka http://apktemplate.test/admin lalu login dengan admin / password
+
+8. Cek semua menu di sidebar:
+   - Content (Order Baju dengan CRUD + upload dokumen)
+   - Master (Jenis Baju, Ukuran, Warna - semua CRUD)
+   - Transaksi (Daftar Transaksi CRUD + dokumen)
+   - Laporan (PDF + Excel)
+   - Backup (Backup Dokumen ZIP + Backup Database)
+
+Kalau ada error atau fitur tidak muncul, tolong diagnosa dan bantu saya perbaiki. Yang paling penting: semua module harus bisa diakses dan tombol Create/Edit harus muncul di halaman master dan transaksi.
