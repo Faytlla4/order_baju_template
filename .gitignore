@@ -50,6 +50,22 @@ application/modules/*
 # Except the following modules:
 !application/modules/backup/
 !application/modules/backup/**
+!application/modules/master_jenis_baju/
+!application/modules/master_jenis_baju/**
+!application/modules/master_ukuran/
+!application/modules/master_ukuran/**
+!application/modules/master_warna/
+!application/modules/master_warna/**
+!application/modules/order_baju/
+!application/modules/order_baju/**
+!application/modules/transaksi/
+!application/modules/transaksi/**
+!application/modules/report_excel/
+!application/modules/report_excel/**
+!application/modules/report_pdf/
+!application/modules/report_pdf/**
+!application/modules/sk_tidak_mampu/
+!application/modules/sk_tidak_mampu/**
 
 # Remove PHPStorm Project folders
 bonfire/.ideas
