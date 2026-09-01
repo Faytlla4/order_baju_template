@@ -85,6 +85,7 @@ Route::prefix(SITE_AREA, function(){
     Route::context('transaksi', array('home' => SITE_AREA .'/transaksi/index'));
     Route::context('reports', array('home' => SITE_AREA .'/reports/index'));
     Route::any('backup', 'backup/backup/index');
+    Route::any('backup/filter', 'backup/backup/filter');
     Route::any('backup/document', 'backup/backup/document');
     Route::any('backup/database', 'backup/backup/database_page');
     Route::any('backup/database/run', 'backup/backup/database');
