@@ -1,55 +1,34 @@
-Saya butuh bantuan diagnosa dan perbaikan project CI3 + Bonfire di Windows (Laragon) dengan PostgreSQL.
+Saya punya website CI3 + Bonfire (SI-Reklame) di Windows Laragon + PostgreSQL. Website sudah bisa dibuka, database sudah terhubung, tapi:
 
-## Info Project
-- Repo: https://github.com/Faytlla4/order_baju_template.git (branch main)
-- Stack: CodeIgniter 3 + Bonfire 0.9.0-dev HMVC + PostgreSQL 18.4 + PHP 7.4 + AdminLTE
-- Domain: apktemplate.test
-- Database sudah di-import dari backup server asli
+1. Beberapa halaman tampilannya BEDA dari seharusnya (kayak tampilan lama)
+2. Beberapa halaman ada error
 
-## Yang Sudah Benar
-- Website bisa dibuka di http://apktemplate.test/admin
-- Login admin / password bisa
-- Beberapa fitur sudah sesuai setelah git pull
+Tolong analisis dan perbaiki semua halaman web ini:
 
-## Masalah yang Perlu Diperbaiki
+- Login ke http://apktemplate.test/admin (admin / password)
+- Buka SETIAP halaman di sidebar satu per satu
+- Untuk setiap halaman, cek:
+  - Apakah ada error? Screenshot / copy error-nya
+  - Apakah tampilannya benar? Bandingkan dengan source code di folder application/modules/
+  - Pastikan semua tabel data muncul
+  - Pastikan tombol Create, Edit, Delete muncul di halaman master
+  - Pastikan form input bisa diakses
+  - Pastikan fitur cetak PDF dan Excel bisa diakses
+  - Pastikan fitur upload dokumen di transaksi bisa diakses
 
-### 1. Tampilan tidak berubah
-Beberapa halaman masih menampilkan tampilan LAMA (sebelum pull). Kemungkinan:
-- File view yang di-cache oleh browser
-- File CSS/JS yang di-cache
-- Asset tidak ke-deploy dengan benar
+List halaman yang wajib dicek:
+1. /admin/content/order_baju (Content - Order Baju)
+2. /admin/master/master_jenis_baju (Master - Jenis Baju)
+3. /admin/master/master_ukuran (Master - Ukuran)
+4. /admin/master/master_warna (Master - Warna)
+5. /admin/transaksi/transaksi (Transaksi)
+6. /admin/reports/report_pdf (Laporan PDF)
+7. /admin/reports/report_excel (Laporan Excel)
+8. /admin/backup (Backup)
+9. /admin/backup/database (Backup Database)
 
-### 2. Fitur yang error
-Ada beberapa halaman yang muncul error. Tolong cek error log di:
-- `application/logs/` (lihat file log terbaru)
-- Browser console (F12 > Console)
-- Apache error log di Laragon
+Kalau tampilan beda, cek file view yang dipanggil controller-nya di folder application/modules/{nama_module}/views/ — pastikan file view-nya sudah versi terbaru (sudah di-pull dari git).
 
-### 3. Module yang perlu dicek
-Pastikan semua module ini bisa diakses dan berfungsi dari sidebar:
-- **Content** → Order Baju (CRUD + upload dokumen) di admin/content
-- **Master** → Jenis Baju, Ukuran, Warna (CRUD dengan tombol Create/Edit) di admin/master
-- **Transaksi** → Daftar Transaksi (CRUD + dokumen) di admin/transaksi
-- **Laporan** → Cetak Laporan PDF + Excel di admin/reports
-- **Backup** → Backup Dokumen + Backup Database di admin/backup
+Kalau ada error, cek error log di application/logs/ dan fix error-nya.
 
-## Yang Perlu Dilakukan
-
-1. **Clear browser cache** teman saya (Ctrl+Shift+Delete > Clear all)
-2. **Restart Apache & PostgreSQL** di Laragon
-3. Cek error log di `application/logs/` — kasih tau saya isi errornya
-4. Cek setiap module satu per satu di sidebar, kasih tau mana yang:
-   - ✅ Sudah benar
-   - ❌ Masih tampilan lama
-   - ❌ Error (screenshot atau copy error message)
-5. Kalau ada error "permission denied" atau "access restricted", berarti permissions di database belum lengkap. Jalankan migration:
-   ```
-   php index.php tools migrate
-   ```
-6. Kalau tampilan tidak berubah, coba hard refresh: **Ctrl+Shift+R** atau buka di incognito window
-7. Pastikan semua file sudah ter-update dengan cek isi file yang dicurigai, contoh:
-   ```
-   type application\modules\master_jenis_baju\views\master\_sub_nav.php
-   ```
-
-Kasih tau saya hasil pemeriksaan di atas supaya saya bisa bantu perbaiki tepat sasaran.
+Kasih tau saya hasilnya: mana yang sudah benar, mana yang masih error, mana yang tampilannya beda beserta cara fix-nya.
