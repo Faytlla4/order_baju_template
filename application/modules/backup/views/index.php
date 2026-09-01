@@ -67,8 +67,7 @@ $(function() {
     // Init with server data
     initTable(" . json_encode($js_data) . ");
 
-    if ($('#tbl-backup-history').length) {
-        $('#tbl-backup-history').DataTable({
+    $('#tbl-backup-history').DataTable({
         language: {
             search: 'Cari:', lengthMenu: 'Tampilkan _MENU_ data',
             info: 'Menampilkan _START_ - _END_ dari _TOTAL_ data',
