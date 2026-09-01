@@ -322,7 +322,6 @@ class Backup extends App_Controller
 			'--no-owner',
 			'--no-privileges',
 			'--no-password',
-			'--inserts',
 			'-f', $tmpSql,
 		);
 
@@ -666,7 +665,8 @@ class Backup extends App_Controller
 
 	private function run_pg_file($psql, $env, $host, $port, $user, $dbname, $sqlFile)
 	{
-		$args = array('-h', $host, '-p', $port, '-U', $user, '-d', $dbname, '-f', $sqlFile);
+		$args = array('-h', $host, '-p', $port, '-U', $user, '-d', $dbname,
+			'--single-transaction', '--set=ON_ERROR_STOP=1', '-f', $sqlFile);
 		$desc = array(
 			0 => array('pipe', 'r'),
 			1 => array('pipe', 'w'),
