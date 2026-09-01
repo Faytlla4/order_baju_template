@@ -8,8 +8,10 @@ $('#transaksi_order_table').bfDataTable({
     params: filterStatusTransaksi,
     columns: [
         { data: 'kode_order', render: function(data, type, row) {
-            var link = '<a href="' + site_url + 'admin/transaksi/transaksi/edit/' + row.id + '">' + data + '</a>';
-            return link + ' <button type="button" class="btn btn-xs btn-info btn-copy-kode" data-kode="' + data + '"><i class="far fa-copy"></i> Copy</button>' +
+            var editUrl = site_url + 'admin/transaksi/transaksi/edit/' + row.id;
+            var link = '<a href="' + editUrl + '">' + data + '</a>';
+            return link + ' <button type="button" class="btn btn-xs btn-warning btn-edit-transaksi" data-id="' + (parseInt(row.id, 10) || 0) + '" title="Edit Transaksi"><i class="fas fa-edit"></i> Edit</button>' +
+                ' <button type="button" class="btn btn-xs btn-info btn-copy-kode" data-kode="' + data + '"><i class="far fa-copy"></i> Copy</button>' +
                 ' <button type="button" class="btn btn-xs btn-primary btn-detail-transaksi" data-id="' + (parseInt(row.id, 10) || 0) + '" title="Lihat Detail"><i class="fas fa-eye"></i> Detail</button>';
         } },
         { data: 'nama_customer' },
@@ -46,6 +48,13 @@ $('#status_transaksi_filter').on('change', function() {
     var table = $('#transaksi_order_table').DataTable();
     if (table) {
         table.ajax.reload();
+    }
+});
+
+$(document).on('click', '.btn-edit-transaksi', function() {
+    var id = parseInt($(this).attr('data-id') || '0', 10) || 0;
+    if (id) {
+        window.location.href = site_url + 'admin/transaksi/transaksi/edit/' + id;
     }
 });
 

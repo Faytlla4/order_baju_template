@@ -8,6 +8,15 @@ $('#master_ukuran_table').bfDataTable({
         { data: 'kode_order' },
         { data: 'nama_customer' },
         { data: 'nama_ukuran' },
+        {
+            data: 'id',
+            orderable: false,
+            render: function(data, type, row) {
+                var editUrl = site_url + 'admin/master/master_ukuran/edit/' + data;
+                var editBtn = '<a href="' + editUrl + '" class="btn btn-warning btn-xs" title="Edit"><i class="fas fa-edit"></i> Edit</a> ';
+                return editBtn;
+            }
+        }
     ],
 });
 
