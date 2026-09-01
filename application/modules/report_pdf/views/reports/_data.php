@@ -60,11 +60,9 @@ $btn_label = isset($btn_label) ? $btn_label : 'Cetak PDF';
             </table>
         <?php endif; ?>
     </div>
-    <?php if (!empty($rows)) : ?>
     <div class="card-footer text-right">
         <a href="javascript:void(0)" id="<?php echo html_escape($btn_id); ?>" class="btn <?php echo html_escape($btn_class); ?>">
             <i class="<?php echo html_escape($btn_icon); ?>"></i> <?php echo html_escape($btn_label); ?>
         </a>
     </div>
-    <?php endif; ?>
 </div>

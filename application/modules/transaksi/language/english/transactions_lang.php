@@ -1,0 +1,35 @@
+<?php defined('BASEPATH') || exit('No direct script access allowed');
+
+$lang['trx_area_title']				= 'Penjualan';
+$lang['trx_list']					= 'Daftar Penjualan';
+$lang['trx_new']					= '+ Transaksi Baru';
+$lang['trx_field_invoice']			= 'Invoice';
+$lang['trx_field_customer']			= 'Pelanggan';
+$lang['trx_field_date']				= 'Tanggal';
+$lang['trx_field_total']			= 'Total';
+$lang['trx_field_payment_method']	= 'Metode Pembayaran';
+$lang['trx_field_payment_status']	= 'Status Pembayaran';
+$lang['trx_field_order_status']		= 'Status Pesanan';
+$lang['trx_action']					= 'Aksi';
+$lang['trx_action_detail']			= 'Detail';
+$lang['trx_action_edit_status']		= 'Edit Status';
+$lang['trx_action_cancel_order']	= 'Batal';
+$lang['trx_action_save']			= 'Simpan Transaksi';
+$lang['trx_action_cancel']			= 'Batal';
+$lang['trx_filter_start']			= 'Tanggal Mulai';
+$lang['trx_filter_end']				= 'Tanggal Akhir';
+$lang['trx_filter_payment']			= 'Semua Pembayaran';
+$lang['trx_filter_order']			= 'Semua Pesanan';
+$lang['trx_search_placeholder']		= 'Cari invoice/pelanggan...';
+
+$lang['trxf_create_title']			= 'Transaksi Penjualan';
+$lang['trxf_add_product']			= '+ Tambahkan Produk';
+$lang['trxf_pick_product']			= 'Pilih Produk';
+$lang['trxf_size']					= 'Ukuran';
+$lang['trxf_price']					= 'Harga';
+$lang['trxf_quantity']				= 'Jumlah';
+$lang['trxf_subtotal']				= 'Subtotal';
+$lang['trxf_summary']				= 'Ringkasan';
+$lang['trxf_notes']					= 'Catatan';
+$lang['trxf_pick_payment_method']	= 'Pilih';
+$lang['trxf_pending']				= 'Pending';
