@@ -25,6 +25,7 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "phpoffice/phpspreadsheet": "^1.30"
+        "phpoffice/phpspreadsheet": "^1.30",
+        "vlucas/phpdotenv": "5.6"
     }
 }

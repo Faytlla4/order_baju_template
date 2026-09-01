@@ -17,6 +17,30 @@ class Migration_Install_backup_permissions extends Migration
 
 	public function up()
 	{
+		// Create history tables if not exist
+		if (!$this->db->table_exists('backup_document_history')) {
+			$this->db->query("CREATE TABLE backup_document_history (
+				id SERIAL PRIMARY KEY,
+				file_name VARCHAR(255) NOT NULL,
+				file_path VARCHAR(500) NOT NULL,
+				file_size BIGINT DEFAULT 0,
+				jumlah_dokumen INT DEFAULT 0,
+				filter_used VARCHAR(100) DEFAULT '',
+				created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+			)");
+		}
+		if (!$this->db->table_exists('backup_database_history')) {
+			$this->db->query("CREATE TABLE backup_database_history (
+				id SERIAL PRIMARY KEY,
+				file_name VARCHAR(255) NOT NULL,
+				file_path VARCHAR(500) NOT NULL,
+				file_size BIGINT DEFAULT 0,
+				status VARCHAR(50) DEFAULT 'Berhasil',
+				created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+			)");
+		}
+
+		// Create permissions
 		$rolePermissionsData = array();
 		foreach ($this->permissionValues as $permissionValue) {
 			// Skip if already exists
@@ -41,6 +65,14 @@ class Migration_Install_backup_permissions extends Migration
 
 	public function down()
 	{
+		// Drop history tables
+		if ($this->db->table_exists('backup_document_history')) {
+			$this->db->query("DROP TABLE backup_document_history");
+		}
+		if ($this->db->table_exists('backup_database_history')) {
+			$this->db->query("DROP TABLE backup_database_history");
+		}
+
 		$permissionNames = array();
 		foreach ($this->permissionValues as $permissionValue) {
 			$permissionNames[] = $permissionValue[$this->permissionNameField];
