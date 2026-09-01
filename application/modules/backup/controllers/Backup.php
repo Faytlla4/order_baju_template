@@ -123,23 +123,31 @@ class Backup extends App_Controller
 
 		$periode_label = $this->build_periode_label($tgl_mulai, $tgl_akhir, $status);
 
+		// --- Generate documents and track successes ---
+		$successful_files = array();
+
 		try {
 			$pdfFile = $tmpDir . DIRECTORY_SEPARATOR . 'laporan_transaksi_' . $wib->format('Y-m-d_His') . '.pdf';
-			if (!$this->generate_pdf_file($rows, $periode_label, $pdfFile)) {
-				throw new Exception('Gagal generate PDF');
+			if ($this->generate_pdf_file($rows, $periode_label, $pdfFile)) {
+				$successful_files[] = $pdfFile;
 			}
 
 			$xlsxFile = $tmpDir . DIRECTORY_SEPARATOR . 'laporan_transaksi_' . $wib->format('Y-m-d_His') . '.xlsx';
-			if (!$this->generate_excel_file($rows, $periode_label, $xlsxFile)) {
-				throw new Exception('Gagal generate Excel');
+			if ($this->generate_excel_file($rows, $periode_label, $xlsxFile)) {
+				$successful_files[] = $xlsxFile;
+			}
+
+			if (empty($successful_files)) {
+				throw new Exception('Tidak ada dokumen yang berhasil dibuat');
 			}
 
 			$zip = new ZipArchive();
 			if ($zip->open($tmpZip, ZipArchive::CREATE) !== true) {
 				throw new Exception('Gagal membuat ZIP');
 			}
-			$zip->addFile($pdfFile, basename($pdfFile));
-			$zip->addFile($xlsxFile, basename($xlsxFile));
+			foreach ($successful_files as $file) {
+				$zip->addFile($file, basename($file));
+			}
 			$zip->close();
 
 			if (!is_file($tmpZip) || filesize($tmpZip) <= 0) {
@@ -152,19 +160,32 @@ class Backup extends App_Controller
 				throw new Exception('ZIP tidak valid');
 			}
 
+			// Verify ZIP entry count matches successful files
+			$zipVerify = new ZipArchive();
+			if ($zipVerify->open($tmpZip) === true) {
+				$zipCount = $zipVerify->numFiles;
+				$zipVerify->close();
+			} else {
+				$zipCount = count($successful_files);
+			}
+			if ($zipCount !== count($successful_files)) {
+				@unlink($tmpZip);
+				throw new Exception('Jumlah file ZIP (' . $zipCount . ') tidak cocok dengan dokumen berhasil (' . count($successful_files) . ')');
+			}
+
 			// Store permanently
 			$stored_path = $this->backup_model->store_zip($tmpZip, $zipName);
 			if ($stored_path === false) {
 				throw new Exception('Gagal menyimpan ZIP');
 			}
 
-			// Record history
+			// Record history — jumlah_dokumen = actual ZIP file count
 			$filter_label = $periode_label;
 			$this->backup_model->save_document_history(
 				$zipName,
 				$stored_path,
 				filesize($stored_path),
-				count($rows),
+				count($successful_files),
 				$filter_label
 			);
 
