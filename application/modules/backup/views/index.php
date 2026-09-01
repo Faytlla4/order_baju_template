@@ -67,15 +67,17 @@ $(function() {
     // Init with server data
     initTable(" . json_encode($js_data) . ");
 
-    $('#tbl-backup-history').DataTable({
-        language: {
-            search: 'Cari:', lengthMenu: 'Tampilkan _MENU_ data',
-            info: 'Menampilkan _START_ - _END_ dari _TOTAL_ data',
-            infoEmpty: 'Tidak ada data', zeroRecords: 'Tidak ada data yang cocok',
-            paginate: { first: 'Pertama', last: 'Terakhir', next: 'Selanjutnya', previous: 'Sebelumnya' }
-        },
-        pageLength: 10, order: [[0, 'desc']], destroy: true
-    });
+    if ($('#tbl-backup-history').length) {
+        $('#tbl-backup-history').DataTable({
+            language: {
+                search: 'Cari:', lengthMenu: 'Tampilkan _MENU_ data',
+                info: 'Menampilkan _START_ - _END_ dari _TOTAL_ data',
+                infoEmpty: 'Tidak ada data', zeroRecords: 'Tidak ada data yang cocok',
+                paginate: { first: 'Pertama', last: 'Terakhir', next: 'Selanjutnya', previous: 'Sebelumnya' }
+            },
+            pageLength: 10, order: [[0, 'desc']], destroy: true
+        });
+    }
 
     if ($('#dp_mulai').length && $.fn.datetimepicker) {
         $('#dp_mulai').datetimepicker({ format: 'DD-MM-YYYY', useCurrent: false });
