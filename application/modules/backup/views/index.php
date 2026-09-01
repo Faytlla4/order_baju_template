@@ -37,7 +37,7 @@ $(function() {
             for (var i = 0; i < data.length; i++) {
                 var r = data[i];
                 tbody += '<tr>'
-                    + '<td class=\"text-center\"><input type=\"checkbox\" class=\"row-check\" value=\"' + r.id + '\"></td>'
+                    + '<td class=\"text-center\"><input type=\"checkbox\" name=\"report_ids[]\" class=\"row-check\" value=\"' + r.id + '\"></td>'
                     + '<td class=\"text-center\">' + r.id + '</td>'
                     + '<td>' + r.created_on + '</td>'
                     + '<td class=\"text-center\">' + r.tipe_badge + '</td>'
@@ -146,51 +146,10 @@ $(function() {
         $('#check-all').prop('checked', total > 0 && total === checked);
     });
 
-    // Backup button
-    $(document).on('click', '#btn-backup-dokumen', function(e) {
-        e.preventDefault();
-        var selected = [];
-        if (tblCetak) {
-            tblCetak.nodes().toJQuery().find('.row-check:checked').each(function() {
-                selected.push($(this).val());
-            });
-        }
-        if (selected.length === 0) {
-            alert('Pilih minimal satu dokumen dari Riwayat Cetak.');
-            return;
-        }
-        if (!confirm('Arsipkan ' + selected.length + ' dokumen yang dipilih?')) return;
-
-        var btn = $(this);
-        btn.prop('disabled', true).html('<i class=\"fas fa-spinner fa-spin\"></i> Memproses...');
-
-        $.ajax({
-            url: '" . $backupDocUrl . "',
-            method: 'POST',
-            data: {
-                report_ids: selected,
-                tgl_mulai: $('#filter-tgl_mulai').val() || '',
-                tgl_akhir: $('#filter-tgl_akhir').val() || ''
-            },
-            dataType: 'json',
-            success: function(res) {
-                btn.prop('disabled', false).html('<i class=\"fas fa-file-archive\"></i> Backup Dokumen Terpilih');
-                if (res.success) {
-                    $('#modal-download-url').attr('href', res.download_url);
-                    $('#modal-backup-success').modal('show');
-                } else {
-                    alert(res.message || 'Gagal membuat backup.');
-                }
-            },
-            error: function() {
-                btn.prop('disabled', false).html('<i class=\"fas fa-file-archive\"></i> Backup Dokumen Terpilih');
-                alert('Terjadi kesalahan server. Silakan coba lagi.');
-            }
-        });
-    });
-
-    $('#modal-backup-success').on('hidden.bs.modal', function() {
-        window.location.reload();
+    // Backup button — handled by form submit, sync dates before submit
+    $('#form-backup-dokumen').on('submit', function() {
+        $('#form-tgl_mulai').val($('#filter-tgl_mulai').val());
+        $('#form-tgl_akhir').val($('#filter-tgl_akhir').val());
     });
 });
 ";
@@ -210,6 +169,9 @@ Assets::add_js($inline_js, 'inline');
     <div class="col-12">
 
         <!-- FILTER -->
+        <form method="POST" action="<?php echo $backupDocUrl; ?>" id="form-backup-dokumen">
+        <input type="hidden" name="tgl_mulai" id="form-tgl_mulai" value="<?php echo html_escape($tgl_mulai); ?>">
+        <input type="hidden" name="tgl_akhir" id="form-tgl_akhir" value="<?php echo html_escape($tgl_akhir); ?>">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title"><i class="fas fa-filter text-primary"></i> Filter Riwayat Cetak</h3>
@@ -242,7 +204,7 @@ Assets::add_js($inline_js, 'inline');
                         <div class="form-group">
                             <button type="button" id="btn-filter" class="btn btn-primary"><i class="fas fa-search"></i> Filter</button>
                             <button type="button" id="btn-reset" class="btn btn-secondary"><i class="fas fa-undo"></i> Reset</button>
-                            <button type="button" id="btn-backup-dokumen" class="btn btn-danger float-right">
+                            <button type="submit" id="btn-backup-dokumen" class="btn btn-danger float-right" onclick="return confirm('Arsipkan dokumen yang dipilih?')">
                                     <i class="fas fa-file-archive"></i> Backup Dokumen Terpilih
                                 </button>
                         </div>
@@ -320,6 +282,7 @@ Assets::add_js($inline_js, 'inline');
 
     </div>
 </div>
+</form>
 
 <!-- MODAL SUKSES -->
 <div class="modal fade" id="modal-backup-success" tabindex="-1" role="dialog" aria-labelledby="modalBackupLabel" aria-hidden="true">
