@@ -74,10 +74,6 @@ class Backup extends App_Controller
 	// --------------------------------------------------------------------
 	public function document()
 	{
-		if ($this->auth->permission_exists($this->permissionDocument)) {
-			$this->auth->restrict($this->permissionDocument);
-		}
-
 		if ($this->input->method() !== 'post') {
 			redirect(SITE_AREA . '/backup');
 			return;

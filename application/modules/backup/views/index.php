@@ -1,8 +1,8 @@
 <?php
-Assets::add_js('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js', 'external');
 Assets::add_css('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css', 'external');
 Assets::add_js('plugins/datatables/jquery.dataTables.min.js', 'external');
 Assets::add_js('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js', 'external');
+Assets::add_js('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js', 'external');
 
 $backupIndexUrl = site_url(SITE_AREA . '/backup');
 $backupDocUrl   = site_url(SITE_AREA . '/backup/document');
@@ -147,12 +147,14 @@ $(function() {
     });
 
     // Backup button
-    $('#btn-backup-dokumen').on('click', function(e) {
+    $(document).on('click', '#btn-backup-dokumen', function(e) {
         e.preventDefault();
         var selected = [];
-        tblCetak.nodes().toJQuery().find('.row-check:checked').each(function() {
-            selected.push($(this).val());
-        });
+        if (tblCetak) {
+            tblCetak.nodes().toJQuery().find('.row-check:checked').each(function() {
+                selected.push($(this).val());
+            });
+        }
         if (selected.length === 0) {
             alert('Pilih minimal satu dokumen dari Riwayat Cetak.');
             return;
@@ -240,11 +242,9 @@ Assets::add_js($inline_js, 'inline');
                         <div class="form-group">
                             <button type="button" id="btn-filter" class="btn btn-primary"><i class="fas fa-search"></i> Filter</button>
                             <button type="button" id="btn-reset" class="btn btn-secondary"><i class="fas fa-undo"></i> Reset</button>
-                            <?php if (!empty($can_document)) : ?>
-                                <button type="button" id="btn-backup-dokumen" class="btn btn-danger float-right">
+                            <button type="button" id="btn-backup-dokumen" class="btn btn-danger float-right">
                                     <i class="fas fa-file-archive"></i> Backup Dokumen Terpilih
                                 </button>
-                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
