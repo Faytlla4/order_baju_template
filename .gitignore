@@ -50,6 +50,8 @@ application/modules/*
 # Except the following modules:
 !application/modules/backup/
 !application/modules/backup/**
+!application/modules/master/
+!application/modules/master/**
 !application/modules/master_jenis_baju/
 !application/modules/master_jenis_baju/**
 !application/modules/master_ukuran/
@@ -58,14 +60,16 @@ application/modules/*
 !application/modules/master_warna/**
 !application/modules/order_baju/
 !application/modules/order_baju/**
-!application/modules/transaksi/
-!application/modules/transaksi/**
 !application/modules/report_excel/
 !application/modules/report_excel/**
 !application/modules/report_pdf/
 !application/modules/report_pdf/**
+!application/modules/reports/
+!application/modules/reports/**
 !application/modules/sk_tidak_mampu/
 !application/modules/sk_tidak_mampu/**
+!application/modules/transaksi/
+!application/modules/transaksi/**
 
 # Remove PHPStorm Project folders
 bonfire/.ideas
@@ -120,3 +124,13 @@ Desktop.ini
 test_output/
 -w
 public/C_/
+
+# Debug / scratch files (not part of the app)
+test_*.html
+test_cookies*.txt
+ck*.txt
+cookie*.txt
+check_sessions.php
+composer.phar
+login_headers.txt
+login_page.html

@@ -9,5 +9,14 @@ $('#master_jenis_baju_table').bfDataTable({
         { data: 'urutan' },
         { data: 'keterangan' },
         { data: 'status', render: function(data) { return data == 1 ? 'Aktif' : 'Non Aktif'; } },
+        {
+            data: 'id',
+            orderable: false,
+            render: function(data, type, row) {
+                var editUrl = site_url + 'admin/master/master_jenis_baju/edit/' + data;
+                var editBtn = '<a href="' + editUrl + '" class="btn btn-warning btn-xs" title="Edit"><i class="fas fa-edit"></i> Edit</a> ';
+                return editBtn;
+            }
+        }
     ],
 });

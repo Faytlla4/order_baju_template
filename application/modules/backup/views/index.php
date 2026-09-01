@@ -8,13 +8,14 @@ $backupIndexUrl = site_url(SITE_AREA . '/backup');
 $backupDocUrl   = site_url(SITE_AREA . '/backup/document');
 $backupFilterUrl = site_url(SITE_AREA . '/backup/filter');
 
-$js_data = array();
+$js_report = array();
 if (!empty($riwayat_cetak)) {
     foreach ($riwayat_cetak as $r) {
         $tipe_badge = $r->tipe_report === 'pdf'
             ? '<span class=\"badge badge-danger\"><i class=\"fas fa-file-pdf\"></i> PDF</span>'
             : '<span class=\"badge badge-success\"><i class=\"fas fa-file-excel\"></i> Excel</span>';
-        $js_data[] = array(
+        $js_report[] = array(
+            'source' => 'report',
             'id' => (int) $r->id,
             'created_on' => $r->created_on_str,
             'tipe_badge' => $tipe_badge,
@@ -24,11 +25,37 @@ if (!empty($riwayat_cetak)) {
     }
 }
 
+$js_trx = array();
+if (!empty($dokumen_transaksi)) {
+    foreach ($dokumen_transaksi as $d) {
+        $tipe_badge = '<span class=\"badge badge-info\"><i class=\"fas fa-folder-open\"></i> Dokumen Transaksi</span>';
+        $js_trx[] = array(
+            'source' => 'transaksi',
+            'id' => (int) $d->id,
+            'created_on' => $d->created_on_str,
+            'tipe_badge' => $tipe_badge,
+            'nama_file' => $d->nama_file,
+            'jumlah_transaksi' => (int) $d->jumlah_transaksi,
+        );
+    }
+}
+
 $inline_js = "
 $(function() {
     var tblCetak;
+    var tblTrx;
 
-    function initTable(data) {
+    function dtLangFile() {
+        return {
+            search: 'Cari:', lengthMenu: 'Tampilkan _MENU_ data',
+            info: 'Menampilkan _START_ - _END_ dari _TOTAL_ data',
+            infoEmpty: 'Tidak ada data', zeroRecords: 'Tidak ada data yang cocok',
+            paginate: { first: 'Pertama', last: 'Terakhir', next: 'Selanjutnya', previous: 'Sebelumnya' }
+        };
+    }
+
+    // Tabel 1: Laporan (PDF/Excel) — checkbox report_ids[]
+    function initTableReport(data) {
         if (tblCetak) tblCetak.destroy();
         var tbody = '';
         if (data.length === 0) {
@@ -37,7 +64,7 @@ $(function() {
             for (var i = 0; i < data.length; i++) {
                 var r = data[i];
                 tbody += '<tr>'
-                    + '<td class=\"text-center\"><input type=\"checkbox\" name=\"report_ids[]\" class=\"row-check\" value=\"' + r.id + '\"></td>'
+                    + '<td class=\"text-center\"><input type=\"checkbox\" name=\"report_ids[]\" class=\"row-check-report\" value=\"' + r.id + '\"></td>'
                     + '<td class=\"text-center\">' + r.id + '</td>'
                     + '<td>' + r.created_on + '</td>'
                     + '<td class=\"text-center\">' + r.tipe_badge + '</td>'
@@ -50,22 +77,48 @@ $(function() {
         $('#total-dokumen').text(data.length);
 
         tblCetak = $('#tbl-riwayat-cetak').DataTable({
-            language: {
-                search: 'Cari:', lengthMenu: 'Tampilkan _MENU_ data',
-                info: 'Menampilkan _START_ - _END_ dari _TOTAL_ data',
-                infoEmpty: 'Tidak ada data', zeroRecords: 'Tidak ada data yang cocok',
-                paginate: { first: 'Pertama', last: 'Terakhir', next: 'Selanjutnya', previous: 'Sebelumnya' }
-            },
+            language: dtLangFile(),
             pageLength: 10, order: [[1, 'desc']],
             columnDefs: [{ orderable: false, targets: 0 }],
             destroy: true
         });
-
         $('#check-all').prop('checked', false);
     }
 
+    // Tabel 2: Dokumen Transaksi (upload user) — checkbox trx_docs[]
+    function initTableTrx(data) {
+        if (tblTrx) tblTrx.destroy();
+        var tbody = '';
+        if (data.length === 0) {
+            tbody = '<tr><td colspan=\"6\" class=\"text-center text-muted\">Tidak ada data.</td></tr>';
+        } else {
+            for (var i = 0; i < data.length; i++) {
+                var r = data[i];
+                tbody += '<tr>'
+                    + '<td class=\"text-center\"><input type=\"checkbox\" name=\"trx_docs[]\" class=\"row-check-trx\" value=\"' + r.id + ':' + r.nama_file + '\"></td>'
+                    + '<td class=\"text-center\">' + r.id + '</td>'
+                    + '<td>' + r.created_on + '</td>'
+                    + '<td class=\"text-center\">' + r.tipe_badge + '</td>'
+                    + '<td>' + r.nama_file + '</td>'
+                    + '<td class=\"text-center\">' + r.jumlah_transaksi + '</td>'
+                    + '</tr>';
+            }
+        }
+        $('#tbl-dokumen-transaksi tbody').html(tbody);
+        $('#total-dokumen-trx').text(data.length);
+
+        tblTrx = $('#tbl-dokumen-transaksi').DataTable({
+            language: dtLangFile(),
+            pageLength: 10, order: [[1, 'desc']],
+            columnDefs: [{ orderable: false, targets: 0 }],
+            destroy: true
+        });
+        $('#check-all-trx').prop('checked', false);
+    }
+
     // Init with server data
-    initTable(" . json_encode($js_data) . ");
+    initTableReport(" . json_encode($js_report) . ");
+    initTableTrx(" . json_encode($js_trx) . ");
 
     if ($('#tbl-backup-history').length) {
         $('#tbl-backup-history').DataTable({
@@ -111,7 +164,13 @@ $(function() {
             dataType: 'json',
             success: function(res) {
                 if (res.success) {
-                    initTable(res.data);
+                    var report = [], trx = [];
+                    for (var i = 0; i < res.data.length; i++) {
+                        if (res.data[i].source === 'transaksi') { trx.push(res.data[i]); }
+                        else { report.push(res.data[i]); }
+                    }
+                    initTableReport(report);
+                    initTableTrx(trx);
                 }
             }
         });
@@ -127,23 +186,49 @@ $(function() {
             data: { tgl_mulai: '', tgl_akhir: '' },
             dataType: 'json',
             success: function(res) {
-                if (res.success) initTable(res.data);
+                if (res.success) {
+                    var report = [], trx = [];
+                    for (var i = 0; i < res.data.length; i++) {
+                        if (res.data[i].source === 'transaksi') { trx.push(res.data[i]); }
+                        else { report.push(res.data[i]); }
+                    }
+                    initTableReport(report);
+                    initTableTrx(trx);
+                }
             }
         });
     });
 
-    // Select All checkbox
+    // Select All — Laporan (PDF/Excel)
     $(document).on('change', '#check-all', function() {
         var checked = $(this).is(':checked');
+        if (!tblCetak) return;
         tblCetak.rows().every(function() {
-            $(this.node()).find('.row-check').prop('checked', checked);
+            $(this.node()).find('.row-check-report').prop('checked', checked);
         });
     });
 
-    $(document).on('change', '.row-check', function() {
+    $(document).on('change', '.row-check-report', function() {
+        if (!tblCetak) return;
         var total = tblCetak.rows().nodes().length;
-        var checked = tblCetak.nodes().toJQuery().find('.row-check:checked').length;
+        var checked = tblCetak.nodes().toJQuery().find('.row-check-report:checked').length;
         $('#check-all').prop('checked', total > 0 && total === checked);
+    });
+
+    // Select All — Dokumen Transaksi (upload user)
+    $(document).on('change', '#check-all-trx', function() {
+        var checked = $(this).is(':checked');
+        if (!tblTrx) return;
+        tblTrx.rows().every(function() {
+            $(this.node()).find('.row-check-trx').prop('checked', checked);
+        });
+    });
+
+    $(document).on('change', '.row-check-trx', function() {
+        if (!tblTrx) return;
+        var total = tblTrx.rows().nodes().length;
+        var checked = tblTrx.nodes().toJQuery().find('.row-check-trx:checked').length;
+        $('#check-all-trx').prop('checked', total > 0 && total === checked);
     });
 
     // Backup button — handled by form submit, sync dates before submit
@@ -213,20 +298,44 @@ Assets::add_js($inline_js, 'inline');
             </div>
         </div>
 
-        <!-- RIWAYAT CETAK DOKUMEN -->
-        <div class="card" id="card-data">
+        <!-- DOKUMEN TRANSAKSI (UPLOAD USER) -->
+        <div class="card" id="card-data-trx">
             <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-print text-info"></i> Riwayat Cetak Dokumen</h3>
-                <span class="float-right">Total: <span id="total-dokumen"><?php echo count($riwayat_cetak); ?></span> dokumen</span>
+                <h3 class="card-title"><i class="fas fa-folder-open text-primary"></i> Dokumen Transaksi (Upload User)</h3>
+                <span class="float-right">Total: <span id="total-dokumen-trx"><?php echo count($dokumen_transaksi); ?></span> dokumen</span>
+            </div>
+            <div class="card-body table-responsive">
+                <table id="tbl-dokumen-transaksi" class="table table-bordered table-striped table-hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th style="width:40px"><input type="checkbox" id="check-all-trx" title="Pilih Semua Dokumen Transaksi"></th>
+                            <th style="width:60px">ID Transaksi</th>
+                            <th>Tanggal</th>
+                            <th style="width:160px">Tipe</th>
+                            <th>Nama File</th>
+                            <th style="width:80px">Transaksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- RIWAYAT CETAK DOKUMEN (LAPORAN PDF/EXCEL) -->
+        <div class="card mt-3" id="card-data">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-print text-info"></i> Riwayat Cetak (Laporan PDF/Excel)</h3>
+                <span class="float-right">Total: <span id="total-dokumen"><?php echo count($riwayat_cetak); ?></span> laporan</span>
             </div>
             <div class="card-body table-responsive">
                 <table id="tbl-riwayat-cetak" class="table table-bordered table-striped table-hover" style="width:100%">
                     <thead>
                         <tr>
-                            <th style="width:40px"><input type="checkbox" id="check-all" title="Pilih Semua"></th>
+                            <th style="width:40px"><input type="checkbox" id="check-all" title="Pilih Semua Laporan"></th>
                             <th style="width:60px">ID</th>
-                            <th>Tanggal Cetak</th>
-                            <th style="width:80px">Tipe</th>
+                            <th>Tanggal</th>
+                            <th style="width:100px">Tipe</th>
                             <th>Nama File</th>
                             <th style="width:80px">Transaksi</th>
                         </tr>

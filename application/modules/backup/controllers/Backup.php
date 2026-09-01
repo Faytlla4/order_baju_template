@@ -27,11 +27,13 @@ class Backup extends App_Controller
 		}
 
 		$riwayat_cetak = $this->backup_model->get_riwayat_cetak($tgl_mulai, $tgl_akhir);
+		$dokumen_transaksi = $this->backup_model->get_dokumen_transaksi($tgl_mulai, $tgl_akhir);
 		$backup_history = $this->backup_model->get_document_history();
 
 		Template::set('tgl_mulai', $tgl_mulai);
 		Template::set('tgl_akhir', $tgl_akhir);
 		Template::set('riwayat_cetak', $riwayat_cetak);
+		Template::set('dokumen_transaksi', $dokumen_transaksi);
 		Template::set('backup_history', $backup_history);
 		Template::set('can_document', $this->auth->has_permission($this->permissionDocument));
 		Template::set('can_database', $this->auth->has_permission($this->permissionDatabase));
@@ -50,6 +52,7 @@ class Backup extends App_Controller
 		$tgl_akhir = $this->normalize_tgl($this->input->get('tgl_akhir'));
 
 		$riwayat_cetak = $this->backup_model->get_riwayat_cetak($tgl_mulai, $tgl_akhir);
+		$dokumen_transaksi = $this->backup_model->get_dokumen_transaksi($tgl_mulai, $tgl_akhir);
 
 		$rows = array();
 		foreach ($riwayat_cetak as $r) {
@@ -57,11 +60,24 @@ class Backup extends App_Controller
 				? '<span class="badge badge-danger"><i class="fas fa-file-pdf"></i> PDF</span>'
 				: '<span class="badge badge-success"><i class="fas fa-file-excel"></i> Excel</span>';
 			$rows[] = array(
+				'source' => 'report',
 				'id' => (int) $r->id,
 				'created_on' => html_escape($r->created_on_str),
 				'tipe_badge' => $tipe_badge,
 				'nama_file' => html_escape($r->nama_file),
 				'jumlah_transaksi' => (int) $r->jumlah_transaksi,
+			);
+		}
+
+		foreach ($dokumen_transaksi as $d) {
+			$tipe_badge = '<span class="badge badge-info"><i class="fas fa-folder-open"></i> Dokumen Transaksi</span>';
+			$rows[] = array(
+				'source' => 'transaksi',
+				'id' => (int) $d->id,
+				'created_on' => html_escape($d->created_on_str),
+				'tipe_badge' => $tipe_badge,
+				'nama_file' => html_escape($d->nama_file),
+				'jumlah_transaksi' => (int) $d->jumlah_transaksi,
 			);
 		}
 
@@ -82,7 +98,8 @@ class Backup extends App_Controller
 		$this->load->model('backup/backup_model');
 
 		$report_ids = $this->input->post('report_ids');
-		if (!is_array($report_ids) || empty($report_ids)) {
+		$trx_docs   = $this->input->post('trx_docs');
+		if ((!is_array($report_ids) || empty($report_ids)) && (!is_array($trx_docs) || empty($trx_docs))) {
 			$msg = 'Tidak ada dokumen yang dipilih.';
 			if ($this->input->is_ajax_request()) {
 				echo json_encode(array('success' => false, 'message' => $msg));
@@ -105,9 +122,21 @@ class Backup extends App_Controller
 		}
 
 		// Fetch selected reports
-		$reports = $this->backup_model->get_reports_by_ids($report_ids);
-		if (empty($reports)) {
-			$msg = 'Data riwayat cetak tidak ditemukan.';
+		$reports = array();
+		if (is_array($report_ids) && !empty($report_ids)) {
+			$reports = $this->backup_model->get_reports_by_ids($report_ids);
+		}
+
+		// Kumpulkan dokumen transaksi terpilih: "id:nama_file".
+		// VALIDASI: nama file harus benar-benar terdaftar di kolom dokumen transaksi tsb
+		// (mencegah user menyebut path/file sewenang-wenang).
+		$trx_items = array();
+		if (is_array($trx_docs) && !empty($trx_docs)) {
+			$trx_items = $this->backup_model->get_transaksi_docs_selected($trx_docs);
+		}
+
+		if (empty($reports) && empty($trx_items)) {
+			$msg = 'Data dokumen yang dipilih tidak ditemukan.';
 			if ($this->input->is_ajax_request()) {
 				echo json_encode(array('success' => false, 'message' => $msg));
 				exit;
@@ -131,18 +160,34 @@ class Backup extends App_Controller
 			$added = array();
 			$missing = array();
 
+			// Bagian A: Report PDF/Excel — masuk folder "report/".
 			foreach ($reports as $report) {
 				$filePath = APPPATH . '../' . $report->path_file;
 				$fileName = $report->nama_file;
 
 				if (!is_file($filePath) || filesize($filePath) <= 0) {
-					$missing[] = $fileName;
-					log_message('warning', 'Backup Dokumen: file tidak ditemukan — ' . $report->path_file);
+					$missing[] = '/' . $fileName;
+					log_message('error', 'Backup Dokumen: file report tidak ditemukan — ' . $report->path_file);
 					continue;
 				}
 
-				// Prefix with report ID to avoid filename collision
-				$zipNameEntry = $report->id . '_' . $fileName;
+				$zipNameEntry = 'report/' . $report->id . '_' . $fileName;
+				$zip->addFile($filePath, $zipNameEntry);
+				$added[] = $zipNameEntry;
+			}
+
+			// Bagian B: Dokumen transaksi (upload user) — masuk folder "dokumen_transaksi/[id]/".
+			foreach ($trx_items as $item) {
+				$filePath = FCPATH . 'assets/dokumen_transaksi/' . (int) $item->id . '/' . basename($item->nama_file);
+				$fileName = basename($item->nama_file);
+
+				if (!is_file($filePath) || filesize($filePath) <= 0) {
+					$missing[] = basename($item->nama_file);
+					log_message('error', 'Backup Dokumen: file transaksi tidak ditemukan — ' . $filePath);
+					continue;
+				}
+
+				$zipNameEntry = 'dokumen_transaksi/' . (int) $item->id . '/' . $fileName;
 				$zip->addFile($filePath, $zipNameEntry);
 				$added[] = $zipNameEntry;
 			}

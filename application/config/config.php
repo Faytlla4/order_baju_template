@@ -24,8 +24,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |
  */
 $config['base_url'] = isset($_SERVER['HTTP_HOST'])
-    ? 'http://' . $_SERVER['HTTP_HOST'] . '/'
-    : (getenv('APP_BASE_URL') ?: 'http://localhost/');
+    ? 'http://' . $_SERVER['HTTP_HOST'] . str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME'])
+    : (getenv('APP_BASE_URL') ?: 'http://localhost/order_baju_template/public/');
 
 /*
 |--------------------------------------------------------------------------
