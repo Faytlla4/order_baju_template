@@ -1,41 +1,55 @@
-Saya perlu bantuan setup project CI3 + Bonfire di Windows (Laragon) dengan PostgreSQL. Tolong bantu saya step by step.
+Saya butuh bantuan diagnosa dan perbaikan project CI3 + Bonfire di Windows (Laragon) dengan PostgreSQL.
 
-Project ini adalah aplikasi admin panel bernama "SI-Reklame" dengan stack:
-- CodeIgniter 3 + Bonfire 0.9.0-dev HMVC
-- PostgreSQL 18.4
-- PHP 7.4
-- AdminLTE theme
-- Virtual host: apktemplate.test
+## Info Project
+- Repo: https://github.com/Faytlla4/order_baju_template.git (branch main)
+- Stack: CodeIgniter 3 + Bonfire 0.9.0-dev HMVC + PostgreSQL 18.4 + PHP 7.4 + AdminLTE
+- Domain: apktemplate.test
+- Database sudah di-import dari backup server asli
 
-Yang perlu saya lakukan:
+## Yang Sudah Benar
+- Website bisa dibuka di http://apktemplate.test/admin
+- Login admin / password bisa
+- Beberapa fitur sudah sesuai setelah git pull
 
-1. Clone dari https://github.com/Faytlla4/order_baju_template.git, branch main
+## Masalah yang Perlu Diperbaiki
 
-2. Jalankan composer install
+### 1. Tampilan tidak berubah
+Beberapa halaman masih menampilkan tampilan LAMA (sebelum pull). Kemungkinan:
+- File view yang di-cache oleh browser
+- File CSS/JS yang di-cache
+- Asset tidak ke-deploy dengan benar
 
-3. Buat database PostgreSQL bernama nama_db
+### 2. Fitur yang error
+Ada beberapa halaman yang muncul error. Tolong cek error log di:
+- `application/logs/` (lihat file log terbaru)
+- Browser console (F12 > Console)
+- Apache error log di Laragon
 
-4. Import backup database dari server asli (file .sql) ke database baru. JANGAN pakai database/schema.sql karena isinya cuma struktur kosong.
+### 3. Module yang perlu dicek
+Pastikan semua module ini bisa diakses dan berfungsi dari sidebar:
+- **Content** → Order Baju (CRUD + upload dokumen) di admin/content
+- **Master** → Jenis Baju, Ukuran, Warna (CRUD dengan tombol Create/Edit) di admin/master
+- **Transaksi** → Daftar Transaksi (CRUD + dokumen) di admin/transaksi
+- **Laporan** → Cetak Laporan PDF + Excel di admin/reports
+- **Backup** → Backup Dokumen + Backup Database di admin/backup
 
-5. Buat file .env di root project dengan isi:
-   - APP_ENV=development
-   - APP_DEBUG=true
-   - DB_HOSTNAME=localhost
-   - DB_PORT=5432
-   - DB_USERNAME=postgres
-   - DB_PASSWORD=postgres
-   - DB_DATABASE=nama_db
-   - BACKUP_SKIP_TEST=1
+## Yang Perlu Dilakukan
 
-6. Setup virtual host di Laragon untuk domain apktemplate.test pointing ke folder public/
+1. **Clear browser cache** teman saya (Ctrl+Shift+Delete > Clear all)
+2. **Restart Apache & PostgreSQL** di Laragon
+3. Cek error log di `application/logs/` — kasih tau saya isi errornya
+4. Cek setiap module satu per satu di sidebar, kasih tau mana yang:
+   - ✅ Sudah benar
+   - ❌ Masih tampilan lama
+   - ❌ Error (screenshot atau copy error message)
+5. Kalau ada error "permission denied" atau "access restricted", berarti permissions di database belum lengkap. Jalankan migration:
+   ```
+   php index.php tools migrate
+   ```
+6. Kalau tampilan tidak berubah, coba hard refresh: **Ctrl+Shift+R** atau buka di incognito window
+7. Pastikan semua file sudah ter-update dengan cek isi file yang dicurigai, contoh:
+   ```
+   type application\modules\master_jenis_baju\views\master\_sub_nav.php
+   ```
 
-7. Buka http://apktemplate.test/admin lalu login dengan admin / password
-
-8. Cek semua menu di sidebar:
-   - Content (Order Baju dengan CRUD + upload dokumen)
-   - Master (Jenis Baju, Ukuran, Warna - semua CRUD)
-   - Transaksi (Daftar Transaksi CRUD + dokumen)
-   - Laporan (PDF + Excel)
-   - Backup (Backup Dokumen ZIP + Backup Database)
-
-Kalau ada error atau fitur tidak muncul, tolong diagnosa dan bantu saya perbaiki. Yang paling penting: semua module harus bisa diakses dan tombol Create/Edit harus muncul di halaman master dan transaksi.
+Kasih tau saya hasil pemeriksaan di atas supaya saya bisa bantu perbaiki tepat sasaran.
