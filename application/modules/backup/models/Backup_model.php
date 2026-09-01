@@ -15,15 +15,58 @@ class Backup_model extends CI_Model
 		}
 	}
 
-	// --- Transaksi for Riwayat Cetak ---
+	// --- Riwayat Cetak (Report History) ---
 
-	public function get_transaksi_for_backup($tgl_mulai = '', $tgl_akhir = '', $status = '')
+	/**
+	 * Ambil riwayat cetak dari tabel report, difilter tanggal.
+	 *
+	 * @param string $tgl_mulai YYYY-MM-DD
+	 * @param string $tgl_akhir YYYY-MM-DD
+	 * @return array
+	 */
+	public function get_riwayat_cetak($tgl_mulai = '', $tgl_akhir = '')
 	{
-		$this->load->model('report_pdf/report_model');
-		if ($tgl_mulai !== '' || $tgl_akhir !== '') {
-			return $this->report_model->get_report('custom', $tgl_mulai, $tgl_akhir, $status);
+		$sql = "SELECT id, tipe_report, nama_file, path_file, jumlah_transaksi,
+				to_char(created_on, 'DD-MM-YYYY HH24:MI') AS created_on_str
+			FROM report";
+
+		$params = array();
+		$conditions = array();
+
+		if ($tgl_mulai !== '') {
+			$conditions[] = 'created_on::date >= ?';
+			$params[] = $tgl_mulai;
 		}
-		return $this->report_model->get_report('all', '', '', $status);
+		if ($tgl_akhir !== '') {
+			$conditions[] = 'created_on::date <= ?';
+			$params[] = $tgl_akhir;
+		}
+
+		if (!empty($conditions)) {
+			$sql .= ' WHERE ' . implode(' AND ', $conditions);
+		}
+
+		$sql .= ' ORDER BY created_on DESC';
+
+		if (!empty($params)) {
+			return $this->db->query($sql, $params)->result();
+		}
+		return $this->db->query($sql)->result();
+	}
+
+	/**
+	 * Ambil beberapa report berdasarkan ID.
+	 *
+	 * @param array $ids
+	 * @return array
+	 */
+	public function get_reports_by_ids($ids)
+	{
+		if (empty($ids)) {
+			return array();
+		}
+		$this->db->where_in('id', $ids);
+		return $this->db->get('report')->result();
 	}
 
 	// --- Database Config ---

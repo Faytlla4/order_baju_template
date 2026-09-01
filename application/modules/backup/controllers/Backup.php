@@ -13,7 +13,7 @@ class Backup extends App_Controller
 	}
 
 	// --------------------------------------------------------------------
-	// INDEX — Filter + Riwayat Cetak + Riwayat Backup Dokumen
+	// INDEX — Filter Riwayat Cetak + Riwayat Backup Dokumen
 	// --------------------------------------------------------------------
 	public function index()
 	{
@@ -21,28 +21,17 @@ class Backup extends App_Controller
 
 		$tgl_mulai = $this->normalize_tgl($this->input->get('tgl_mulai'));
 		$tgl_akhir = $this->normalize_tgl($this->input->get('tgl_akhir'));
-		$status    = $this->normalize_status($this->input->get('status'));
 
 		if ($tgl_mulai !== '' && $tgl_akhir !== '' && $tgl_mulai > $tgl_akhir) {
 			Template::set_message('Tanggal Mulai tidak boleh setelah Tanggal Akhir.', 'error');
 		}
 
-		$rows = array();
-		$has_filter = ($tgl_mulai !== '' || $tgl_akhir !== '' || $status !== '');
-		if ($has_filter) {
-			$this->load->model('report_pdf/report_model');
-			$rows = $this->report_model->get_report('custom', $tgl_mulai, $tgl_akhir, $status);
-		}
-
+		$riwayat_cetak = $this->backup_model->get_riwayat_cetak($tgl_mulai, $tgl_akhir);
 		$backup_history = $this->backup_model->get_document_history();
 
 		Template::set('tgl_mulai', $tgl_mulai);
 		Template::set('tgl_akhir', $tgl_akhir);
-		Template::set('status', $status);
-		Template::set('rows', $rows);
-		Template::set('grand_total', empty($rows) ? 0 : $this->report_model->grand_total($rows));
-		Template::set('has_filter', $has_filter);
-		Template::set('periode_label', $this->build_periode_label($tgl_mulai, $tgl_akhir, $status));
+		Template::set('riwayat_cetak', $riwayat_cetak);
 		Template::set('backup_history', $backup_history);
 		Template::set('can_document', $this->auth->has_permission($this->permissionDocument));
 		Template::set('can_database', $this->auth->has_permission($this->permissionDatabase));
@@ -51,7 +40,7 @@ class Backup extends App_Controller
 	}
 
 	// --------------------------------------------------------------------
-	// BACKUP DOKUMEN — POST, store ZIP + record history, return JSON
+	// BACKUP DOKUMEN — POST, copy existing files from Riwayat Cetak, return JSON
 	// --------------------------------------------------------------------
 	public function document()
 	{
@@ -66,30 +55,15 @@ class Backup extends App_Controller
 
 		$this->load->model('backup/backup_model');
 
-		$tgl_mulai = $this->normalize_tgl($this->input->post('tgl_mulai'));
-		$tgl_akhir = $this->normalize_tgl($this->input->post('tgl_akhir'));
-		$status    = $this->normalize_status($this->input->post('status'));
-
-		if ($tgl_mulai !== '' && $tgl_akhir !== '' && $tgl_mulai > $tgl_akhir) {
-			if ($this->input->is_ajax_request()) {
-				echo json_encode(array('success' => false, 'message' => 'Tanggal Mulai tidak boleh setelah Tanggal Akhir.'));
-				exit;
-			}
-			Template::set_message('Tanggal Mulai tidak boleh setelah Tanggal Akhir.', 'error');
-			redirect(SITE_AREA . '/backup');
-			return;
-		}
-
-		$rows = $this->backup_model->get_transaksi_for_backup($tgl_mulai, $tgl_akhir, $status);
-
-		if (empty($rows)) {
-			$msg = 'Tidak ada data transaksi untuk periode/status yang dipilih.';
+		$report_ids = $this->input->post('report_ids');
+		if (!is_array($report_ids) || empty($report_ids)) {
+			$msg = 'Tidak ada dokumen yang dipilih.';
 			if ($this->input->is_ajax_request()) {
 				echo json_encode(array('success' => false, 'message' => $msg));
 				exit;
 			}
 			Template::set_message($msg, 'warning');
-			redirect(SITE_AREA . '/backup?' . http_build_query(array('status' => $status, 'tgl_mulai' => $tgl_mulai, 'tgl_akhir' => $tgl_akhir)));
+			redirect(SITE_AREA . '/backup');
 			return;
 		}
 
@@ -104,14 +78,15 @@ class Backup extends App_Controller
 			return;
 		}
 
-		$tmpDir = $this->create_tmp_dir('backup_dokumen');
-		if ($tmpDir === false) {
-			$msg = 'Permission directory tidak tersedia.';
+		// Fetch selected reports
+		$reports = $this->backup_model->get_reports_by_ids($report_ids);
+		if (empty($reports)) {
+			$msg = 'Data riwayat cetak tidak ditemukan.';
 			if ($this->input->is_ajax_request()) {
 				echo json_encode(array('success' => false, 'message' => $msg));
 				exit;
 			}
-			Template::set_message($msg, 'error');
+			Template::set_message($msg, 'warning');
 			redirect(SITE_AREA . '/backup');
 			return;
 		}
@@ -121,35 +96,41 @@ class Backup extends App_Controller
 		$zipName = 'backup_dokumen_' . $stamp . '.zip';
 		$tmpZip  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $zipName;
 
-		$periode_label = $this->build_periode_label($tgl_mulai, $tgl_akhir, $status);
-
-		// --- Generate documents and track successes ---
-		$successful_files = array();
-
 		try {
-			$pdfFile = $tmpDir . DIRECTORY_SEPARATOR . 'laporan_transaksi_' . $wib->format('Y-m-d_His') . '.pdf';
-			if ($this->generate_pdf_file($rows, $periode_label, $pdfFile)) {
-				$successful_files[] = $pdfFile;
-			}
-
-			$xlsxFile = $tmpDir . DIRECTORY_SEPARATOR . 'laporan_transaksi_' . $wib->format('Y-m-d_His') . '.xlsx';
-			if ($this->generate_excel_file($rows, $periode_label, $xlsxFile)) {
-				$successful_files[] = $xlsxFile;
-			}
-
-			if (empty($successful_files)) {
-				throw new Exception('Tidak ada dokumen yang berhasil dibuat');
-			}
-
 			$zip = new ZipArchive();
 			if ($zip->open($tmpZip, ZipArchive::CREATE) !== true) {
 				throw new Exception('Gagal membuat ZIP');
 			}
-			foreach ($successful_files as $file) {
-				$zip->addFile($file, basename($file));
+
+			$added = array();
+			$missing = array();
+
+			foreach ($reports as $report) {
+				$filePath = APPPATH . '../' . $report->path_file;
+				$fileName = $report->nama_file;
+
+				if (!is_file($filePath) || filesize($filePath) <= 0) {
+					$missing[] = $fileName;
+					log_message('warning', 'Backup Dokumen: file tidak ditemukan — ' . $report->path_file);
+					continue;
+				}
+
+				// Prefix with report ID to avoid filename collision
+				$zipNameEntry = $report->id . '_' . $fileName;
+				$zip->addFile($filePath, $zipNameEntry);
+				$added[] = $zipNameEntry;
 			}
+
+			if (empty($added)) {
+				$zip->close();
+				@unlink($tmpZip);
+				$missingList = implode(', ', $missing);
+				throw new Exception('Semua file tidak ditemukan di server. (' . $missingList . ')');
+			}
+
 			$zip->close();
 
+			// Validate ZIP
 			if (!is_file($tmpZip) || filesize($tmpZip) <= 0) {
 				throw new Exception('ZIP kosong');
 			}
@@ -160,17 +141,17 @@ class Backup extends App_Controller
 				throw new Exception('ZIP tidak valid');
 			}
 
-			// Verify ZIP entry count matches successful files
+			// Verify ZIP entry count matches added files
 			$zipVerify = new ZipArchive();
 			if ($zipVerify->open($tmpZip) === true) {
 				$zipCount = $zipVerify->numFiles;
 				$zipVerify->close();
 			} else {
-				$zipCount = count($successful_files);
+				$zipCount = count($added);
 			}
-			if ($zipCount !== count($successful_files)) {
+			if ($zipCount !== count($added)) {
 				@unlink($tmpZip);
-				throw new Exception('Jumlah file ZIP (' . $zipCount . ') tidak cocok dengan dokumen berhasil (' . count($successful_files) . ')');
+				throw new Exception('Jumlah file ZIP (' . $zipCount . ') tidak cocok dengan file berhasil (' . count($added) . ')');
 			}
 
 			// Store permanently
@@ -179,36 +160,43 @@ class Backup extends App_Controller
 				throw new Exception('Gagal menyimpan ZIP');
 			}
 
-			// Record history — jumlah_dokumen = actual ZIP file count
-			$filter_label = $periode_label;
+			// Build filter label from dates
+			$tgl_mulai = $this->normalize_tgl($this->input->post('tgl_mulai'));
+			$tgl_akhir = $this->normalize_tgl($this->input->post('tgl_akhir'));
+			$filter_label = $this->build_filter_label($tgl_mulai, $tgl_akhir);
+
+			// Record history
 			$this->backup_model->save_document_history(
 				$zipName,
 				$stored_path,
 				filesize($stored_path),
-				count($successful_files),
+				count($added),
 				$filter_label
 			);
 
-			$this->cleanup_tmp($tmpDir);
 			@unlink($tmpZip);
+
+			$msg = 'Backup berhasil dibuat. ' . count($added) . ' file berhasil diarsipkan.';
+			if (!empty($missing)) {
+				$msg .= ' ' . count($missing) . ' file tidak ditemukan: ' . implode(', ', $missing);
+			}
 
 			if ($this->input->is_ajax_request()) {
 				echo json_encode(array(
 					'success' => true,
-					'message' => 'Backup berhasil dibuat.',
+					'message' => $msg,
 					'download_url' => site_url(SITE_AREA . '/backup/download/doc/' . $this->db->insert_id()),
 				));
 				exit;
 			}
-			Template::set_message('Backup berhasil dibuat.', 'success');
-			redirect(SITE_AREA . '/backup?' . http_build_query(array('status' => $status, 'tgl_mulai' => $tgl_mulai, 'tgl_akhir' => $tgl_akhir)));
+			Template::set_message($msg, 'success');
+			redirect(SITE_AREA . '/backup?' . http_build_query(array('tgl_mulai' => $tgl_mulai, 'tgl_akhir' => $tgl_akhir)));
 			return;
 
 		} catch (Exception $e) {
 			log_message('error', 'Backup Dokumen gagal: ' . $e->getMessage());
-			$this->cleanup_tmp($tmpDir);
 			@unlink($tmpZip);
-			$msg = 'Backup dokumen gagal dibuat. ' . $e->getMessage();
+			$msg = 'Backup dokumen gagal. ' . $e->getMessage();
 			if ($this->input->is_ajax_request()) {
 				echo json_encode(array('success' => false, 'message' => $msg));
 				exit;
@@ -577,19 +565,6 @@ class Backup extends App_Controller
 	// Helpers
 	// --------------------------------------------------------------------
 
-	private function create_tmp_dir($prefix)
-	{
-		$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $prefix . '_' . uniqid('', true);
-		$base = preg_replace('/[^a-zA-Z0-9_\-\/\\\\]/', '_', $base);
-		if (!mkdir($base, 0755, true) && !is_dir($base)) {
-			return false;
-		}
-		if (!is_writable($base)) {
-			return false;
-		}
-		return $base;
-	}
-
 	private function cleanup_tmp($dir)
 	{
 		if (empty($dir) || !is_dir($dir)) {
@@ -635,21 +610,18 @@ class Backup extends App_Controller
 			'WINDIR' => getenv('WINDIR'),
 		);
 
-		// 1. CREATE DATABASE $testDbName
 		$createResult = $this->run_pg_command($psql, $env, $host, $port, $user, 'postgres',
 			'CREATE DATABASE ' . $this->pg_quote_ident($testDbName));
 		if ($createResult['exit'] !== 0) {
 			return false;
 		}
 
-		// 2. Restore SQL into test DB
 		$restoreResult = $this->run_pg_file($psql, $env, $host, $port, $user, $testDbName, $sqlFile);
 		if ($restoreResult['exit'] !== 0) {
 			$this->drop_test_db($psql, $env, $host, $port, $user, $testDbName);
 			return false;
 		}
 
-		// 3. Verify tables exist
 		$verifyResult = $this->run_pg_command($psql, $env, $host, $port, $user, $testDbName,
 			"SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public'");
 		$this->drop_test_db($psql, $env, $host, $port, $user, $testDbName);
@@ -659,16 +631,11 @@ class Backup extends App_Controller
 		}
 
 		$count = intval(trim($verifyResult['stdout']));
-		if ($count <= 0) {
-			return false;
-		}
-
-		return true;
+		return $count > 0;
 	}
 
 	private function run_pg_command($psql, $env, $host, $port, $user, $dbname, $sql)
 	{
-		// ponytail: -t (tuples only) -A (unaligned) for raw output parseable by intval
 		$args = array('-h', $host, '-p', $port, '-U', $user, '-d', $dbname, '-t', '-A', '-c', $sql);
 		$desc = array(
 			0 => array('pipe', 'r'),
@@ -714,7 +681,6 @@ class Backup extends App_Controller
 
 	private function drop_test_db($psql, $env, $host, $port, $user, $dbName)
 	{
-		// Terminate connections first
 		$this->run_pg_command($psql, $env, $host, $port, $user, 'postgres',
 			"SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '" . addslashes($dbName) . "' AND pid <> pg_backend_pid()");
 		$result = $this->run_pg_command($psql, $env, $host, $port, $user, 'postgres',
@@ -727,110 +693,8 @@ class Backup extends App_Controller
 		return '"' . str_replace('"', '""', $ident) . '"';
 	}
 
-	private function generate_pdf_file($rows, $periode_label, $fullPath)
-	{
-		$this->load->model('report_pdf/report_model');
-		$this->load->library('report_pdf/report_pdf');
-		$headers = array('No', 'Kode', 'Customer', 'Produk', 'Jenis', 'Ukuran', 'Warna', 'Jumlah', 'Harga', 'Total', 'Status', 'Tanggal');
-		$widths  = array(25, 85, 90, 80, 70, 35, 50, 40, 75, 80, 55, 75);
-		$aligns  = array('center', 'left', 'left', 'left', 'left', 'center', 'left', 'center', 'right', 'right', 'center', 'center');
-
-		$data_rows = array();
-		foreach ($rows as $r) {
-			$data_rows[] = array(
-				$r->kode_order,
-				$r->nama_customer,
-				$r->produk,
-				$r->jenis_nama,
-				$r->ukuran_nama,
-				$r->warna_nama,
-				$r->jumlah,
-				$r->harga,
-				$r->total_harga,
-				$r->status_transaksi,
-				$r->tanggal,
-			);
-		}
-
-		$footers = array();
-		if (!empty($rows)) {
-			$footers[] = 'Total Transaksi: ' . count($rows);
-			$footers[] = 'Total Nilai: Rp ' . number_format($this->report_model->grand_total($rows), 0, ',', '.');
-		}
-
-		$this->report_pdf->set_data('LAPORAN TRANSAKSI ORDER BAJU', $periode_label, $headers, $widths, $data_rows, $footers, $aligns);
-		$pdf = $this->report_pdf->build();
-
-		if (!is_string($pdf) || $pdf === '' || strncmp($pdf, '%PDF', 4) !== 0) {
-			log_message('error', 'Backup Dokumen: build PDF tidak valid');
-			return false;
-		}
-
-		$written = @file_put_contents($fullPath, $pdf);
-		if ($written === false || $written <= 0 || !is_file($fullPath)) {
-			log_message('error', 'Backup Dokumen: file_put_contents PDF gagal');
-			return false;
-		}
-		$head = @file_get_contents($fullPath, false, null, 0, 4);
-		if ($head === false || strncmp($head, '%PDF', 4) !== 0) {
-			@unlink($fullPath);
-			return false;
-		}
-		return true;
-	}
-
-	private function generate_excel_file($rows, $periode_label, $fullPath)
-	{
-		$this->load->library('report_excel/report_excel');
-		$headers = array('No', 'Kode', 'Customer', 'Produk', 'Jenis', 'Ukuran', 'Warna', 'Jumlah', 'Harga', 'Total', 'Status', 'Tanggal');
-		$widths  = array(25, 85, 90, 80, 70, 35, 50, 40, 75, 80, 55, 75);
-		$aligns  = array('center', 'left', 'left', 'left', 'left', 'center', 'left', 'center', 'right', 'right', 'center', 'center');
-
-		$data_rows = array();
-		$no = 0;
-		foreach ($rows as $r) {
-			$no++;
-			$data_rows[] = array(
-				$no,
-				$r->kode_order,
-				$r->nama_customer,
-				$r->produk,
-				$r->jenis_nama,
-				$r->ukuran_nama,
-				$r->warna_nama,
-				(int) $r->jumlah,
-				(float) $r->harga,
-				(float) $r->total_harga,
-				$r->status_transaksi,
-				$r->tanggal,
-			);
-		}
-
-		$footers = array();
-		if (!empty($rows)) {
-			$footers[] = 'Total Transaksi: ' . count($rows);
-			$footers[] = 'Total Nilai: Rp ' . number_format($this->report_model->grand_total($rows), 0, ',', '.');
-		}
-
-		require_once APPPATH . '../vendor/autoload.php';
-		$excelLib = new Report_excel();
-		$excelLib->set_data('LAPORAN TRANSAKSI ORDER BAJU', $periode_label, $headers, $widths, $data_rows, $footers, $aligns);
-		$saved = $excelLib->save($fullPath);
-		if (!$saved || !is_file($fullPath) || filesize($fullPath) <= 0) {
-			log_message('error', 'Backup Dokumen: save Excel gagal');
-			return false;
-		}
-		$head = @file_get_contents($fullPath, false, null, 0, 2);
-		if ($head === false || strncmp($head, 'PK', 2) !== 0) {
-			@unlink($fullPath);
-			return false;
-		}
-		return true;
-	}
-
 	private function find_pg_dump()
 	{
-		// 1. Try system PATH first (works on all platforms if pg_dump is in PATH)
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 			$out = array();
 			@exec('where pg_dump 2>&1', $out, $ret);
@@ -845,7 +709,6 @@ class Backup extends App_Controller
 			}
 		}
 
-		// 2. Search common installation paths
 		$commonPaths = array(
 			'/usr/bin/pg_dump',
 			'/usr/local/bin/pg_dump',
@@ -853,7 +716,6 @@ class Backup extends App_Controller
 			'/usr/pgsql/bin/pg_dump',
 		);
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-			// Windows: search Program Files and common install locations
 			$programFiles = array(
 				getenv('ProgramFiles') ?: 'C:\\Program Files',
 				getenv('ProgramFiles(x86)') ?: 'C:\\Program Files (x86)',
@@ -862,7 +724,6 @@ class Backup extends App_Controller
 				$commonPaths[] = $pf . '\\PostgreSQL\\*\\bin\\pg_dump.exe';
 				$commonPaths[] = $pf . '\\postgresql\\*\\bin\\pg_dump.exe';
 			}
-			// Laragon default
 			$laragonBin = getenv('LARAGON_DIR') ?: 'C:\\laragon\\bin';
 			$commonPaths[] = $laragonBin . '\\postgresql\\*\\bin\\pg_dump.exe';
 			$commonPaths[] = $laragonBin . '\\postgresql*\\bin\\pg_dump.exe';
@@ -878,30 +739,21 @@ class Backup extends App_Controller
 			}
 		}
 
-		// 3. Fallback: assume it's in PATH (user can install pg_dump globally)
 		return 'pg_dump';
 	}
 
-	private function build_periode_label($tgl_mulai, $tgl_akhir, $status)
+	private function build_filter_label($tgl_mulai, $tgl_akhir)
 	{
-		$label = 'Semua';
 		if ($tgl_mulai !== '' && $tgl_akhir !== '') {
-			$label = date('d-m-Y', strtotime($tgl_mulai)) . ' s/d ' . date('d-m-Y', strtotime($tgl_akhir));
-		} elseif ($tgl_mulai !== '' && $tgl_akhir === '') {
-			$label = '>= ' . date('d-m-Y', strtotime($tgl_mulai));
-		} elseif ($tgl_mulai === '' && $tgl_akhir !== '') {
-			$label = '<= ' . date('d-m-Y', strtotime($tgl_akhir));
+			return date('d-m-Y', strtotime($tgl_mulai)) . ' s/d ' . date('d-m-Y', strtotime($tgl_akhir));
 		}
-		if ($status !== '') {
-			$label .= ' | Status: ' . $status;
+		if ($tgl_mulai !== '') {
+			return '>= ' . date('d-m-Y', strtotime($tgl_mulai));
 		}
-		return $label;
-	}
-
-	private function normalize_status($status)
-	{
-		$status = (string) $status;
-		return in_array($status, array('Diproses', 'Diambil', 'Selesai'), true) ? $status : '';
+		if ($tgl_akhir !== '') {
+			return '<= ' . date('d-m-Y', strtotime($tgl_akhir));
+		}
+		return 'Semua';
 	}
 
 	private function normalize_tgl($tgl)
