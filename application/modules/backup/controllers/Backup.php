@@ -74,10 +74,6 @@ class Backup extends App_Controller
 	// --------------------------------------------------------------------
 	public function document()
 	{
-		if ($this->auth->permission_exists($this->permissionDocument)) {
-			$this->auth->restrict($this->permissionDocument);
-		}
-
 		if ($this->input->method() !== 'post') {
 			redirect(SITE_AREA . '/backup');
 			return;
@@ -219,8 +215,20 @@ class Backup extends App_Controller
 				));
 				exit;
 			}
+
+			// Non-AJAX: download ZIP directly
+			$storedFile = $stored_path;
+			if (is_file($storedFile) && filesize($storedFile) > 0) {
+				while (ob_get_level() > 0) { @ob_end_clean(); }
+				header('Content-Type: application/zip');
+				header('Content-Disposition: attachment; filename="' . $zipName . '"');
+				header('Content-Length: ' . filesize($storedFile));
+				header('Cache-Control: max-age=0');
+				readfile($storedFile);
+				exit;
+			}
 			Template::set_message($msg, 'success');
-			redirect(SITE_AREA . '/backup?' . http_build_query(array('tgl_mulai' => $tgl_mulai, 'tgl_akhir' => $tgl_akhir)));
+			redirect(SITE_AREA . '/backup');
 			return;
 
 		} catch (Exception $e) {
