@@ -6,20 +6,60 @@ Assets::add_js('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js', 'extern
 
 $backupIndexUrl = site_url(SITE_AREA . '/backup');
 $backupDocUrl   = site_url(SITE_AREA . '/backup/document');
+$backupFilterUrl = site_url(SITE_AREA . '/backup/filter');
 
 $inline_js = "
 $(function() {
-    var tblCetak = $('#tbl-riwayat-cetak').DataTable({
-        language: {
-            search: 'Cari:', lengthMenu: 'Tampilkan _MENU_ data',
-            info: 'Menampilkan _START_ - _END_ dari _TOTAL_ data',
-            infoEmpty: 'Tidak ada data', zeroRecords: 'Tidak ada data yang cocok',
-            paginate: { first: 'Pertama', last: 'Terakhir', next: 'Selanjutnya', previous: 'Sebelumnya' }
-        },
-        pageLength: 10, order: [[1, 'desc']],
-        columnDefs: [{ orderable: false, targets: 0 }],
-        destroy: true
-    });
+    var tblCetak;
+
+    function initTable(data) {
+        if (tblCetak) tblCetak.destroy();
+        var tbody = '';
+        if (data.length === 0) {
+            tbody = '<tr><td colspan=\"6\" class=\"text-center text-muted\">Tidak ada data.</td></tr>';
+        } else {
+            for (var i = 0; i < data.length; i++) {
+                var r = data[i];
+                tbody += '<tr>'
+                    + '<td class=\"text-center\"><input type=\"checkbox\" class=\"row-check\" value=\"' + r.id + '\"></td>'
+                    + '<td class=\"text-center\">' + r.id + '</td>'
+                    + '<td>' + r.created_on + '</td>'
+                    + '<td class=\"text-center\">' + r.tipe_badge + '</td>'
+                    + '<td>' + r.nama_file + '</td>'
+                    + '<td class=\"text-center\">' + r.jumlah_transaksi + '</td>'
+                    + '</tr>';
+            }
+        }
+        $('#tbl-riwayat-cetak tbody').html(tbody);
+        $('#total-dokumen').text(data.length);
+
+        tblCetak = $('#tbl-riwayat-cetak').DataTable({
+            language: {
+                search: 'Cari:', lengthMenu: 'Tampilkan _MENU_ data',
+                info: 'Menampilkan _START_ - _END_ dari _TOTAL_ data',
+                infoEmpty: 'Tidak ada data', zeroRecords: 'Tidak ada data yang cocok',
+                paginate: { first: 'Pertama', last: 'Terakhir', next: 'Selanjutnya', previous: 'Sebelumnya' }
+            },
+            pageLength: 10, order: [[1, 'desc']],
+            columnDefs: [{ orderable: false, targets: 0 }],
+            destroy: true
+        });
+
+        $('#check-all').prop('checked', false);
+    }
+
+    // Init with server data
+    initTable(<?php echo json_encode(array_map(function($r) {
+        return array(
+            'id' => (int) $r->id,
+            'created_on' => html_escape($r->created_on_str),
+            'tipe_badge' => $r->tipe_report === 'pdf'
+                ? '<span class=\"badge badge-danger\"><i class=\"fas fa-file-pdf\"></i> PDF</span>'
+                : '<span class=\"badge badge-success\"><i class=\"fas fa-file-excel\"></i> Excel</span>',
+            'nama_file' => html_escape($r->nama_file),
+            'jumlah_transaksi' => (int) $r->jumlah_transaksi,
+        );
+    }, $riwayat_cetak)); ?>);
 
     $('#tbl-backup-history').DataTable({
         language: {
@@ -34,16 +74,55 @@ $(function() {
     if ($('#dp_mulai').length && $.fn.datetimepicker) { $('#dp_mulai').datetimepicker({ format: 'DD-MM-YYYY' }); }
     if ($('#dp_akhir').length && $.fn.datetimepicker) { $('#dp_akhir').datetimepicker({ format: 'DD-MM-YYYY' }); }
 
+    // AJAX Filter
+    $('#btn-filter').on('click', function(e) {
+        e.preventDefault();
+        var mulai = $('#filter-tgl_mulai').val() || '';
+        var akhir = $('#filter-tgl_akhir').val() || '';
+        if (mulai && akhir) {
+            function toIso(v) {
+                var m = /^(\\d{2})-(\\d{2})-(\\d{4})$/.exec(v || '');
+                return m ? m[3]+'-'+m[2]+'-'+m[1] : '';
+            }
+            var mi = toIso(mulai), ai = toIso(akhir);
+            if (mi && ai && mi > ai) { alert('Tanggal Mulai tidak boleh setelah Tanggal Akhir.'); return; }
+        }
+        $.ajax({
+            url: '" . $backupFilterUrl . "',
+            data: { tgl_mulai: mulai, tgl_akhir: akhir },
+            dataType: 'json',
+            success: function(res) {
+                if (res.success) {
+                    initTable(res.data);
+                }
+            }
+        });
+    });
+
+    // Reset
+    $('#btn-reset').on('click', function(e) {
+        e.preventDefault();
+        $('#filter-tgl_mulai').val('');
+        $('#filter-tgl_akhir').val('');
+        $.ajax({
+            url: '" . $backupFilterUrl . "',
+            data: { tgl_mulai: '', tgl_akhir: '' },
+            dataType: 'json',
+            success: function(res) {
+                if (res.success) initTable(res.data);
+            }
+        });
+    });
+
     // Select All checkbox
-    $('#check-all').on('change', function() {
+    $(document).on('change', '#check-all', function() {
         var checked = $(this).is(':checked');
         tblCetak.rows().every(function() {
             $(this.node()).find('.row-check').prop('checked', checked);
         });
     });
 
-    // Individual checkbox change
-    $('#tbl-riwayat-cetak').on('change', '.row-check', function() {
+    $(document).on('change', '.row-check', function() {
         var total = tblCetak.rows().nodes().length;
         var checked = tblCetak.nodes().toJQuery().find('.row-check:checked').length;
         $('#check-all').prop('checked', total > 0 && total === checked);
@@ -52,17 +131,14 @@ $(function() {
     // Backup button
     $('#btn-backup-dokumen').on('click', function(e) {
         e.preventDefault();
-
         var selected = [];
         tblCetak.nodes().toJQuery().find('.row-check:checked').each(function() {
             selected.push($(this).val());
         });
-
         if (selected.length === 0) {
             alert('Pilih minimal satu dokumen dari Riwayat Cetak.');
             return;
         }
-
         if (!confirm('Arsipkan ' + selected.length + ' dokumen yang dipilih?')) return;
 
         var btn = $(this);
@@ -119,43 +195,41 @@ Assets::add_js($inline_js, 'inline');
                 <h3 class="card-title"><i class="fas fa-filter text-primary"></i> Filter Riwayat Cetak</h3>
             </div>
             <div class="card-body">
-                <form id="filter-form" method="get" action="<?php echo $backupIndexUrl; ?>">
-                    <div class="row align-items-end">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Tanggal Mulai</label>
-                                <div class="input-group date" id="dp_mulai" data-target-input="nearest">
-                                    <input type="text" name="tgl_mulai" id="filter-tgl_mulai" class="form-control datetimepicker-input" data-target="#dp_mulai" placeholder="DD-MM-YYYY" value="<?php echo html_escape($tgl_mulai ? date('d-m-Y', strtotime($tgl_mulai)) : ''); ?>" />
-                                    <div class="input-group-append" data-target="#dp_mulai" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                    </div>
+                <div class="row align-items-end">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Tanggal Mulai</label>
+                            <div class="input-group date" id="dp_mulai" data-target-input="nearest">
+                                <input type="text" id="filter-tgl_mulai" class="form-control datetimepicker-input" data-target="#dp_mulai" placeholder="DD-MM-YYYY" value="<?php echo html_escape($tgl_mulai ? date('d-m-Y', strtotime($tgl_mulai)) : ''); ?>" />
+                                <div class="input-group-append" data-target="#dp_mulai" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Tanggal Akhir</label>
-                                <div class="input-group date" id="dp_akhir" data-target-input="nearest">
-                                    <input type="text" name="tgl_akhir" id="filter-tgl_akhir" class="form-control datetimepicker-input" data-target="#dp_akhir" placeholder="DD-MM-YYYY" value="<?php echo html_escape($tgl_akhir ? date('d-m-Y', strtotime($tgl_akhir)) : ''); ?>" />
-                                    <div class="input-group-append" data-target="#dp_akhir" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Filter</button>
-                                <a href="<?php echo $backupIndexUrl; ?>" class="btn btn-secondary"><i class="fas fa-undo"></i> Reset</a>
-                                <?php if (!empty($can_document)) : ?>
-                                    <button type="button" id="btn-backup-dokumen" class="btn btn-danger float-right">
-                                        <i class="fas fa-file-archive"></i> Backup Dokumen Terpilih
-                                    </button>
-                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
-                </form>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Tanggal Akhir</label>
+                            <div class="input-group date" id="dp_akhir" data-target-input="nearest">
+                                <input type="text" id="filter-tgl_akhir" class="form-control datetimepicker-input" data-target="#dp_akhir" placeholder="DD-MM-YYYY" value="<?php echo html_escape($tgl_akhir ? date('d-m-Y', strtotime($tgl_akhir)) : ''); ?>" />
+                                <div class="input-group-append" data-target="#dp_akhir" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <button type="button" id="btn-filter" class="btn btn-primary"><i class="fas fa-search"></i> Filter</button>
+                            <button type="button" id="btn-reset" class="btn btn-secondary"><i class="fas fa-undo"></i> Reset</button>
+                            <?php if (!empty($can_document)) : ?>
+                                <button type="button" id="btn-backup-dokumen" class="btn btn-danger float-right">
+                                    <i class="fas fa-file-archive"></i> Backup Dokumen Terpilih
+                                </button>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -163,43 +237,23 @@ Assets::add_js($inline_js, 'inline');
         <div class="card" id="card-data">
             <div class="card-header">
                 <h3 class="card-title"><i class="fas fa-print text-info"></i> Riwayat Cetak Dokumen</h3>
-                <span class="float-right">Total: <?php echo count($riwayat_cetak); ?> dokumen</span>
+                <span class="float-right">Total: <span id="total-dokumen"><?php echo count($riwayat_cetak); ?></span> dokumen</span>
             </div>
             <div class="card-body table-responsive">
-                <?php if (empty($riwayat_cetak)) : ?>
-                    <div class="alert alert-info mb-0"><i class="fas fa-info-circle"></i> <?php echo ($tgl_mulai !== '' || $tgl_akhir !== '') ? 'Tidak ada riwayat cetak pada periode yang dipilih.' : 'Belum ada riwayat cetak dokumen.'; ?></div>
-                <?php else : ?>
-                    <table id="tbl-riwayat-cetak" class="table table-bordered table-striped table-hover" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th style="width:40px"><input type="checkbox" id="check-all" title="Pilih Semua"></th>
-                                <th style="width:60px">ID</th>
-                                <th>Tanggal Cetak</th>
-                                <th style="width:80px">Tipe</th>
-                                <th>Nama File</th>
-                                <th style="width:80px">Transaksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($riwayat_cetak as $r) : ?>
-                            <tr>
-                                <td class="text-center"><input type="checkbox" class="row-check" value="<?php echo (int) $r->id; ?>"></td>
-                                <td class="text-center"><?php echo (int) $r->id; ?></td>
-                                <td><?php echo html_escape($r->created_on_str); ?></td>
-                                <td class="text-center">
-                                    <?php if ($r->tipe_report === 'pdf') : ?>
-                                        <span class="badge badge-danger"><i class="fas fa-file-pdf"></i> PDF</span>
-                                    <?php else : ?>
-                                        <span class="badge badge-success"><i class="fas fa-file-excel"></i> Excel</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td><?php echo html_escape($r->nama_file); ?></td>
-                                <td class="text-center"><?php echo (int) $r->jumlah_transaksi; ?></td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                <?php endif; ?>
+                <table id="tbl-riwayat-cetak" class="table table-bordered table-striped table-hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th style="width:40px"><input type="checkbox" id="check-all" title="Pilih Semua"></th>
+                            <th style="width:60px">ID</th>
+                            <th>Tanggal Cetak</th>
+                            <th style="width:80px">Tipe</th>
+                            <th>Nama File</th>
+                            <th style="width:80px">Transaksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
         </div>
 

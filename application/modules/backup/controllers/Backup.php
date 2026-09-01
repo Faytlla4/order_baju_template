@@ -40,6 +40,36 @@ class Backup extends App_Controller
 	}
 
 	// --------------------------------------------------------------------
+	// AJAX FILTER — return Riwayat Cetak rows as JSON
+	// --------------------------------------------------------------------
+	public function filter()
+	{
+		$this->load->model('backup/backup_model');
+
+		$tgl_mulai = $this->normalize_tgl($this->input->get('tgl_mulai'));
+		$tgl_akhir = $this->normalize_tgl($this->input->get('tgl_akhir'));
+
+		$riwayat_cetak = $this->backup_model->get_riwayat_cetak($tgl_mulai, $tgl_akhir);
+
+		$rows = array();
+		foreach ($riwayat_cetak as $r) {
+			$tipe_badge = $r->tipe_report === 'pdf'
+				? '<span class="badge badge-danger"><i class="fas fa-file-pdf"></i> PDF</span>'
+				: '<span class="badge badge-success"><i class="fas fa-file-excel"></i> Excel</span>';
+			$rows[] = array(
+				'id' => (int) $r->id,
+				'created_on' => html_escape($r->created_on_str),
+				'tipe_badge' => $tipe_badge,
+				'nama_file' => html_escape($r->nama_file),
+				'jumlah_transaksi' => (int) $r->jumlah_transaksi,
+			);
+		}
+
+		echo json_encode(array('success' => true, 'data' => $rows, 'total' => count($rows)));
+		exit;
+	}
+
+	// --------------------------------------------------------------------
 	// BACKUP DOKUMEN — POST, copy existing files from Riwayat Cetak, return JSON
 	// --------------------------------------------------------------------
 	public function document()
