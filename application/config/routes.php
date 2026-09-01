@@ -80,10 +80,34 @@ Route::prefix(SITE_AREA, function(){
     Route::any('transaksi/transaksi/view_dokumen/(:num)/(:any)', 'transaksi/transaksi/view_dokumen/$1/$2');
     Route::any('transaksi/transaksi/download_dokumen/(:num)/(:any)', 'transaksi/transaksi/download_dokumen/$1/$2');
     Route::any('transaksi/transaksi/get_dokumen_list/(:num)', 'transaksi/transaksi/get_dokumen_list/$1');
-    Route::context('content', array('home' => SITE_AREA .'/content/index'));
-    Route::context('master', array('home' => SITE_AREA .'/master/index'));
+
+    // Content context
+    Route::any('content', 'content/content/index');
+    Route::any('content/order_baju', 'content/content/order_baju');
+    Route::any('content/order_baju_save', 'content/content/order_baju_save');
+    Route::any('content/order_baju_delete/(:num)', 'content/content/order_baju_delete/$1');
+
+    // Master context
+    Route::any('master', 'master/master/index');
+    Route::any('master/jenis_baju', 'master/master/jenis_baju');
+    Route::any('master/jenis_baju_save', 'master/master/jenis_baju_save');
+    Route::any('master/jenis_baju_delete/(:num)', 'master/master/jenis_baju_delete/$1');
+    Route::any('master/ukuran', 'master/master/ukuran');
+    Route::any('master/ukuran_save', 'master/master/ukuran_save');
+    Route::any('master/ukuran_delete/(:num)', 'master/master/ukuran_delete/$1');
+    Route::any('master/warna', 'master/master/warna');
+    Route::any('master/warna_save', 'master/master/warna_save');
+    Route::any('master/warna_delete/(:num)', 'master/master/warna_delete/$1');
+
     Route::context('transaksi', array('home' => SITE_AREA .'/transaksi/index'));
-    Route::context('reports', array('home' => SITE_AREA .'/reports/index'));
+
+    // Reports context (module)
+    Route::any('reports', 'reports/reports/index');
+    Route::any('reports/report_pdf', 'reports/reports/report_pdf');
+    Route::any('reports/report_excel', 'reports/reports/report_excel');
+    Route::any('reports/download_pdf', 'reports/reports/download_pdf');
+    Route::any('reports/download_excel', 'reports/reports/download_excel');
+
     Route::any('backup', 'backup/backup/index');
     Route::any('backup/filter', 'backup/backup/filter');
     Route::any('backup/document', 'backup/backup/document');

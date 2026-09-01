@@ -34,6 +34,72 @@
             <?php
             $navMenus = Contextslte::render_menu('text', 'normal');
 
+            // --- CONTENT dropdown (replace empty context) ---
+            $isContent = ($this->uri->segment(2) == 'content');
+            $isContentOrder = ($this->uri->segment(2) == 'content' && $this->uri->segment(3) == 'order_baju');
+            $contentParentClass = ($isContent || $isContentOrder) ? "nav-item menu-is-opening menu-open" : "nav-item";
+            $contentParentLink  = ($isContent && !$isContentOrder) ? ' active' : '';
+            $contentOrderActive = $isContentOrder ? ' active' : '';
+
+            $contentSection = "<li class='{$contentParentClass}'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/content') . "' class='nav-link{$contentParentLink}'>\n"
+                . "<i class='nav-icon fas fa-tachometer-alt'></i>\n"
+                . "<p>\nContent\n<i class='right fas fa-angle-left'></i>\n</p>\n"
+                . "</a>\n"
+                . "<ul class='nav nav-treeview'>\n"
+                . "<li class='nav-item'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/content/order_baju') . "' class='nav-link{$contentOrderActive}'>\n"
+                . "<i class='nav-icon far fa-circle'></i>\n<p>Order Baju</p>\n"
+                . "</a>\n"
+                . "</li>\n"
+                . "</ul>\n"
+                . "</li>\n";
+
+            $pos0 = strrpos($navMenus, '</ul>');
+            if ($pos0 !== false) {
+                $navMenus = substr($navMenus, 0, $pos0) . $contentSection . substr($navMenus, $pos0);
+            }
+
+            // --- MASTER dropdown (replace empty context) ---
+            $isMaster       = ($this->uri->segment(2) == 'master');
+            $isMasterJenis  = ($this->uri->segment(2) == 'master' && $this->uri->segment(3) == 'jenis_baju');
+            $isMasterUkuran = ($this->uri->segment(2) == 'master' && $this->uri->segment(3) == 'ukuran');
+            $isMasterWarna  = ($this->uri->segment(2) == 'master' && $this->uri->segment(3) == 'warna');
+            $masterParentClass = $isMaster ? "nav-item menu-is-opening menu-open" : "nav-item";
+            $masterParentLink  = $isMaster && !$isMasterJenis && !$isMasterUkuran && !$isMasterWarna ? ' active' : '';
+            $masterJenisActive  = $isMasterJenis ? ' active' : '';
+            $masterUkuranActive = $isMasterUkuran ? ' active' : '';
+            $masterWarnaActive  = $isMasterWarna ? ' active' : '';
+
+            $masterSection = "<li class='{$masterParentClass}'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/master') . "' class='nav-link{$masterParentLink}'>\n"
+                . "<i class='nav-icon fas fa-database'></i>\n"
+                . "<p>\nMaster\n<i class='right fas fa-angle-left'></i>\n</p>\n"
+                . "</a>\n"
+                . "<ul class='nav nav-treeview'>\n"
+                . "<li class='nav-item'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/master/jenis_baju') . "' class='nav-link{$masterJenisActive}'>\n"
+                . "<i class='nav-icon far fa-circle'></i>\n<p>Jenis Baju</p>\n"
+                . "</a>\n"
+                . "</li>\n"
+                . "<li class='nav-item'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/master/ukuran') . "' class='nav-link{$masterUkuranActive}'>\n"
+                . "<i class='nav-icon far fa-circle'></i>\n<p>Ukuran</p>\n"
+                . "</a>\n"
+                . "</li>\n"
+                . "<li class='nav-item'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/master/warna') . "' class='nav-link{$masterWarnaActive}'>\n"
+                . "<i class='nav-icon far fa-circle'></i>\n<p>Warna</p>\n"
+                . "</a>\n"
+                . "</li>\n"
+                . "</ul>\n"
+                . "</li>\n";
+
+            $pos00 = strrpos($navMenus, '</ul>');
+            if ($pos00 !== false) {
+                $navMenus = substr($navMenus, 0, $pos00) . $masterSection . substr($navMenus, $pos00);
+            }
+
             // --- Transaksi menu ---
             $isTransaksi = $this->uri->segment(2) == 'transaksi';
             $transaksiLink = $isTransaksi ? ' active' : '';

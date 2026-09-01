@@ -59,5 +59,71 @@ class Reports extends Admin_Controller
 
 	//--------------------------------------------------------------------
 
+	public function report_pdf()
+	{
+		$this->load->database();
+
+		$tgl_mulai = $this->input->get('tgl_mulai');
+		$tgl_akhir = $this->input->get('tgl_akhir');
+
+		$this->db->select('transaksi.*, order_baju.kode_order, order_baju.nama_customer, order_baju.produk, master_jenis_baju.nama_jenis, master_ukuran.nama_ukuran, master_warna.nama_warna')
+			->from('transaksi')
+			->join('order_baju', 'order_baju.id = transaksi.order_baju_id', 'left')
+			->join('master_jenis_baju', 'master_jenis_baju.id = order_baju.jenis_baju_id', 'left')
+			->join('master_ukuran', 'master_ukuran.id = order_baju.ukuran_id', 'left')
+			->join('master_warna', 'master_warna.id = order_baju.warna_id', 'left');
+
+		if ($tgl_mulai) {
+			$this->db->where('transaksi.created_on >=', $tgl_mulai);
+		}
+		if ($tgl_akhir) {
+			$this->db->where('transaksi.created_on <=', $tgl_akhir . ' 23:59:59');
+		}
+
+		$rows = $this->db->order_by('transaksi.id', 'DESC')->get()->result();
+
+		Template::set('rows', $rows);
+		Template::set('tgl_mulai', $tgl_mulai);
+		Template::set('tgl_akhir', $tgl_akhir);
+		Template::set('toolbar_title', 'Laporan Transaksi PDF');
+		Template::set_view('admin/reports/report_pdf');
+		Template::render();
+	}//end report_pdf()
+
+	//--------------------------------------------------------------------
+
+	public function report_excel()
+	{
+		$this->load->database();
+
+		$tgl_mulai = $this->input->get('tgl_mulai');
+		$tgl_akhir = $this->input->get('tgl_akhir');
+
+		$this->db->select('transaksi.*, order_baju.kode_order, order_baju.nama_customer, order_baju.produk, master_jenis_baju.nama_jenis, master_ukuran.nama_ukuran, master_warna.nama_warna')
+			->from('transaksi')
+			->join('order_baju', 'order_baju.id = transaksi.order_baju_id', 'left')
+			->join('master_jenis_baju', 'master_jenis_baju.id = order_baju.jenis_baju_id', 'left')
+			->join('master_ukuran', 'master_ukuran.id = order_baju.ukuran_id', 'left')
+			->join('master_warna', 'master_warna.id = order_baju.warna_id', 'left');
+
+		if ($tgl_mulai) {
+			$this->db->where('transaksi.created_on >=', $tgl_mulai);
+		}
+		if ($tgl_akhir) {
+			$this->db->where('transaksi.created_on <=', $tgl_akhir . ' 23:59:59');
+		}
+
+		$rows = $this->db->order_by('transaksi.id', 'DESC')->get()->result();
+
+		Template::set('rows', $rows);
+		Template::set('tgl_mulai', $tgl_mulai);
+		Template::set('tgl_akhir', $tgl_akhir);
+		Template::set('toolbar_title', 'Laporan Transaksi Excel');
+		Template::set_view('admin/reports/report_excel');
+		Template::render();
+	}//end report_excel()
+
+	//--------------------------------------------------------------------
+
 
 }//end class

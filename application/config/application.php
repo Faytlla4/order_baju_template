@@ -52,8 +52,6 @@ $config['site.backup_folder'] = 'archives/';
 // The icon displayed is chosen automatically from the file:
 //      theme/images/context_context_name.png
 $config['contexts'] = array(
-	'content',
-	'master',
 	'reports',
 	'settings',
 	'developer',

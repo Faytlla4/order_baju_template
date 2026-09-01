@@ -61,4 +61,22 @@ class Content extends App_Controller
 
 	//--------------------------------------------------------------------
 
+	public function order_baju()
+	{
+		$query = $this->db->select('order_baju.*, master_jenis_baju.nama_jenis, master_ukuran.nama_ukuran, master_warna.nama_warna')
+			->from('order_baju')
+			->join('master_jenis_baju', 'master_jenis_baju.id = order_baju.jenis_baju_id', 'left')
+			->join('master_ukuran', 'master_ukuran.id = order_baju.ukuran_id', 'left')
+			->join('master_warna', 'master_warna.id = order_baju.warna_id', 'left')
+			->order_by('order_baju.id', 'DESC')
+			->get();
+
+		Template::set('orders', $query->result());
+		Template::set('toolbar_title', 'Order Baju');
+		Template::set_view('admin/content/order_baju');
+		Template::render();
+	} //end order_baju()
+
+	//--------------------------------------------------------------------
+
 } //end class
