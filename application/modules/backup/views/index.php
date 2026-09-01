@@ -8,6 +8,22 @@ $backupIndexUrl = site_url(SITE_AREA . '/backup');
 $backupDocUrl   = site_url(SITE_AREA . '/backup/document');
 $backupFilterUrl = site_url(SITE_AREA . '/backup/filter');
 
+$js_data = array();
+if (!empty($riwayat_cetak)) {
+    foreach ($riwayat_cetak as $r) {
+        $tipe_badge = $r->tipe_report === 'pdf'
+            ? '<span class=\"badge badge-danger\"><i class=\"fas fa-file-pdf\"></i> PDF</span>'
+            : '<span class=\"badge badge-success\"><i class=\"fas fa-file-excel\"></i> Excel</span>';
+        $js_data[] = array(
+            'id' => (int) $r->id,
+            'created_on' => $r->created_on_str,
+            'tipe_badge' => $tipe_badge,
+            'nama_file' => $r->nama_file,
+            'jumlah_transaksi' => (int) $r->jumlah_transaksi,
+        );
+    }
+}
+
 $inline_js = "
 $(function() {
     var tblCetak;
@@ -49,17 +65,7 @@ $(function() {
     }
 
     // Init with server data
-    initTable(<?php echo json_encode(array_map(function($r) {
-        return array(
-            'id' => (int) $r->id,
-            'created_on' => html_escape($r->created_on_str),
-            'tipe_badge' => $r->tipe_report === 'pdf'
-                ? '<span class=\"badge badge-danger\"><i class=\"fas fa-file-pdf\"></i> PDF</span>'
-                : '<span class=\"badge badge-success\"><i class=\"fas fa-file-excel\"></i> Excel</span>',
-            'nama_file' => html_escape($r->nama_file),
-            'jumlah_transaksi' => (int) $r->jumlah_transaksi,
-        );
-    }, $riwayat_cetak)); ?>);
+    initTable(" . json_encode($js_data) . ");
 
     $('#tbl-backup-history').DataTable({
         language: {
