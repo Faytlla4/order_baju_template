@@ -160,34 +160,41 @@ class Backup extends App_Controller
 			$added = array();
 			$missing = array();
 
-			// Bagian A: Report PDF/Excel — masuk folder "report/".
+			// Bagian A: Report PDF/Excel — masuk folder "dokumen/report/".
 			foreach ($reports as $report) {
-				$filePath = APPPATH . '../' . $report->path_file;
-				$fileName = $report->nama_file;
+				$fileName = trim((string) $report->nama_file);
 
-				if (!is_file($filePath) || filesize($filePath) <= 0) {
-					$missing[] = '/' . $fileName;
+				// path_file kosong = report lama (mis. export CSV) tanpa file fisik.
+				if (trim((string) $report->path_file) === '') {
+					$missing[] = '/report/' . ($fileName !== '' ? $fileName : ('#' . $report->id));
+					log_message('error', 'Backup Dokumen: report #' . $report->id . ' tidak punya path_file (file fisik tidak ada).');
+					continue;
+				}
+
+				$filePath = APPPATH . '../' . ltrim((string) $report->path_file, '/\\');
+				if ($fileName === '' || !is_file($filePath) || filesize($filePath) <= 0) {
+					$missing[] = '/report/' . ($fileName !== '' ? $fileName : '#' . $report->id);
 					log_message('error', 'Backup Dokumen: file report tidak ditemukan — ' . $report->path_file);
 					continue;
 				}
 
-				$zipNameEntry = 'report/' . $report->id . '_' . $fileName;
+				$zipNameEntry = 'dokumen/report/' . $fileName;
 				$zip->addFile($filePath, $zipNameEntry);
 				$added[] = $zipNameEntry;
 			}
 
-			// Bagian B: Dokumen transaksi (upload user) — masuk folder "dokumen_transaksi/[id]/".
+			// Bagian B: Dokumen transaksi (upload user) — masuk folder "dokumen/dokumen_transaksi/[id]/".
 			foreach ($trx_items as $item) {
-				$filePath = FCPATH . 'assets/dokumen_transaksi/' . (int) $item->id . '/' . basename($item->nama_file);
-				$fileName = basename($item->nama_file);
+				$filePath = $this->resolve_transaksi_file((int) $item->id, $item->nama_file);
+				$fileName = basename((string) $item->nama_file);
 
-				if (!is_file($filePath) || filesize($filePath) <= 0) {
-					$missing[] = basename($item->nama_file);
-					log_message('error', 'Backup Dokumen: file transaksi tidak ditemukan — ' . $filePath);
+				if ($filePath === null || !is_file($filePath) || filesize($filePath) <= 0) {
+					$missing[] = 'dokumen/dokumen_transaksi/' . (int) $item->id . '/' . $fileName;
+					log_message('error', 'Backup Dokumen: file transaksi tidak ditemukan — transaksi #' . (int) $item->id . ', file ' . $fileName);
 					continue;
 				}
 
-				$zipNameEntry = 'dokumen_transaksi/' . (int) $item->id . '/' . $fileName;
+				$zipNameEntry = 'dokumen/dokumen_transaksi/' . (int) $item->id . '/' . $fileName;
 				$zip->addFile($filePath, $zipNameEntry);
 				$added[] = $zipNameEntry;
 			}
@@ -647,6 +654,42 @@ class Backup extends App_Controller
 	// --------------------------------------------------------------------
 	// Helpers
 	// --------------------------------------------------------------------
+
+	/**
+	 * Resolve path fisik file dokumen transaksi.
+	 *
+	 * Urutan pencarian (sesuai struktur penyimpanan saat ini & historis):
+	 * 1. public/assets/dokumen/dokumen_transaksi/[id]/   (struktur baru)
+	 * 2. public/assets/dokumen_transaksi/[id]/           (struktur lama)
+	 * 3. uploads/transaksi/                              (legacy)
+	 *
+	 * @param int    $id   ID transaksi.
+	 * @param string $file Nama file.
+	 *
+	 * @return string|null
+	 */
+	private function resolve_transaksi_file($id, $file)
+	{
+		$id = (int) $id;
+		$file = basename((string) $file);
+		if ($id <= 0 || $file === '') {
+			return null;
+		}
+
+		$candidates = array(
+			FCPATH . 'assets/dokumen/dokumen_transaksi/' . $id . '/' . $file,
+			FCPATH . 'assets/dokumen_transaksi/' . $id . '/' . $file,
+			APPPATH . '../uploads/transaksi/' . $file,
+		);
+
+		foreach ($candidates as $p) {
+			if (is_file($p)) {
+				return $p;
+			}
+		}
+
+		return null;
+	}
 
 	private function cleanup_tmp($dir)
 	{

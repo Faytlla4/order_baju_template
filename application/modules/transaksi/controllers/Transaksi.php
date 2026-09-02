@@ -20,6 +20,7 @@ class Transaksi extends App_Controller
 {
 	protected $permissionCreate = 'Order_Baju.Content.Create';
 	protected $permissionEdit   = 'Order_Baju.Content.Edit';
+	protected $permissionDelete = 'Order_Baju.Content.Delete';
 	protected $permissionView   = 'Order_Baju.Content.View';
 
 	private $status_aktual = array(
@@ -102,6 +103,7 @@ class Transaksi extends App_Controller
 			Template::set('status_options', $this->status_aktual);
 		}
 
+		Template::set('kode_selected', $kode_selected);
 		Template::set('active_tab', $tab);
 		Template::set_view('order_baju/index');
 		Template::set('toolbar_title', 'Transaksi Order Baju');
@@ -210,7 +212,7 @@ class Transaksi extends App_Controller
 		$total = (float) $jumlah * (float) $harga;
 
 		// ID transaksi belum ada saat CREATE — upload ke staging dulu,
-		// setelah insert dapat ID, file dipindahkan ke public/assets/dokumen_transaksi/[id]/.
+		// setelah insert dapat ID, file dipindahkan ke public/assets/dokumen/dokumen_transaksi/[id]/.
 		$staging = $this->staging_dir();
 		$dokumen_files = $this->upload_documents($staging);
 		if ($dokumen_files === false) {
@@ -405,6 +407,17 @@ class Transaksi extends App_Controller
 					Template::set_message('Transaksi gagal diperbarui.', 'error');
 				}
 			}
+		} elseif (isset($_POST['delete'])) {
+			$this->auth->restrict($this->permissionDelete);
+
+			if ($this->delete_transaksi_hard($id)) {
+				log_activity($this->auth->user_id(), 'Transaksi ' . $id . ' dihapus beserta order terkait dari halaman edit', 'transaksi');
+				Template::set_message('Transaksi beserta order terkait berhasil dihapus.', 'success');
+				redirect(SITE_AREA . '/transaksi/transaksi?tab=daftar');
+				return;
+			}
+
+			Template::set_message('Gagal menghapus transaksi: ' . ($this->transaksi_model->error ? $this->transaksi_model->error : 'Data transaksi tidak ditemukan atau sudah dihapus.'), 'error');
 		}
 
 		Template::set('transaksi', $transaksi);
@@ -429,6 +442,175 @@ class Transaksi extends App_Controller
 		$return = $this->transaksi_model->get_list_data();
 
 		echo json_encode($return);
+	}
+
+	/**
+	 * Hapus transaksi beserta order terkait (hard delete), sama seperti tombol
+	 * delete di Content: record transaksi + order_baju + file dokumen di disk,
+	 * lalu bersihkan master yang tidak lagi dipakai order lain.
+	 *
+	 * @return void
+	 */
+	public function delete()
+	{
+		$this->auth->restrict($this->permissionDelete);
+
+		$id = (int) $this->input->post('id');
+		if ($id <= 0) {
+			Template::set_message('Data transaksi tidak ditemukan atau sudah dihapus.', 'error');
+			redirect(SITE_AREA . '/transaksi/transaksi?tab=daftar');
+			return;
+		}
+
+		if ($this->delete_transaksi_hard($id)) {
+			Template::set_message('Transaksi beserta order terkait berhasil dihapus.', 'success');
+		} else {
+			Template::set_message('Gagal menghapus transaksi: ' . ($this->transaksi_model->error ? $this->transaksi_model->error : 'Data transaksi tidak ditemukan atau sudah dihapus.'), 'error');
+		}
+
+		redirect(SITE_AREA . '/transaksi/transaksi?tab=daftar');
+	}
+
+	/**
+	 * Inti penghapusan: transaksi + order terkait (hard delete).
+	 *
+	 * @param int $id ID transaksi.
+	 *
+	 * @return bool
+	 */
+	private function delete_transaksi_hard($id)
+	{
+		$id = (int) $id;
+		if ($id <= 0) {
+			$this->transaksi_model->error = 'Data transaksi tidak ditemukan atau sudah dihapus.';
+			return false;
+		}
+
+		$transaksi = $this->transaksi_model->find($id);
+		if (!$transaksi) {
+			$this->transaksi_model->error = 'Data transaksi tidak ditemukan atau sudah dihapus.';
+			return false;
+		}
+
+		$order_id = (int) $transaksi->order_baju_id;
+		$kode = '';
+
+		$order = $order_id > 0 ? $this->order_baju_model->find($order_id) : null;
+		if ($order) {
+			$kode = $order->kode_order;
+		}
+
+		$this->db->trans_start();
+
+		// Hapus file dokumen terkait dari disk (folder [id] baru + lokasi lama).
+		$transaksi_rows = $this->db->select('id, dokumen')
+			->where('order_baju_id', $order_id)
+			->get('transaksi')
+			->result();
+		foreach ($transaksi_rows as $trow) {
+			$files = json_decode(isset($trow->dokumen) ? $trow->dokumen : '', true);
+			if (is_array($files)) {
+				$this->hapus_dokumen_lama($files, (int) $trow->id);
+			}
+		}
+
+		// Hapus transaksi terkait dulu agar tidak melanggar FK fk_transaksi_order_baju.
+		$this->db->where('order_baju_id', $order_id)->delete('transaksi');
+
+		// Hapus order (hard delete), seperti Content::hard_delete_order.
+		if ($order_id > 0) {
+			$this->db->where('id', $order_id)->delete('order_baju');
+		}
+
+		// Bersihkan master yang tidak lagi dipakai order lain.
+		$this->cleanup_master_order($order);
+
+		$this->db->trans_complete();
+
+		if ($this->db->trans_status() === false) {
+			$this->transaksi_model->error = 'Terjadi kesalahan pada database.';
+			return false;
+		}
+
+		// ID kembali ke 1 bila tabel kosong setelah hard delete.
+		$this->reset_sequence_if_empty('order_baju', 'order_baju_id_seq');
+		$this->reset_sequence_if_empty('master_jenis_baju', 'master_jenis_baju_id_seq');
+		$this->reset_sequence_if_empty('master_ukuran', 'master_ukuran_id_seq');
+		$this->reset_sequence_if_empty('master_warna', 'master_warna_id_seq');
+
+		log_activity($this->auth->user_id(), 'Transaksi ' . $id . ' dihapus beserta order ' . ($kode !== '' ? $kode : '#' . $order_id), 'transaksi');
+
+		return true;
+	}
+
+	/**
+	 * Hapus satu master bila master tersebut tidak dipakai oleh order lain
+	 * (order yang sedang dihapus dikecualikan). Menjaga master yang masih
+	 * direferensikan order lain tetap aman.
+	 *
+	 * @param object|null $order Order yang sedang dihapus (dari order_baju).
+	 *
+	 * @return void
+	 */
+	private function cleanup_master_order($order)
+	{
+		if (!$order) {
+			return;
+		}
+
+		$maps = array(
+			'master_jenis_baju' => array('jenis_baju_id', $order->jenis_baju_id),
+			'master_ukuran' => array('ukuran_id', $order->ukuran_id),
+			'master_warna' => array('warna_id', $order->warna_id),
+		);
+
+		foreach ($maps as $table => $pair) {
+			list($field, $master_id) = $pair;
+			if (empty($master_id)) {
+				continue;
+			}
+
+			$count = $this->db->where($field, $master_id)
+				->where('id !=', $order->id)
+				->count_all_results('order_baju');
+
+			if ($count > 0) {
+				continue;
+			}
+
+			$this->db->where('id', $master_id)->delete($table);
+
+			switch ($table) {
+				case 'master_jenis_baju':
+					$this->load->model('master_jenis_baju/master_jenis_baju_model');
+					$this->master_jenis_baju_model->reorder_aktif();
+					break;
+				case 'master_ukuran':
+					$this->load->model('master_ukuran/master_ukuran_model');
+					$this->master_ukuran_model->reorder_aktif();
+					break;
+				case 'master_warna':
+					$this->load->model('master_warna/master_warna_model');
+					$this->master_warna_model->reorder_aktif();
+					break;
+			}
+		}
+	}
+
+	/**
+	 * Reset sequence PostgreSQL ke 1 bila tabel sudah kosong.
+	 *
+	 * @param string $table Nama tabel.
+	 * @param string $seq   Nama sequence.
+	 *
+	 * @return void
+	 */
+	private function reset_sequence_if_empty($table, $seq)
+	{
+		$count = (int) $this->db->count_all($table);
+		if ($count === 0) {
+			$this->db->query('ALTER SEQUENCE ' . $seq . ' RESTART WITH 1');
+		}
 	}
 
 	/**
@@ -727,7 +909,7 @@ class Transaksi extends App_Controller
 	}
 
 	/**
-	 * Direktori dokumen transaksi per ID, di FCPATH/assets/dokumen_transaksi/[id]/.
+	 * Direktori dokumen transaksi per ID, di FCPATH/assets/dokumen/dokumen_transaksi/[id]/.
 	 * Folder dibuat bila belum ada (kecuali $create = false).
 	 * Pada kegagalan pembuatan folder, log error ditulis dan false dikembalikan.
 	 *
@@ -738,7 +920,7 @@ class Transaksi extends App_Controller
 	 */
 	private function dokumen_dir($id, $create = true)
 	{
-		$dir = FCPATH . 'assets/dokumen_transaksi/' . (int) $id . '/';
+		$dir = FCPATH . 'assets/dokumen/dokumen_transaksi/' . (int) $id . '/';
 
 		if ($create && !is_dir($dir)) {
 			$ok = @mkdir($dir, 0755, true);
@@ -763,7 +945,7 @@ class Transaksi extends App_Controller
 	 */
 	private function staging_dir()
 	{
-		$dir = FCPATH . 'assets/dokumen_transaksi/_staging/';
+		$dir = FCPATH . 'assets/dokumen/_staging/';
 		if (!is_dir($dir)) {
 			mkdir($dir, 0755, true);
 		}
@@ -771,8 +953,9 @@ class Transaksi extends App_Controller
 	}
 
 	/**
-	 * Resolve path file dokumen dari storage baru (public/assets/dokumen_transaksi/[id]/)
-	 * dengan fallback ke lokasi lama (uploads/transaksi/) untuk file legacy.
+	 * Resolve path file dokumen dari storage baru (public/assets/dokumen/dokumen_transaksi/[id]/)
+	 * dengan fallback ke lokasi lama (public/assets/dokumen_transaksi/[id]/ lalu uploads/transaksi/)
+	 * agar file legacy tetap dapat dibaca/unduh.
 	 *
 	 * @param int    $id   ID transaksi.
 	 * @param string $file Nama file.
@@ -789,6 +972,11 @@ class Transaksi extends App_Controller
 		$path = $this->dokumen_dir($id, false) . $file;
 		if (is_file($path)) {
 			return $path;
+		}
+
+		$old = FCPATH . 'assets/dokumen_transaksi/' . (int) $id . '/' . $file;
+		if (is_file($old)) {
+			return $old;
 		}
 
 		$legacy = APPPATH . '../uploads/transaksi/' . $file;
@@ -920,10 +1108,11 @@ class Transaksi extends App_Controller
 	}
 
 	/**
-	 * Hapus file dokumen lama dari disk (folder baru [id]/ lalu fallback legacy).
+	 * Hapus file dokumen lama dari disk. Cek lokasi baru dulu, lalu lokasi lama,
+	 * agar file yang benar-benar ada saja yang dihapus (tiada path dijamin aman).
 	 *
 	 * @param array $files
-	 * @param int   $id    ID transaksi (untuk folder baru).
+	 * @param int   $id    ID transaksi.
 	 *
 	 * @return void
 	 */
@@ -935,22 +1124,18 @@ class Transaksi extends App_Controller
 				continue;
 			}
 
-			$path = null;
+			$candidates = array();
 			if ($id > 0) {
-				$p = $this->dokumen_dir($id, false) . $f;
-				if (is_file($p)) {
-					$path = $p;
-				}
+				$candidates[] = FCPATH . 'assets/dokumen/dokumen_transaksi/' . (int) $id . '/' . $f;
+				$candidates[] = FCPATH . 'assets/dokumen_transaksi/' . (int) $id . '/' . $f;
 			}
-			if ($path === null) {
-				$p = APPPATH . '../uploads/transaksi/' . $f;
-				if (is_file($p)) {
-					$path = $p;
-				}
-			}
+			$candidates[] = APPPATH . '../uploads/transaksi/' . $f;
 
-			if ($path !== null) {
-				unlink($path);
+			foreach ($candidates as $p) {
+				if (is_file($p)) {
+					@unlink($p);
+					break;
+				}
 			}
 		}
 	}
