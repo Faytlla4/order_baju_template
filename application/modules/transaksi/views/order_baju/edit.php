@@ -98,6 +98,13 @@
                 <button type="submit" name="save" class="btn btn-primary">Simpan</button>
                 <?php echo lang('bf_or'); ?>
                 <?php echo anchor(SITE_AREA . '/transaksi/transaksi', lang('order_baju_cancel'), 'class="btn btn-warning"'); ?>
+
+                <?php if ($this->auth->has_permission('Order_Baju.Content.Delete')) : ?>
+                    <?php echo lang('bf_or'); ?>
+                    <button type='submit' name='delete' formnovalidate class='btn btn-danger' id='delete-me' onclick="return confirm('Apakah Anda yakin ingin menghapus transaksi ini beserta order terkait? Data tidak dapat dikembalikan.');">
+                        <span class='icon-trash icon-white'></span>&nbsp;Hapus
+                    </button>
+                <?php endif; ?>
             </div>
             <?php echo form_close(); ?>
         </div>

@@ -1,0 +1,96 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R ] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 2890 >>
+stream
+BT /F2 13 Tf 20 551 Td (LAPORAN TRANSAKSI ORDER BAJU) Tj ET
+BT /F1 9 Tf 20 533 Td (Periode: 02-09-2026) Tj ET
+BT /F1 8 Tf 692 533 Td (Dicetak: 02-09-2026 07:20) Tj ET
+0.40 w 0 G 20.00 513.00 m 822.00 513.00 l S
+0.40 w 0 G 20.00 511.00 m 822.00 511.00 l S
+BT /F2 7 Tf 0 g 29.56 500 Td (No) Tj ET
+BT /F2 7 Tf 0 g 47.00 500 Td (Kode) Tj ET
+BT /F2 7 Tf 0 g 132.00 500 Td (Customer) Tj ET
+BT /F2 7 Tf 0 g 222.00 500 Td (Produk) Tj ET
+BT /F2 7 Tf 0 g 302.00 500 Td (Jenis) Tj ET
+BT /F2 7 Tf 0 g 378.68 500 Td (Ukuran) Tj ET
+BT /F2 7 Tf 0 g 407.00 500 Td (Warna) Tj ET
+BT /F2 7 Tf 0 g 466.18 500 Td (Jumlah) Tj ET
+BT /F2 7 Tf 0 g 553.30 500 Td (Harga) Tj ET
+BT /F2 7 Tf 0 g 633.30 500 Td (Total) Tj ET
+BT /F2 7 Tf 0 g 668.68 500 Td (Status) Tj ET
+BT /F2 7 Tf 0 g 732.21 500 Td (Tanggal) Tj ET
+0.40 w 0 G 20.00 495.00 m 822.00 495.00 l S
+0.40 w 0 G 20.00 479.00 m 822.00 479.00 l S
+BT /F1 7 Tf 0 g 31.03 484.00 Td (1) Tj ET
+BT /F1 7 Tf 0 g 47.00 484.00 Td (ORD-20260902-0028) Tj ET
+BT /F1 7 Tf 0 g 132.00 484.00 Td (Slamet) Tj ET
+BT /F1 7 Tf 0 g 222.00 484.00 Td (Kaos) Tj ET
+BT /F1 7 Tf 0 g 302.00 484.00 Td (Kaos Polos) Tj ET
+BT /F1 7 Tf 0 g 383.09 484.00 Td (XLL) Tj ET
+BT /F1 7 Tf 0 g 407.00 484.00 Td (Putih) Tj ET
+BT /F1 7 Tf 0 g 473.53 484.00 Td (1) Tj ET
+BT /F1 7 Tf 0 g 541.54 484.00 Td (Rp 55.000) Tj ET
+BT /F1 7 Tf 0 g 621.54 484.00 Td (Rp 55.000) Tj ET
+BT /F1 7 Tf 0 g 665.74 484.00 Td (Diproses) Tj ET
+BT /F1 7 Tf 0 g 718.98 484.00 Td (02-09-2026 02:04) Tj ET
+0.40 w 0 G 20.00 463.00 m 822.00 463.00 l S
+BT /F1 7 Tf 0 g 31.03 468.00 Td (2) Tj ET
+BT /F1 7 Tf 0 g 47.00 468.00 Td (ORD-20260902-0027) Tj ET
+BT /F1 7 Tf 0 g 132.00 468.00 Td (Rama) Tj ET
+BT /F1 7 Tf 0 g 222.00 468.00 Td (Kaos) Tj ET
+BT /F1 7 Tf 0 g 302.00 468.00 Td (Kaos Olahraga) Tj ET
+BT /F1 7 Tf 0 g 386.03 468.00 Td (M) Tj ET
+BT /F1 7 Tf 0 g 407.00 468.00 Td (Biru) Tj ET
+BT /F1 7 Tf 0 g 473.53 468.00 Td (1) Tj ET
+BT /F1 7 Tf 0 g 538.60 468.00 Td (Rp 112.000) Tj ET
+BT /F1 7 Tf 0 g 618.60 468.00 Td (Rp 112.000) Tj ET
+BT /F1 7 Tf 0 g 665.74 468.00 Td (Diproses) Tj ET
+BT /F1 7 Tf 0 g 718.98 468.00 Td (02-09-2026 00:58) Tj ET
+0.40 w 0 G 20.00 447.00 m 822.00 447.00 l S
+BT /F1 7 Tf 0 g 31.03 452.00 Td (3) Tj ET
+BT /F1 7 Tf 0 g 47.00 452.00 Td (ORD-20260902-0026) Tj ET
+BT /F1 7 Tf 0 g 132.00 452.00 Td (Reza) Tj ET
+BT /F1 7 Tf 0 g 222.00 452.00 Td (Kemeja) Tj ET
+BT /F1 7 Tf 0 g 302.00 452.00 Td (Kemeja Kotak Kotak) Tj ET
+BT /F1 7 Tf 0 g 386.03 452.00 Td (L) Tj ET
+BT /F1 7 Tf 0 g 407.00 452.00 Td (Hitam) Tj ET
+BT /F1 7 Tf 0 g 473.53 452.00 Td (1) Tj ET
+BT /F1 7 Tf 0 g 538.60 452.00 Td (Rp 100.000) Tj ET
+BT /F1 7 Tf 0 g 618.60 452.00 Td (Rp 100.000) Tj ET
+BT /F1 7 Tf 0 g 665.74 452.00 Td (Diproses) Tj ET
+BT /F1 7 Tf 0 g 718.98 452.00 Td (02-09-2026 00:55) Tj ET
+0.40 w 0 G 20.00 441.00 m 822.00 441.00 l S
+BT /F2 9 Tf 20 425 Td (Total Transaksi: 3) Tj ET
+BT /F2 9 Tf 20 411 Td (Total Nilai: Rp 267.000) Tj ET
+
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000116 00000 n 
+0000000213 00000 n 
+0000000315 00000 n 
+0000000451 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3393
+%%EOF

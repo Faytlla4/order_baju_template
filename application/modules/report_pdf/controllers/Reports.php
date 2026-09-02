@@ -206,13 +206,13 @@ class Reports extends App_Controller
 		$nama_file = $this->simpan_pdf($pdf);
 
 		if ($nama_file === false) {
-			log_message('error', 'Report PDF: gagal menyimpan file PDF ke uploads/report/.');
+			log_message('error', 'Report PDF: gagal menyimpan file PDF ke assets/dokumen/report/.');
 			Template::set_message('Gagal menyimpan file PDF di server.', 'error');
 			redirect(SITE_AREA . '/reports/report_pdf');
 			return;
 		}
 
-		$path_rel = 'uploads/report/' . $nama_file;
+		$path_rel = 'public/assets/dokumen/report/' . $nama_file;
 
 		$meta = array(
 			'tipe_report'      => 'pdf',
@@ -347,7 +347,8 @@ class Reports extends App_Controller
 	}
 
 	/**
-	 * Simpan binary PDF ke uploads/report/ dengan nama unik.
+	 * Simpan binary PDF ke public/assets/dokumen/report/ dengan nama unik.
+	 * PDF dan Excel report TIDAK dipisah ke sub-folder terpisah.
 	 *
 	 * @param string $pdf Binary PDF.
 	 *
@@ -355,7 +356,7 @@ class Reports extends App_Controller
 	 */
 	private function simpan_pdf($pdf)
 	{
-		$dir = APPPATH . '../uploads/report/';
+		$dir = FCPATH . 'assets/dokumen/report/';
 		if (!is_dir($dir)) {
 			if (!mkdir($dir, 0755, true) && !is_dir($dir)) {
 				log_message('error', 'Report PDF: tidak dapat membuat direktori ' . $dir);

@@ -13,4 +13,5 @@ $config['permissions'] = array(
 	'Order_Baju.Content.View',
 	'Order_Baju.Content.Create',
 	'Order_Baju.Content.Edit',
+	'Order_Baju.Content.Delete',
 );
