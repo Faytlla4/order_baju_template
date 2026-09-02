@@ -125,7 +125,7 @@ class Backup_model extends CI_Model
 					'source'         => 'transaksi',
 					'tipe_report'    => 'transaksi',
 					'nama_file'      => $f,
-					'path_file'      => 'dokumen_transaksi/' . (int) $r->id . '/' . $f,
+					'path_file'      => 'dokumen/dokumen_transaksi/' . (int) $r->id . '/' . $f,
 					'created_on_str' => $r->created_on_str,
 					'jumlah_transaksi' => 1,
 				);

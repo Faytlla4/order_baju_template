@@ -210,8 +210,8 @@ class Reports extends App_Controller
 		$wib = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
 		$nama_file = 'laporan_transaksi_' . $wib->format('Y-m-d_His') . '_' . substr(uniqid('', true), -5) . '.xlsx';
 
-		$path_rel = 'uploads/report/' . $nama_file;
-		$full = APPPATH . '../' . $path_rel;
+		$path_rel = 'public/assets/dokumen/report/' . $nama_file;
+		$full = FCPATH . 'assets/dokumen/report/' . $nama_file;
 
 		// Simpan file ke disk
 		$saved = $this->report_excel->save($full);
@@ -311,13 +311,20 @@ class Reports extends App_Controller
 			return null;
 		}
 
+		// created_on pada tabel report ditulis dalam Asia/Jakarta, jadi batas
+		// "5 menit terakhir" juga harus dihitung dalam Asia/Jakarta. Bila memakai
+		// timezone server (mis. Europe/Berlin, 5 jam lebih lambat dari Jakarta),
+		// file lama sampai berjam-jam masih dianggap "baru" -> Excel basi terkirim.
+		$wib = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
+		$cutoff = $wib->modify('-5 minutes')->format('Y-m-d H:i:s');
+
 		$this->db->select('id, nama_file, path_file')
 			->from('report')
 			->where('tipe_report', 'excel')
 			->where('periode', $periode)
 			->where('tgl_mulai', ($tgl_mulai !== '') ? $tgl_mulai : null)
 			->where('tgl_akhir', ($tgl_akhir !== '') ? $tgl_akhir : null)
-			->where('created_on >=', date('Y-m-d H:i:s', strtotime('-5 minutes')))
+			->where('created_on >=', $cutoff)
 			->order_by('id', 'desc')
 			->limit(1);
 

@@ -45,6 +45,10 @@ $(function() {
     var tblCetak;
     var tblTrx;
 
+    // Data lengkap hasil filter (SEMUA baris, bukan hanya halaman aktif).
+    var allReportData = [];
+    var allTrxData = [];
+
     function dtLangFile() {
         return {
             search: 'Cari:', lengthMenu: 'Tampilkan _MENU_ data',
@@ -56,6 +60,7 @@ $(function() {
 
     // Tabel 1: Laporan (PDF/Excel) — checkbox report_ids[]
     function initTableReport(data) {
+        allReportData = data || [];
         if (tblCetak) tblCetak.destroy();
         var tbody = '';
         if (data.length === 0) {
@@ -87,6 +92,7 @@ $(function() {
 
     // Tabel 2: Dokumen Transaksi (upload user) — checkbox trx_docs[]
     function initTableTrx(data) {
+        allTrxData = data || [];
         if (tblTrx) tblTrx.destroy();
         var tbody = '';
         if (data.length === 0) {
@@ -199,35 +205,29 @@ $(function() {
         });
     });
 
-    // Select All — Laporan (PDF/Excel)
+    // Select All — Laporan (PDF/Excel).
+    // Berbasis data hasil filter (allReportData), jadi mencakup SEMUA baris
+    // hasil filter, tidak hanya baris di halaman yang sedang aktif.
     $(document).on('change', '#check-all', function() {
         var checked = $(this).is(':checked');
-        if (!tblCetak) return;
-        tblCetak.rows().every(function() {
-            $(this.node()).find('.row-check-report').prop('checked', checked);
-        });
+        $('#tbl-riwayat-cetak tbody').find('input.row-check-report').prop('checked', checked);
     });
 
     $(document).on('change', '.row-check-report', function() {
-        if (!tblCetak) return;
-        var total = tblCetak.rows().nodes().length;
-        var checked = tblCetak.nodes().toJQuery().find('.row-check-report:checked').length;
+        var total = allReportData.length;
+        var checked = $('#tbl-riwayat-cetak tbody').find('input.row-check-report:checked').length;
         $('#check-all').prop('checked', total > 0 && total === checked);
     });
 
-    // Select All — Dokumen Transaksi (upload user)
+    // Select All — Dokumen Transaksi (upload user).
     $(document).on('change', '#check-all-trx', function() {
         var checked = $(this).is(':checked');
-        if (!tblTrx) return;
-        tblTrx.rows().every(function() {
-            $(this.node()).find('.row-check-trx').prop('checked', checked);
-        });
+        $('#tbl-dokumen-transaksi tbody').find('input.row-check-trx').prop('checked', checked);
     });
 
     $(document).on('change', '.row-check-trx', function() {
-        if (!tblTrx) return;
-        var total = tblTrx.rows().nodes().length;
-        var checked = tblTrx.nodes().toJQuery().find('.row-check-trx:checked').length;
+        var total = allTrxData.length;
+        var checked = $('#tbl-dokumen-transaksi tbody').find('input.row-check-trx:checked').length;
         $('#check-all-trx').prop('checked', total > 0 && total === checked);
     });
 

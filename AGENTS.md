@@ -2,72 +2,59 @@
 
 ## Project Overview
 
-CodeIgniter 3 + Bonfire HMVC application for garment order management ("order baju"). Uses PostgreSQL, AdminLTE theme, and vlucas/phpdotenv for configuration.
-
-## Environment Setup
-
-**Required before running:**
-
-1. Copy `.env.example` to `.env`
-2. Generate encryption key: `php -r "echo bin2hex(random_bytes(16));"`
-3. Set `APP_ENCRYPTION_KEY` in `.env` (32 hex chars)
-4. Copy `application/config/database.php.example` to `application/config/database.php` if `.env` doesn't exist
-5. PostgreSQL credentials go in `.env` (DB_HOSTNAME, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_NAME)
-6. Run `composer install`
-
-**Database setup:**
-
-```bash
-# Import schema
-psql -U postgres -d nama_db -f database/schema.sql
-
-# OR run Bonfire migrations
-php public/index.php migrate
-```
+CodeIgniter 3 + Bonfire HMVC app for garment order management. PostgreSQL, AdminLTE theme, `vlucas/phpdotenv` for config. Named `order_baju_template`, also called "SI-Reklame". Web root is `public/` (NOT project root). The README (`README.markdown`, Indonesian) is the authoritative setup guide — read it before changing setup/docs.
 
 ## Critical Paths
 
-- **Web root:** `public/` (NOT project root)
-- **Entry point:** `public/index.php`
-- **App modules:** `application/modules/` (custom business logic)
-- **Bonfire core:** `bonfire/` (framework modules, do not edit)
-- **Config:** `application/config/`
-- **Migrations:** `application/db/migrations/`
+- **Web root / DocumentRoot:** `public/` — entry point `public/index.php`
+- **Env loading:** `public/index.php` loads `.env` from project root via phpdotenv and sets `ENVIRONMENT` from `CI_ENV`. `application/config/database.php` reads DB values with `getenv()` — do NOT hardcode credentials there.
+- **Git-ignored but load-bearing:** `.env`, `application/config/database.php`, and `uploads/` are gitignored (`.gitignore:93,100`) — edits there won't appear in `git status`, and a fresh clone rebuilds `uploads/` (report/upload files) from nothing.
+- **Custom business logic:** `application/modules/`
+- **Do not edit:** `bonfire/` (framework: core `bonfire/ci3/` + modules + `bonfire/migrations/`)
+- **Logs:** `application/logs/`
 
-## Running the Application
+## Environment Setup
 
-- Set Apache DocumentRoot to `public/` folder
-- Access via configured domain (e.g., `http://apktemplate.test`)
-- Default login: `admin` / `password`
+1. `composer install` (installs `phpoffice/phpspreadsheet`, `vlucas/phpdotenv`)
+2. `cp .env.example .env`
+3. Set `APP_ENCRYPTION_KEY`: `php -r "echo bin2hex(random_bytes(16));"` (must be 32 hex chars)
+4. PostgreSQL creds in `.env`. Variable names are read **verbatim** — gotchas:
+   - Database name var is `DB_NAME` — **never** `DB_DATABASE`
+   - `APP_BASE_URL` must end with `/` and match the exact access URL (incl. subfolder path, e.g. `http://localhost/order_baju_template/public/`)
+   - Never commit `.env`.
+5. `application/config/database.php.example` is a fallback only; `.env` is the primary config. Variants here: `database.php` reads `getenv('DB_*)` directly.
 
-## Database
+## Database Setup
 
-- Driver: `postgre` (CodeIgniter 3 PostgreSQL driver)
-- Migrations use raw SQL (`$migration_type = 'sql'`)
-- Run migrations: `php public/index.php migrate`
+- Driver `postgre`. Use **PostgreSQL** — SQL in migrations is Postgres syntax.
+- **Import a real backup** (via admin menu Backup > Backup Database, or `psql -h localhost -U postgres -d nama_db -f backup.sql`). Do **NOT** use `database/schema.sql` — it is an empty structure only; roles/permissions (needed for admin CRUD buttons) only exist in a real backup's data.
+- **Migrations (Bonfire, not CI):** applied automatically on page load (`application/config/application.php`: `migrate.auto_app = true`; core off). No CLI migrate command exists.
+  - App migrations: `application/db/migrations/`
+  - Per-module migrations: `application/modules/<module>/migrations/`
+  - Core: `bonfire/migrations/`
+  - Files are PHP classes extending `Migration` with `up()`/`down()`; `public $migration_type = 'sql';` is a per-class property allowing raw SQL strings. CI3's own `application/config/migration.php` (`migration_enabled = FALSE`) is irrelevant. Manual schema edits should be added as migration classes.
 
 ## Modules (HMVC)
 
-Active custom modules in `application/modules/`:
-- `backup` - Document & database backup (requires `pg_dump` in PATH)
-- `order_baju` - Order management
-- `transaksi` - Transactions
-- `master_jenis_baju`, `master_ukuran`, `master_warna` - Master data
-- `report_pdf`, `report_excel` - Reports
-- `sk_tidak_mampu` - Certificate module
+Custom modules in `application/modules/` (11 dirs):
+`backup`, `master`, `master_jenis_baju`, `master_ukuran`, `master_warna`, `order_baju`, `reports`, `report_excel`, `report_pdf`, `sk_tidak_mampu`, `transaksi`
 
-## Framework Notes
+Note: `order_baju` owns both `Content.php` and `Transaksi.php` controllers; `transaksi` is not where Transaksi lives. "Module" here = Bonfire context/permission namespace.
 
-- Uses Bonfire's HMVC (wiredesignz/codeigniter-modular-extensions-hmvc)
-- Base controllers in `application/core/`: `Base_Controller`, `Authenticated_Controller`, `Admin_Controller`, etc.
-- CI3 system located at `bonfire/ci3/`
-- Timezone: `Asia/Jakarta`
-- Error reporting suppresses E_DEPRECATED and E_STRICT (PHP 8.2+ dynamic property warnings break DataTables JSON endpoints)
+## Framework / Runtime Quirks
 
-## No Testing Framework
+- HMVC via wiredesignz/codeigniter-modular-extensions-hmvc. Base controllers in `application/core/`: `Base_Controller`, `Authenticated_Controller`, `Admin_Controller`, etc.
+- Timezone `Asia/Jakarta`.
+- `public/index.php` suppresses `E_DEPRECATED`/`E_STRICT` **on purpose**: PHP 8.2+ "Creation of dynamic property" warnings flood output and break the DataTables JSON endpoints. Do not re-enable.
+- DataTables endpoints return JSON — keep controllers' output free of stray warnings/dumps.
+- Sidebar/menus and CRUD buttons are permission-driven from the DB (role_id=1 = admin). Missing buttons ⇒ check `role_permissions` in the DB, not code.
 
-No PHPUnit or test runner configured. Manual testing only.
+## Backup Module
 
-## Backup Module Requirement
+Requires `pg_dump` reachable from PATH or common PG install dirs (`find_pg_dump()` in `application/modules/backup/controllers/Backup.php`). DB backups use `PGPASSWORD` env (never password on CLI), validate output, and run a test-restore unless `BACKUP_SKIP_TEST=1`.
 
-Database backup requires `pg_dump` utility available in system PATH or common PostgreSQL installation directories.
+## Tests
+
+No PHPUnit/test runner configured — manual testing only.
+- Login for manual validation: username `admin`, password `password` (role_id 1 = admin).
+- Local URL follows `APP_BASE_URL` (e.g. `http://localhost/order_baju_template/public/`). After changing `.env`, hard-refresh (Ctrl+F5) — assets are cached in `public/assets/cache/`.
