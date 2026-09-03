@@ -167,10 +167,86 @@ Login:
 │   ├── index.php        # Entry point
 │   └── assets/          # CSS, JS, images
 ├── database/schema.sql  # Hanya struktur kosong (bukan data aktual)
-├── uploads/             # File upload & report (tidak di git)
+├── application/uploads/backup/   # ZIP/SQL backup DB (tidak di git)
+├── public/assets/dokumen/        # Laporan (PDF/Excel) + upload dokumen transaksi (tidak di git)
 ├── .env                 # Konfigurasi lokal (tidak di git)
 └── .env.example         # Template .env
 ```
+
+## Menampilkan Kembali Backup Dokumen Report
+
+Setelah membuat **Backup Dokumen** (menu **Backup** > form *Backup Dokumen Terpilih*), aplikasi menyimpan riwayatnya di tabel `backup_document_history` dan menyimpan file ZIP di `application/uploads/backup/`. Untuk menampilkan kembali / mengunduh laporan (PDF/Excel) yang sudah di-backup:
+
+1. Buka menu **Backup**.
+2. Pada bagian **Riwayat Backup Dokumen**, cari baris backup yang diinginkan (kolom *Tanggal*, *Nama File*, *Jumlah Dokumen*, *Periode*).
+3. Klik tombol **Download** (ikon ⬇) pada baris tersebut → browser mengunduh file ZIP.
+4. Ekstrak ZIP. Di dalamnya terdapat folder `dokumen/dokumen_transaksi/[id]/` berisi file laporan/dokumen transaksi yang bisa dibuka atau dicetak ulang dengan aplikasi PDF/Office.
+
+> Nama file ZIP berformat `backup_dokumen_YYYY-MM-DD_HHMMSS.zip` (berdasarkan waktu WIB).
+
+### Alur & Kode Terkait
+
+Unduhan ini disajikan oleh **`Backup::download('doc', $id)`** di `application/modules/backup/controllers/Backup.php`, di-route via `application/config/routes.php`:
+
+```php
+// application/config/routes.php
+Route::any('backup/download/doc/(:num)', 'backup/backup/download/doc/$1');
+```
+
+Metode `download()` mengambil baris riwayat berdasarkan ID, mengecek file `file_path` di server, lalu mengirimkan ZIP sebagai unduhan:
+
+```php
+// application/modules/backup/controllers/Backup.php
+public function download($type = '', $id = 0)
+{
+    $this->load->model('backup/backup_model');
+
+    if ($type === 'doc') {
+        $row = $this->backup_model->get_document_history_by_id($id);
+    } elseif ($type === 'db') {
+        $row = $this->backup_model->get_database_history_by_id($id);
+    } else {
+        show_404();
+        return;
+    }
+
+    if (empty($row) || empty($row->file_path)) {
+        Template::set_message('File backup tidak ditemukan.', 'error');
+        redirect(SITE_AREA . '/backup');
+        return;
+    }
+
+    $path = $row->file_path;
+    if (!is_file($path) || filesize($path) <= 0) {
+        Template::set_message('File backup sudah tidak tersedia di server.', 'error');
+        redirect(SITE_AREA . '/backup');
+        return;
+    }
+
+    $zipName = $row->file_name;
+    while (ob_get_level() > 0) {
+        @ob_end_clean();
+    }
+    header('Content-Type: application/zip');
+    header('Content-Disposition: attachment; filename="' . basename($zipName) . '"');
+    header('Content-Length: ' . filesize($path));
+    header('Cache-Control: max-age=0');
+    header('Pragma: public');
+    header('Expires: 0');
+    readfile($path);
+    exit;
+}
+```
+
+Tombol **Download** pada tabel riwayat dibuat di `application/modules/backup/views/index.php`:
+
+```php
+<a href="<?php echo site_url(SITE_AREA . '/backup/download/doc/' . $h->id); ?>" class="btn btn-sm btn-success" title="Download">
+    <i class="fas fa-download"></i>
+</a>
+```
+
+> Riwayat diambil oleh `Backup_model::get_document_history()` dari tabel `backup_document_history`, dan disimpan saat backup dibuat lewat `save_document_history()` (kolom: `file_name`, `file_path`, `file_size`, `jumlah_dokumen`, `filter_used`, `created_on`).
 
 ## Environment Variables
 

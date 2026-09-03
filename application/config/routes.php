@@ -89,6 +89,10 @@ Route::prefix(SITE_AREA, function(){
     Route::any('backup/document', 'backup/backup/document');
     Route::any('backup/database', 'backup/backup/database_page');
     Route::any('backup/database/run', 'backup/backup/database');
+    Route::any('backup/per_id', 'backup/backup/dokumen_per_id');
+    Route::any('backup/per_id/process', 'backup/backup/dokumen_per_id_process');
+    Route::any('backup/per_folder', 'backup/backup/dokumen_per_folder');
+    Route::any('backup/per_folder/process', 'backup/backup/dokumen_per_folder_process');
     Route::any('backup/download/doc/(:num)', 'backup/backup/download/doc/$1');
     Route::any('backup/download/db/(:num)', 'backup/backup/download/db/$1');
     Route::context('developer');
