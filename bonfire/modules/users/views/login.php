@@ -1,22 +1,17 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <style type="text/css">
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
 .wrapper {
     width: 100%;
     background: #F8F5EF;
-    background-image:
-        repeating-linear-gradient(45deg, transparent, transparent 24px, rgba(200,169,107,0.03) 24px, rgba(200,169,107,0.03) 25px),
-        repeating-linear-gradient(-45deg, transparent, transparent 24px, rgba(138,106,71,0.02) 24px, rgba(138,106,71,0.02) 25px),
-        linear-gradient(180deg, #F8F5EF 0%, #EFE7D8 100%);
+    background-image: url('<?php echo base_url('assets/images/bg.jfif'); ?>');
+    background-size: cover;
+    background-position: center;
     min-height: 100vh;
 }
 
-nav.navbar {
-    display: none;
-}
+nav.navbar { display: none; }
 
 .login-wrapper {
     position: relative;
@@ -30,26 +25,19 @@ nav.navbar {
 
 .login-card {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #FFFDF9;
+    background: rgba(255,253,249,0.88);
     border: 1px solid rgba(228,214,194,0.6);
     border-radius: 20px;
-    box-shadow: 0 4px 24px rgba(64,58,52,0.08);
+    box-shadow: 0 8px 32px rgba(64,58,52,0.08);
     width: 100%;
     max-width: 400px;
     padding: 2.5rem 2rem;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
-.login-card .logo-wrapper {
-    text-align: center;
-    margin-bottom: 1.25rem;
-}
-
-.login-card .logo-wrapper img {
-    height: 64px;
-    width: auto;
-    object-fit: contain;
-}
-
+.login-card .logo-wrapper { text-align: center; margin-bottom: 1.25rem; }
+.login-card .logo-wrapper img { height: 80px; width: auto; object-fit: contain; }
 .login-card .brand-name {
     text-align: center;
     font-family: 'Cormorant Garamond', Georgia, serif;
@@ -60,9 +48,7 @@ nav.navbar {
     margin-top: 0.4rem;
 }
 
-.login-card .input-group {
-    margin-bottom: 0.85rem;
-}
+.login-card .input-group { margin-bottom: 0.85rem; }
 
 .login-card .form-control {
     font-family: 'Inter', sans-serif;
@@ -71,7 +57,7 @@ nav.navbar {
     padding: 0.6rem 1rem;
     font-size: 0.85rem;
     color: #403A34;
-    background: #FFFDF9;
+    background: rgba(255,253,249,0.9);
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -81,10 +67,7 @@ nav.navbar {
     outline: none;
 }
 
-.login-card .form-control::placeholder {
-    color: #8C8175;
-    font-weight: 400;
-}
+.login-card .form-control::placeholder { color: #8C8175; }
 
 .login-card .input-group-append .input-group-text {
     font-family: 'Inter', sans-serif;
@@ -92,21 +75,11 @@ nav.navbar {
     border: 1px solid #E4D6C2;
     border-radius: 8px;
     color: #8A6A47;
-    font-size: 0.85rem;
 }
 
-.login-card .input-group-append {
-    border-radius: 0 8px 8px 0;
-}
-
-.login-card .input-group-append .input-group-text {
-    border-left: 0;
-}
-
-.login-card .input-group .form-control {
-    border-right: 0;
-    border-radius: 8px 0 0 8px;
-}
+.login-card .input-group-append { border-radius: 0 8px 8px 0; }
+.login-card .input-group-append .input-group-text { border-left: 0; }
+.login-card .input-group .form-control { border-right: 0; border-radius: 8px 0 0 8px; }
 
 .login-card .btn-primary {
     font-family: 'Inter', sans-serif;
@@ -119,10 +92,7 @@ nav.navbar {
     color: #fff;
     transition: background 0.15s ease;
 }
-
-.login-card .btn-primary:hover {
-    background: #7a5d3e;
-}
+.login-card .btn-primary:hover { background: #7a5d3e; }
 
 .login-card .btn-secondary {
     font-family: 'Inter', sans-serif;
@@ -134,35 +104,18 @@ nav.navbar {
     font-size: 0.85rem;
     transition: all 0.15s ease;
 }
-
 .login-card .btn-secondary:hover {
     background: rgba(239,231,216,0.5);
     border-color: #C8A96B;
     color: #403A34;
 }
 
-.login-card .icheck-primary label {
-    font-family: 'Inter', sans-serif;
-    color: #8C8175;
-    font-size: 0.82rem;
-    font-weight: 400;
-}
-
-.login-card .alert {
-    font-family: 'Inter', sans-serif;
-    border-radius: 8px;
-    font-size: 0.83rem;
-    border: none;
-}
+.login-card .icheck-primary label { font-family: 'Inter', sans-serif; color: #8C8175; font-size: 0.82rem; }
+.login-card .alert { font-family: 'Inter', sans-serif; border-radius: 8px; font-size: 0.83rem; border: none; }
 
 @media (max-width: 576px) {
-    .login-card {
-        margin: 1rem;
-        padding: 2rem 1.5rem;
-    }
-    .login-card .logo-wrapper img {
-        height: 48px;
-    }
+    .login-card { margin: 1rem; padding: 2rem 1.5rem; }
+    .login-card .logo-wrapper img { height: 48px; }
 }
 </style>
 
@@ -185,26 +138,20 @@ nav.navbar {
         <div class="input-group">
             <input type="text" class="form-control" name="login" placeholder="Username" autocomplete="off">
             <div class="input-group-append">
-                <div class="input-group-text">
-                    <span class="fas fa-user"></span>
-                </div>
+                <div class="input-group-text"><span class="fas fa-user"></span></div>
             </div>
         </div>
         <div class="input-group">
             <input type="password" class="form-control" name="password" placeholder="Password" autocomplete="off">
             <div class="input-group-append">
-                <div class="input-group-text">
-                    <span class="fas fa-lock"></span>
-                </div>
+                <div class="input-group-text"><span class="fas fa-lock"></span></div>
             </div>
         </div>
         <div class="row justify-content-between align-items-center mt-3">
             <div class="col-sm-7">
                 <div class="icheck-primary">
                     <input type="checkbox" name="remember_me" id="remember" value="1">
-                    <label for="remember">
-                        <?php echo lang('us_remember_note'); ?>
-                    </label>
+                    <label for="remember"><?php echo lang('us_remember_note'); ?></label>
                 </div>
             </div>
             <div class="col-sm-5 text-right">
@@ -219,7 +166,4 @@ nav.navbar {
         <?php echo form_close(); ?>
     </div>
 </div>
-
-<script type="text/javascript">
-document.body.classList.add('login-page');
-</script>
+<script>document.body.classList.add('login-page');</script>

@@ -1,3 +1,4 @@
+<!-- FASHIONER Hero Section -->
 <section class="f-hero">
     <div class="f-hero-card">
         <img src="<?php echo base_url('assets/images/logo-transparent.png'); ?>" alt="FASHIONER Logo" class="f-hero-logo">

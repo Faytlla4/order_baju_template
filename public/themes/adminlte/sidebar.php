@@ -10,9 +10,7 @@
                 <img src="<?php echo base_url('assets/images/anonym.png'); ?>" class="img-circle elevation-2" style="width:32px;height:32px;">
             </div>
             <div class="info">
-                <?php
-                    $userDisplayName = isset($current_user->display_name) && !empty($current_user->display_name) ? $current_user->display_name : ($this->settings_lib->item('auth.use_usernames') ? $current_user->username : $current_user->email);
-                ?>
+                <?php $userDisplayName = isset($current_user->display_name) && !empty($current_user->display_name) ? $current_user->display_name : ($this->settings_lib->item('auth.use_usernames') ? $current_user->username : $current_user->email); ?>
                 <a href="#" class="d-block" style="font-size:0.85rem;font-weight:500;"><?php echo $userDisplayName; ?></a>
             </div>
         </div>
@@ -21,46 +19,24 @@
             <?php
             $uri2 = $this->uri->segment(2);
             $uri3 = $this->uri->segment(3);
-
-            // Helper for active class
-            function fa($seg2, $seg3 = null) {
-                $uri2 = $GLOBALS['uri2'];
-                $uri3 = $GLOBALS['uri3'];
-                if ($seg3 !== null) {
-                    return ($uri2 == $seg2 && $uri3 == $seg3) ? ' active' : '';
-                }
-                return ($uri2 == $seg2) ? ' active' : '';
-            }
-
-            function faOpen($seg2, $seg3 = null) {
-                $uri2 = $GLOBALS['uri2'];
-                $uri3 = $GLOBALS['uri3'];
-                if ($seg3 !== null) {
-                    return ($uri2 == $seg2 && $uri3 == $seg3) ? ' menu-is-opening menu-open' : '';
-                }
-                return ($uri2 == $seg2) ? ' menu-is-opening menu-open' : '';
-            }
-
             $a = site_url(SITE_AREA);
             ?>
 
             <!-- Dashboard -->
             <li class="nav-item">
-                <a href="<?php echo $a; ?>" class="nav-link<?php echo fa(''); ?>">
-                    <i class="nav-icon fas fa-th-large"></i>
-                    <p>Dashboard</p>
+                <a href="<?php echo $a; ?>" class="nav-link<?php if (!$uri2 && !$uri3) echo ' active'; ?>">
+                    <i class="nav-icon fas fa-th-large"></i><p>Dashboard</p>
                 </a>
             </li>
 
             <!-- Order Baju -->
-            <li class="nav-item<?php echo faOpen('content'); ?>">
-                <a href="<?php echo $a.'/content'; ?>" class="nav-link<?php echo fa('content'); ?>">
-                    <i class="nav-icon fas fa-tshirt"></i>
-                    <p>Order Baju <i class="right fas fa-angle-left"></i></p>
+            <li style="border-top:1px solid rgba(248,245,239,0.08);margin:6px 14px 0;padding-top:6px;" class="nav-item<?php if ($uri2 == 'content') echo ' menu-is-opening menu-open'; ?>">
+                <a href="#" class="nav-link" data-widget="treeview">
+                    <i class="nav-icon fas fa-tshirt"></i><p>Order Baju <i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="<?php echo $a.'/content/order_baju'; ?>" class="nav-link<?php echo fa('content','order_baju'); ?>">
+                        <a href="<?php echo $a.'/content/order_baju'; ?>" class="nav-link<?php if ($uri2 == 'content' && $uri3 == 'order_baju') echo ' active'; ?>">
                             <i class="nav-icon far fa-circle"></i><p>Order Baju</p>
                         </a>
                     </li>
@@ -68,24 +44,23 @@
             </li>
 
             <!-- Master -->
-            <li class="nav-item<?php echo faOpen('master'); ?>">
-                <a href="<?php echo $a.'/master'; ?>" class="nav-link<?php echo fa('master'); ?>">
-                    <i class="nav-icon fas fa-database"></i>
-                    <p>Master <i class="right fas fa-angle-left"></i></p>
+            <li style="border-top:1px solid rgba(248,245,239,0.08);margin:6px 14px 0;padding-top:6px;" class="nav-item<?php if ($uri2 == 'master') echo ' menu-is-opening menu-open'; ?>">
+                <a href="#" class="nav-link" data-widget="treeview">
+                    <i class="nav-icon fas fa-database"></i><p>Master <i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="<?php echo $a.'/master/jenis_baju'; ?>" class="nav-link<?php echo fa('master','jenis_baju'); ?>">
+                        <a href="<?php echo $a.'/master/jenis_baju'; ?>" class="nav-link<?php if ($uri2 == 'master' && $uri3 == 'jenis_baju') echo ' active'; ?>">
                             <i class="nav-icon far fa-circle"></i><p>Jenis Baju</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?php echo $a.'/master/ukuran'; ?>" class="nav-link<?php echo fa('master','ukuran'); ?>">
+                        <a href="<?php echo $a.'/master/ukuran'; ?>" class="nav-link<?php if ($uri2 == 'master' && $uri3 == 'ukuran') echo ' active'; ?>">
                             <i class="nav-icon far fa-circle"></i><p>Ukuran</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?php echo $a.'/master/warna'; ?>" class="nav-link<?php echo fa('master','warna'); ?>">
+                        <a href="<?php echo $a.'/master/warna'; ?>" class="nav-link<?php if ($uri2 == 'master' && $uri3 == 'warna') echo ' active'; ?>">
                             <i class="nav-icon far fa-circle"></i><p>Warna</p>
                         </a>
                     </li>
@@ -93,14 +68,13 @@
             </li>
 
             <!-- Transaksi -->
-            <li class="nav-item<?php echo faOpen('transaksi'); ?>">
-                <a href="<?php echo $a.'/transaksi/transaksi'; ?>" class="nav-link<?php echo fa('transaksi'); ?>">
-                    <i class="nav-icon fas fa-file-invoice"></i>
-                    <p>Transaksi <i class="right fas fa-angle-left"></i></p>
+            <li style="border-top:1px solid rgba(248,245,239,0.08);margin:6px 14px 0;padding-top:6px;" class="nav-item<?php if ($uri2 == 'transaksi') echo ' menu-is-opening menu-open'; ?>">
+                <a href="#" class="nav-link" data-widget="treeview">
+                    <i class="nav-icon fas fa-file-invoice"></i><p>Transaksi <i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="<?php echo $a.'/transaksi/transaksi'; ?>" class="nav-link<?php echo fa('transaksi','transaksi'); ?>">
+                        <a href="<?php echo $a.'/transaksi/transaksi'; ?>" class="nav-link<?php if ($uri2 == 'transaksi' && $uri3 == 'transaksi') echo ' active'; ?>">
                             <i class="nav-icon far fa-circle"></i><p>Daftar Transaksi</p>
                         </a>
                     </li>
@@ -108,66 +82,61 @@
             </li>
 
             <!-- Laporan -->
-            <?php
-            $isLaporan = ($uri2 == 'reports' || $uri2 == 'laporan-dokumen' || $uri2 == 'laporan-database' || $uri2 == 'laporan-history');
-            $lapClass = $isLaporan ? ' menu-is-opening menu-open' : '';
-            $lapActive = $isLaporan ? ' active' : '';
-            ?>
-            <li class="nav-item<?php echo $lapClass; ?>">
-                <a href="#" class="nav-link<?php echo $lapActive; ?>">
-                    <i class="nav-icon fas fa-chart-bar"></i>
-                    <p>Laporan <i class="right fas fa-angle-left"></i></p>
+            <?php $isLaporan = ($uri2 == 'reports' || $uri2 == 'laporan-dokumen' || $uri2 == 'laporan-database' || $uri2 == 'laporan-history'); ?>
+            <li style="border-top:1px solid rgba(248,245,239,0.08);margin:6px 14px 0;padding-top:6px;" class="nav-item<?php if ($isLaporan) echo ' menu-is-opening menu-open'; ?>">
+                <a href="#" class="nav-link" data-widget="treeview">
+                    <i class="nav-icon fas fa-chart-bar"></i><p>Laporan <i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                     <!-- Laporan Transaksi -->
-                    <li class="nav-item<?php echo faOpen('reports'); ?>">
-                        <a href="#" class="nav-link<?php echo fa('reports'); ?>">
+                    <li class="nav-item<?php if ($uri2 == 'reports') echo ' menu-is-opening menu-open'; ?>">
+                        <a href="#" class="nav-link" data-widget="treeview">
                             <i class="nav-icon far fa-circle"></i><p>Laporan Transaksi <i class="right fas fa-angle-left"></i></p>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="<?php echo $a.'/reports/report_pdf'; ?>" class="nav-link<?php echo fa('reports','report_pdf'); ?>">
+                                <a href="<?php echo $a.'/reports/report_pdf'; ?>" class="nav-link<?php if ($uri2 == 'reports' && $uri3 == 'report_pdf') echo ' active'; ?>">
                                     <i class="nav-icon far fa-dot-circle"></i><p>PDF</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?php echo $a.'/reports/report_excel'; ?>" class="nav-link<?php echo fa('reports','report_excel'); ?>">
+                                <a href="<?php echo $a.'/reports/report_excel'; ?>" class="nav-link<?php if ($uri2 == 'reports' && $uri3 == 'report_excel') echo ' active'; ?>">
                                     <i class="nav-icon far fa-dot-circle"></i><p>Excel</p>
                                 </a>
                             </li>
                         </ul>
                     </li>
                     <!-- Laporan Dokumen -->
-                    <li class="nav-item<?php echo faOpen('laporan-dokumen'); ?>">
-                        <a href="#" class="nav-link<?php echo fa('laporan-dokumen'); ?>">
+                    <li class="nav-item<?php if ($uri2 == 'laporan-dokumen') echo ' menu-is-opening menu-open'; ?>">
+                        <a href="#" class="nav-link" data-widget="treeview">
                             <i class="nav-icon far fa-circle"></i><p>Laporan Dokumen <i class="right fas fa-angle-left"></i></p>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="<?php echo $a.'/laporan-dokumen/pdf'; ?>" class="nav-link<?php echo fa('laporan-dokumen','pdf'); ?>">
+                                <a href="<?php echo $a.'/laporan-dokumen/pdf'; ?>" class="nav-link<?php if ($uri2 == 'laporan-dokumen' && $uri3 == 'pdf') echo ' active'; ?>">
                                     <i class="nav-icon far fa-dot-circle"></i><p>PDF</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?php echo $a.'/laporan-dokumen/excel'; ?>" class="nav-link<?php echo fa('laporan-dokumen','excel'); ?>">
+                                <a href="<?php echo $a.'/laporan-dokumen/excel'; ?>" class="nav-link<?php if ($uri2 == 'laporan-dokumen' && $uri3 == 'excel') echo ' active'; ?>">
                                     <i class="nav-icon far fa-dot-circle"></i><p>Excel</p>
                                 </a>
                             </li>
                         </ul>
                     </li>
                     <!-- Laporan Database -->
-                    <li class="nav-item<?php echo faOpen('laporan-database'); ?>">
-                        <a href="#" class="nav-link<?php echo fa('laporan-database'); ?>">
+                    <li class="nav-item<?php if ($uri2 == 'laporan-database') echo ' menu-is-opening menu-open'; ?>">
+                        <a href="#" class="nav-link" data-widget="treeview">
                             <i class="nav-icon far fa-circle"></i><p>Laporan Database <i class="right fas fa-angle-left"></i></p>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="<?php echo $a.'/laporan-database/pdf'; ?>" class="nav-link<?php echo fa('laporan-database','pdf'); ?>">
+                                <a href="<?php echo $a.'/laporan-database/pdf'; ?>" class="nav-link<?php if ($uri2 == 'laporan-database' && $uri3 == 'pdf') echo ' active'; ?>">
                                     <i class="nav-icon far fa-dot-circle"></i><p>PDF</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?php echo $a.'/laporan-database/excel'; ?>" class="nav-link<?php echo fa('laporan-database','excel'); ?>">
+                                <a href="<?php echo $a.'/laporan-database/excel'; ?>" class="nav-link<?php if ($uri2 == 'laporan-database' && $uri3 == 'excel') echo ' active'; ?>">
                                     <i class="nav-icon far fa-dot-circle"></i><p>Excel</p>
                                 </a>
                             </li>
@@ -175,7 +144,7 @@
                     </li>
                     <!-- Riwayat Cetak Laporan -->
                     <li class="nav-item">
-                        <a href="<?php echo $a.'/laporan-history'; ?>" class="nav-link<?php echo fa('laporan-history'); ?>">
+                        <a href="<?php echo $a.'/laporan-history'; ?>" class="nav-link<?php if ($uri2 == 'laporan-history') echo ' active'; ?>">
                             <i class="nav-icon far fa-circle"></i><p>Riwayat Cetak Laporan</p>
                         </a>
                     </li>
@@ -183,24 +152,23 @@
             </li>
 
             <!-- Backup -->
-            <li class="nav-item<?php echo faOpen('backup'); ?>">
-                <a href="<?php echo $a.'/backup'; ?>" class="nav-link<?php echo fa('backup'); ?>">
-                    <i class="nav-icon fas fa-download"></i>
-                    <p>Backup <i class="right fas fa-angle-left"></i></p>
+            <li style="border-top:1px solid rgba(248,245,239,0.08);margin:6px 14px 0;padding-top:6px;" class="nav-item<?php if ($uri2 == 'backup') echo ' menu-is-opening menu-open'; ?>">
+                <a href="#" class="nav-link" data-widget="treeview">
+                    <i class="nav-icon fas fa-download"></i><p>Backup <i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="<?php echo $a.'/backup/per_id'; ?>" class="nav-link<?php echo fa('backup','per_id'); ?>">
+                        <a href="<?php echo $a.'/backup/per_id'; ?>" class="nav-link<?php if ($uri2 == 'backup' && $uri3 == 'per_id') echo ' active'; ?>">
                             <i class="nav-icon far fa-circle"></i><p>Backup Dokumen ID</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?php echo $a.'/backup/per_folder'; ?>" class="nav-link<?php echo fa('backup','per_folder'); ?>">
+                        <a href="<?php echo $a.'/backup/per_folder'; ?>" class="nav-link<?php if ($uri2 == 'backup' && $uri3 == 'per_folder') echo ' active'; ?>">
                             <i class="nav-icon far fa-circle"></i><p>Backup Dokumen Folder</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?php echo $a.'/backup/database'; ?>" class="nav-link<?php echo fa('backup','database'); ?>">
+                        <a href="<?php echo $a.'/backup/database'; ?>" class="nav-link<?php if ($uri2 == 'backup' && $uri3 == 'database') echo ' active'; ?>">
                             <i class="nav-icon far fa-circle"></i><p>Backup Database</p>
                         </a>
                     </li>
@@ -208,19 +176,18 @@
             </li>
 
             <!-- Pengaturan -->
-            <li class="nav-item<?php echo faOpen('settings'); ?>">
-                <a href="<?php echo $a.'/settings'; ?>" class="nav-link<?php echo fa('settings'); ?>">
-                    <i class="nav-icon fas fa-cog"></i>
-                    <p>Pengaturan <i class="right fas fa-angle-left"></i></p>
+            <li style="border-top:1px solid rgba(248,245,239,0.08);margin:6px 14px 0;padding-top:6px;" class="nav-item<?php if ($uri2 == 'settings' || $uri2 == 'developer') echo ' menu-is-opening menu-open'; ?>">
+                <a href="#" class="nav-link" data-widget="treeview">
+                    <i class="nav-icon fas fa-cog"></i><p>Pengaturan <i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="<?php echo $a.'/settings'; ?>" class="nav-link<?php echo fa('settings','settings') ?: fa('settings','index'); ?>">
+                        <a href="<?php echo $a.'/settings'; ?>" class="nav-link<?php if ($uri2 == 'settings') echo ' active'; ?>">
                             <i class="nav-icon far fa-circle"></i><p>Settings</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?php echo $a.'/developer'; ?>" class="nav-link<?php echo fa('developer'); ?>">
+                        <a href="<?php echo $a.'/developer'; ?>" class="nav-link<?php if ($uri2 == 'developer') echo ' active'; ?>">
                             <i class="nav-icon far fa-circle"></i><p>Developer</p>
                         </a>
                     </li>

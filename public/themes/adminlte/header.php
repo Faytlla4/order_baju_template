@@ -24,9 +24,9 @@
                     <a href="<?php echo site_url('users/profile'); ?>" class="btn btn-secondary btn-sm" style="border-radius:8px;font-size:0.8rem;">
                         <i class="fas fa-user-cog"></i> Profile
                     </a>
-                    <a href="<?php echo site_url('logout'); ?>" class="btn btn-primary btn-sm" style="border-radius:8px;font-size:0.8rem;background:#8A6A47;border-color:#8A6A47;">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
+                <a href="<?php echo site_url('logout'); ?>" class="btn btn-primary btn-sm" style="border-radius:8px;font-size:0.8rem;background:#8A6A47;border-color:#8A6A47;color:#fff;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
                 </li>
             </ul>
         </li>
