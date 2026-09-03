@@ -197,6 +197,80 @@
                 $navMenus = substr($navMenus, 0, $pos3) . $backupSection . substr($navMenus, $pos3);
             }
 
+            // --- Section LAPORAN DOKUMEN (dropdown) ---
+            $isLapDoc    = ($this->uri->segment(2) == 'laporan-dokumen');
+            $lapDocParentClass = $isLapDoc ? "nav-item menu-is-opening menu-open" : "nav-item";
+            $lapDocParentLink  = $isLapDoc ? ' active' : '';
+
+            $laporanDokumenSection = "<li class='{$lapDocParentClass}'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/laporan-dokumen') . "' class='nav-link{$lapDocParentLink}'>\n"
+                . "<i class='nav-icon fas fa-file-pdf-o'></i>\n"
+                . "<p>\nLaporan Dokumen\n<i class='right fas fa-angle-left'></i>\n</p>\n"
+                . "</a>\n"
+                . "<ul class='nav nav-treeview'>\n"
+                . "<li class='nav-item'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/laporan-dokumen/pdf') . "' class='nav-link'>\n"
+                . "<i class='nav-icon far fa-circle'></i>\n<p>Cetak PDF</p>\n"
+                . "</a>\n"
+                . "</li>\n"
+                . "<li class='nav-item'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/laporan-dokumen/excel') . "' class='nav-link'>\n"
+                . "<i class='nav-icon far fa-circle'></i>\n<p>Cetak Excel</p>\n"
+                . "</a>\n"
+                . "</li>\n"
+                . "</ul>\n"
+                . "</li>\n";
+
+            $pos4 = strrpos($navMenus, '</ul>');
+            if ($pos4 !== false) {
+                $navMenus = substr($navMenus, 0, $pos4) . $laporanDokumenSection . substr($navMenus, $pos4);
+            }
+
+            // --- Section LAPORAN DATABASE (dropdown) ---
+            $isLapDb    = ($this->uri->segment(2) == 'laporan-database');
+            $lapDbParentClass = $isLapDb ? "nav-item menu-is-opening menu-open" : "nav-item";
+            $lapDbParentLink  = $isLapDb ? ' active' : '';
+
+            $laporanDatabaseSection = "<li class='{$lapDbParentClass}'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/laporan-database') . "' class='nav-link{$lapDbParentLink}'>\n"
+                . "<i class='nav-icon fas fa-database'></i>\n"
+                . "<p>\nLaporan Database\n<i class='right fas fa-angle-left'></i>\n</p>\n"
+                . "</a>\n"
+                . "<ul class='nav nav-treeview'>\n"
+                . "<li class='nav-item'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/laporan-database/pdf') . "' class='nav-link'>\n"
+                . "<i class='nav-icon far fa-circle'></i>\n<p>Cetak PDF</p>\n"
+                . "</a>\n"
+                . "</li>\n"
+                . "<li class='nav-item'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/laporan-database/excel') . "' class='nav-link'>\n"
+                . "<i class='nav-icon far fa-circle'></i>\n<p>Cetak Excel</p>\n"
+                . "</a>\n"
+                . "</li>\n"
+                . "</ul>\n"
+                . "</li>\n";
+
+            $pos5 = strrpos($navMenus, '</ul>');
+            if ($pos5 !== false) {
+                $navMenus = substr($navMenus, 0, $pos5) . $laporanDatabaseSection . substr($navMenus, $pos5);
+            }
+
+            // --- Section RIWAYAT CETAK LAPORAN (standalone) ---
+            $isRiwayat = ($this->uri->segment(2) == 'laporan-history');
+            $riwayatClass = $isRiwayat ? ' active' : '';
+
+            $riwayatSection = "<li class='nav-item'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/laporan-history') . "' class='nav-link{$riwayatClass}'>\n"
+                . "<i class='nav-icon fas fa-history'></i>\n"
+                . "<p>\nRiwayat Cetak Laporan\n</p>\n"
+                . "</a>\n"
+                . "</li>\n";
+
+            $pos6 = strrpos($navMenus, '</ul>');
+            if ($pos6 !== false) {
+                $navMenus = substr($navMenus, 0, $pos6) . $riwayatSection . substr($navMenus, $pos6);
+            }
+
             echo $navMenus;
             ?>
         </nav>
