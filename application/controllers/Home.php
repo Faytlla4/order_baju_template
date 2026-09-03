@@ -64,6 +64,12 @@ class Home extends MX_Controller
 		$this->load->library('users/auth');
 		$this->set_current_user();
 
+		// FASHIONER landing — only when not logged in
+		if (! $this->auth->is_logged_in()) {
+			$this->load->helper('url');
+			Template::set('fashioner_home', TRUE);
+		}
+
 		Template::render();
 	}//end index()
 

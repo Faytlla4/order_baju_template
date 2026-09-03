@@ -1,4 +1,6 @@
 <style type="text/css">
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
 .wrapper {
     width: 100%;
 }
@@ -7,18 +9,18 @@ nav.navbar {
     display: none;
 }
 
-/* Full viewport background */
+/* Background login */
 .login-bg {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('<?php echo base_url('assets/images/photo4.jpg'); ?>');
+    z-index: 0;
+    background-image: url('<?php echo base_url('assets/images/bg.jfif'); ?>');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    z-index: 0;
 }
 
 .login-bg::after {
@@ -45,13 +47,16 @@ nav.navbar {
 
 /* Login card */
 .login-card {
-    background: #FFFDF9;
-    border: 1px solid #E4D6C2;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: rgba(255,253,249,0.85);
+    border: 1px solid rgba(228,214,194,0.55);
     border-radius: 18px;
-    box-shadow: 0 8px 32px rgba(64, 58, 52, 0.08), 0 2px 8px rgba(64, 58, 52, 0.04);
+    box-shadow: 0 8px 32px rgba(64, 58, 52, 0.06);
     width: 100%;
-    max-width: 420px;
+    max-width: 400px;
     padding: 2.5rem 2rem;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 /* Logo inside card */
@@ -61,16 +66,17 @@ nav.navbar {
 }
 
 .login-card .logo-wrapper img {
-    height: 64px;
+    height: 80px;
     width: auto;
 }
 
 .login-card .brand-name {
     text-align: center;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #C8A96B;
-    letter-spacing: 3px;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #403A34;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     margin-top: 0.5rem;
 }
@@ -81,12 +87,13 @@ nav.navbar {
 }
 
 .login-card .form-control {
+    font-family: 'Inter', sans-serif;
     border: 1px solid #D8C9B4;
     border-radius: 10px;
-    padding: 0.7rem 1rem;
-    font-size: 0.9rem;
+    padding: 0.65rem 1rem;
+    font-size: 0.88rem;
     color: #403A34;
-    background: #FFFDF9;
+    background: rgba(255,253,249,0.9);
     transition: border-color 0.2s;
 }
 
@@ -121,44 +128,51 @@ nav.navbar {
 
 /* Buttons */
 .login-card .btn-primary {
+    font-family: 'Inter', sans-serif;
     background: #C8A96B;
     border: none;
     border-radius: 10px;
-    padding: 0.65rem 1.5rem;
+    padding: 0.6rem 1.5rem;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     color: #fff;
+    letter-spacing: 0.01em;
     transition: background 0.2s;
 }
 
 .login-card .btn-primary:hover {
-    background: #8A6A47;
+    background: #b89a5c;
 }
 
 .login-card .btn-secondary {
+    font-family: 'Inter', sans-serif;
     background: transparent;
-    border: 1px solid #D8C9B4;
+    border: 1px solid #E4D6C2;
     border-radius: 10px;
     color: #8A6A47;
-    font-weight: 600;
-    font-size: 0.9rem;
+    font-weight: 500;
+    font-size: 0.88rem;
+    letter-spacing: 0.01em;
     transition: all 0.2s;
 }
 
 .login-card .btn-secondary:hover {
-    background: #F8F5EF;
+    background: rgba(239,231,216,0.5);
     border-color: #C8A96B;
     color: #403A34;
 }
 
 /* Checkbox */
 .login-card .icheck-primary label {
+    font-family: 'Inter', sans-serif;
     color: #8C8175;
-    font-size: 0.85rem;
+    font-size: 0.84rem;
+    font-weight: 400;
 }
 
 /* Alert */
 .login-card .alert {
+    font-family: 'Inter', sans-serif;
     border-radius: 10px;
     font-size: 0.85rem;
 }
@@ -181,7 +195,7 @@ nav.navbar {
 <div class="login-wrapper">
     <div class="login-card">
         <div class="logo-wrapper">
-            <img src="<?php echo base_url('assets/images/logo.png'); ?>" alt="Logo">
+            <img src="<?php echo base_url('assets/images/logo-transparent.png'); ?>" alt="Logo">
             <div class="brand-name">FASHIONER</div>
         </div>
 
