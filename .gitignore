@@ -50,6 +50,8 @@ application/modules/*
 # Except the following modules:
 !application/modules/backup/
 !application/modules/backup/**
+!application/modules/backup_report/
+!application/modules/backup_report/**
 !application/modules/master_jenis_baju/
 !application/modules/master_jenis_baju/**
 !application/modules/master_ukuran/

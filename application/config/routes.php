@@ -89,6 +89,26 @@ Route::prefix(SITE_AREA, function(){
     Route::any('backup/download/doc/(:num)', 'backup/backup/download/doc/$1');
     Route::any('backup/download/db/(:num)', 'backup/backup/download/db/$1');
 
+    // --- Laporan Dokumen ---
+    Route::any('laporan-dokumen', 'backup_report/reports/laporan_dokumen_pdf');
+    Route::any('laporan-dokumen/pdf', 'backup_report/reports/laporan_dokumen_pdf');
+    Route::any('laporan-dokumen/excel', 'backup_report/reports/laporan_dokumen_excel');
+    Route::any('laporan-dokumen/filter', 'backup_report/reports/filter_dokumen');
+    Route::any('laporan-dokumen/cetak-pdf', 'backup_report/reports/cetak_pdf_dokumen');
+    Route::any('laporan-dokumen/cetak-excel', 'backup_report/reports/cetak_excel_dokumen');
+
+    // --- Laporan Database ---
+    Route::any('laporan-database', 'backup_report/reports/laporan_database_excel');
+    Route::any('laporan-database/pdf', 'backup_report/reports/laporan_database_pdf');
+    Route::any('laporan-database/excel', 'backup_report/reports/laporan_database_excel');
+    Route::any('laporan-database/filter', 'backup_report/reports/filter_database');
+    Route::any('laporan-database/cetak-pdf', 'backup_report/reports/cetak_pdf_database');
+    Route::any('laporan-database/cetak-excel', 'backup_report/reports/cetak_excel_database');
+
+    // --- Riwayat Cetak Laporan ---
+    Route::any('laporan-history', 'backup_report/reports/riwayat_laporan');
+    Route::any('laporan-history/filter', 'backup_report/reports/filter_riwayat');
+
     Route::context('developer');
     Route::context('settings');
 });
