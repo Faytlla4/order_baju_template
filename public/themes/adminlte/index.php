@@ -23,6 +23,7 @@
     		'plugins/select2/css/select2.min.css',
     		'plugins/sweetalert2/sweetalert2.min.css',
     		'css/adminlte.min.css',
+    		'css/theme-custom.css',
     	]);
     	echo Assets::css();
     ?>

@@ -19,7 +19,7 @@ if (validation_errors()) :
 <style>
 .tab-content.main-settings {
     padding-bottom: 9px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #E4D6C2;
 }
 #name-change-settings input {
     width: 2em;

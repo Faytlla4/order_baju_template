@@ -1,0 +1,714 @@
+/*
+ * Custom Theme Override — SI-Reklame
+ * Warm, clean, elegant palette
+ * Loaded AFTER adminlte.min.css to override defaults.
+ */
+
+/* ============================================================
+   1. CSS Custom Properties (fallback for older browsers)
+   ============================================================ */
+:root {
+    /* Override AdminLTE theme variables */
+    --primary: #C8A96B;
+    --secondary: #8A6A47;
+    --custom-bg: #F8F5EF;
+    --custom-card: #FFFDF9;
+    --custom-primary: #C8A96B;
+    --custom-primary-hover: #b89a5c;
+    --custom-primary-active: #a88c4d;
+    --custom-secondary: #8A6A47;
+    --custom-secondary-hover: #7a5e3d;
+    --custom-text: #403A34;
+    --custom-muted: #8C8175;
+    --custom-border: #E4D6C2;
+    --custom-sidebar: #2F261E;
+    --custom-sidebar-hover: #3d3229;
+    --custom-sidebar-text: #d4c8b8;
+    --custom-sidebar-text-active: #C8A96B;
+}
+
+/* ============================================================
+   2. Body / Page Background
+   ============================================================ */
+body,
+.content-wrapper,
+.main-header.navbar {
+    background-color: var(--custom-bg) !important;
+}
+
+body {
+    color: var(--custom-text);
+}
+
+/* ============================================================
+   3. Sidebar — Dark warm theme
+   ============================================================ */
+.main-sidebar.sidebar-dark-primary {
+    background-color: var(--custom-sidebar) !important;
+}
+
+/* Sidebar brand */
+.main-sidebar .brand-link {
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background-color: var(--custom-sidebar) !important;
+}
+
+.main-sidebar .brand-text {
+    color: #e8dfd3 !important;
+}
+
+/* Sidebar nav items */
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link {
+    color: var(--custom-sidebar-text) !important;
+}
+
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link:hover {
+    background-color: var(--custom-sidebar-hover) !important;
+    color: #fff !important;
+}
+
+/* Active menu item — gold accent */
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active:hover {
+    background-color: rgba(200,169,107,0.15) !important;
+    color: var(--custom-sidebar-text-active) !important;
+    border-radius: 6px;
+    margin: 2px 8px;
+    width: calc(100% - 16px);
+}
+
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active > i.nav-icon {
+    color: var(--custom-sidebar-text-active) !important;
+}
+
+/* Sub-menu items */
+.sidebar-dark-primary .nav-sidebar .nav-treeview > .nav-item > .nav-link {
+    color: var(--custom-sidebar-text) !important;
+}
+
+.sidebar-dark-primary .nav-sidebar .nav-treeview > .nav-item > .nav-link:hover {
+    background-color: var(--custom-sidebar-hover) !important;
+    color: #fff !important;
+}
+
+.sidebar-dark-primary .nav-sidebar .nav-treeview > .nav-item > .nav-link.active {
+    color: var(--custom-sidebar-text-active) !important;
+    background-color: rgba(200,169,107,0.10) !important;
+    border-radius: 4px;
+}
+
+/* Sidebar treeview arrows */
+.sidebar-dark-primary .nav-sidebar .nav-link > .right,
+.sidebar-dark-primary .nav-sidebar .nav-link > p > .right {
+    color: var(--custom-sidebar-text) !important;
+}
+
+/* User panel */
+.main-sidebar .user-panel {
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.main-sidebar .user-panel .info a {
+    color: #e8dfd3 !important;
+}
+
+/* Sidebar search */
+.sidebar-dark-primary .form-control-sidebar {
+    background-color: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255,255,255,0.1) !important;
+    color: #e8dfd3 !important;
+}
+
+.sidebar-dark-primary .btn-sidebar {
+    color: var(--custom-sidebar-text) !important;
+}
+
+/* Sidebar scrollbar */
+.sidebar-dark-primary::-webkit-scrollbar-thumb {
+    background: rgba(200,169,107,0.3);
+}
+
+/* ============================================================
+   4. Header / Navbar
+   ============================================================ */
+.main-header.navbar {
+    background-color: #fffdf9 !important;
+    border-bottom: 1px solid var(--custom-border) !important;
+}
+
+.main-header .nav-link {
+    color: var(--custom-text) !important;
+}
+
+.main-header .nav-link:hover {
+    color: var(--custom-primary) !important;
+}
+
+/* ============================================================
+   5. Cards / Boxes / Panels
+   ============================================================ */
+.card,
+.box,
+.callout {
+    background-color: var(--custom-card) !important;
+    border: 1px solid var(--custom-border) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 1px 3px rgba(64,58,52,0.04) !important;
+}
+
+.card-header {
+    background-color: var(--custom-card) !important;
+    border-bottom: 1px solid var(--custom-border) !important;
+    color: var(--custom-text) !important;
+}
+
+.card-title {
+    color: var(--custom-text) !important;
+}
+
+.card-body {
+    color: var(--custom-text) !important;
+}
+
+/* Small boxes / widgets */
+.small-box {
+    border-radius: 10px !important;
+    border: 1px solid var(--custom-border) !important;
+}
+
+.small-box h3,
+.small-box p {
+    color: var(--custom-text) !important;
+}
+
+/* ============================================================
+   6. Tables
+   ============================================================ */
+.table,
+.table td,
+.table th {
+    border-color: var(--custom-border) !important;
+}
+
+.table thead th {
+    background-color: rgba(228,214,194,0.25) !important;
+    color: var(--custom-text) !important;
+    border-bottom: 2px solid var(--custom-border) !important;
+    font-weight: 600;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(200,169,107,0.06) !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255,253,249,0.5) !important;
+}
+
+.table-bordered,
+.table-bordered td,
+.table-bordered th {
+    border-color: var(--custom-border) !important;
+}
+
+/* DataTables override */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    color: var(--custom-muted) !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    background: var(--custom-primary) !important;
+    border-color: var(--custom-primary) !important;
+    color: #fff !important;
+    border-radius: 4px;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: rgba(200,169,107,0.15) !important;
+    border-color: var(--custom-border) !important;
+    color: var(--custom-text) !important;
+    border-radius: 4px;
+}
+
+.dataTables_wrapper .dataTables_empty {
+    color: var(--custom-muted) !important;
+}
+
+/* ============================================================
+   7. Forms / Inputs
+   ============================================================ */
+.form-control,
+.form-control-sm,
+select.form-control,
+textarea.form-control,
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+input[type="datetime-local"] {
+    background-color: var(--custom-card) !important;
+    border: 1px solid var(--custom-border) !important;
+    color: var(--custom-text) !important;
+    border-radius: 6px !important;
+}
+
+.form-control::placeholder,
+.form-control-sm::placeholder {
+    color: var(--custom-muted) !important;
+}
+
+.form-control:focus,
+.form-control-sm:focus,
+select.form-control:focus,
+textarea.form-control:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="datetime-local"]:focus {
+    border-color: var(--custom-primary) !important;
+    box-shadow: 0 0 0 0.15rem rgba(200,169,107,0.25) !important;
+    outline: none;
+}
+
+.form-group label,
+.control-label {
+    color: var(--custom-text) !important;
+    font-weight: 600;
+}
+
+.form-text,
+.help-block,
+.text-muted {
+    color: var(--custom-muted) !important;
+}
+
+/* Input groups */
+.input-group-prepend .input-group-text,
+.input-group-append .input-group-text {
+    background-color: rgba(228,214,194,0.3) !important;
+    border-color: var(--custom-border) !important;
+    color: var(--custom-muted) !important;
+}
+
+/* Select2 overrides */
+.select2-container--default .select2-selection--single {
+    border-color: var(--custom-border) !important;
+    border-radius: 6px !important;
+    background-color: var(--custom-card) !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: var(--custom-text) !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: var(--custom-muted) transparent transparent transparent !important;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--single,
+.select2-container--default.select2-container--open .select2-selection--single {
+    border-color: var(--custom-primary) !important;
+    box-shadow: 0 0 0 0.15rem rgba(200,169,107,0.25) !important;
+}
+
+.select2-dropdown {
+    border-color: var(--custom-border) !important;
+    background-color: var(--custom-card) !important;
+}
+
+.select2-results__option--highlighted {
+    background-color: var(--custom-primary) !important;
+}
+
+/* ============================================================
+   8. Buttons
+   ============================================================ */
+
+/* Primary buttons */
+.btn-primary {
+    background-color: var(--custom-primary) !important;
+    border-color: var(--custom-primary) !important;
+    color: #fff !important;
+    border-radius: 6px !important;
+    font-weight: 600;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--custom-primary-hover) !important;
+    border-color: var(--custom-primary-hover) !important;
+    color: #fff !important;
+    box-shadow: 0 2px 6px rgba(200,169,107,0.35) !important;
+}
+
+.btn-primary:active,
+.btn-primary.active {
+    background-color: var(--custom-primary-active) !important;
+    border-color: var(--custom-primary-active) !important;
+    color: #fff !important;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active,
+.btn-primary:not(:disabled):not(.disabled).active {
+    background-color: var(--custom-primary-active) !important;
+    border-color: var(--custom-primary-active) !important;
+}
+
+/* Secondary buttons */
+.btn-secondary,
+.btn-default {
+    background-color: var(--custom-secondary) !important;
+    border-color: var(--custom-secondary) !important;
+    color: #fff !important;
+    border-radius: 6px !important;
+    font-weight: 600;
+}
+
+.btn-secondary:hover,
+.btn-default:hover,
+.btn-secondary:focus,
+.btn-default:focus {
+    background-color: var(--custom-secondary-hover) !important;
+    border-color: var(--custom-secondary-hover) !important;
+    color: #fff !important;
+    box-shadow: 0 2px 6px rgba(138,106,71,0.3) !important;
+}
+
+.btn-secondary:active,
+.btn-default:active,
+.btn-secondary.active,
+.btn-default.active {
+    background-color: #6d5438 !important;
+    border-color: #6d5438 !important;
+    color: #fff !important;
+}
+
+/* Success buttons (keep green for status) */
+.btn-success {
+    background-color: #5a8f5c !important;
+    border-color: #5a8f5c !important;
+    border-radius: 6px !important;
+}
+
+.btn-success:hover {
+    background-color: #4d7d4f !important;
+    border-color: #4d7d4f !important;
+}
+
+/* Danger buttons */
+.btn-danger {
+    background-color: #c0392b !important;
+    border-color: #c0392b !important;
+    border-radius: 6px !important;
+}
+
+.btn-danger:hover {
+    background-color: #a93226 !important;
+    border-color: #a93226 !important;
+}
+
+/* Info buttons */
+.btn-info {
+    background-color: #7a9bb5 !important;
+    border-color: #7a9bb5 !important;
+    border-radius: 6px !important;
+}
+
+.btn-info:hover {
+    background-color: #6a8ba5 !important;
+    border-color: #6a8ba5 !important;
+}
+
+/* Warning buttons */
+.btn-warning {
+    background-color: #d4a84b !important;
+    border-color: #d4a84b !important;
+    border-radius: 6px !important;
+    color: #fff !important;
+}
+
+/* Light / outline buttons */
+.btn-light {
+    background-color: rgba(228,214,194,0.3) !important;
+    border-color: var(--custom-border) !important;
+    color: var(--custom-text) !important;
+    border-radius: 6px !important;
+}
+
+.btn-light:hover {
+    background-color: rgba(228,214,194,0.5) !important;
+    border-color: var(--custom-border) !important;
+    color: var(--custom-text) !important;
+}
+
+/* ============================================================
+   9. Typography
+   ============================================================ */
+h1, h2, h3, h4, h5, h6,
+.page-title,
+.content-header h1 {
+    color: var(--custom-text) !important;
+}
+
+.text-muted {
+    color: var(--custom-muted) !important;
+}
+
+a {
+    color: var(--custom-secondary);
+}
+
+a:hover {
+    color: var(--custom-primary);
+}
+
+/* ============================================================
+   10. Content Wrapper
+   ============================================================ */
+.content-wrapper {
+    background-color: var(--custom-bg) !important;
+}
+
+.content-header .m-0 {
+    color: var(--custom-text) !important;
+}
+
+/* ============================================================
+   11. Footer
+   ============================================================ */
+.main-footer {
+    background-color: var(--custom-card) !important;
+    border-top: 1px solid var(--custom-border) !important;
+    color: var(--custom-muted) !important;
+}
+
+.main-footer a {
+    color: var(--custom-secondary) !important;
+}
+
+/* ============================================================
+   12. Alerts / Messages
+   ============================================================ */
+.alert-info {
+    background-color: rgba(122,155,181,0.12) !important;
+    border-color: rgba(122,155,181,0.3) !important;
+    color: #4a6a7f !important;
+}
+
+.alert-success {
+    background-color: rgba(90,143,92,0.12) !important;
+    border-color: rgba(90,143,92,0.3) !important;
+    color: #3d6b3f !important;
+}
+
+.alert-warning {
+    background-color: rgba(212,168,75,0.12) !important;
+    border-color: rgba(212,168,75,0.3) !important;
+    color: #8a7030 !important;
+}
+
+.alert-danger {
+    background-color: rgba(192,57,43,0.10) !important;
+    border-color: rgba(192,57,43,0.25) !important;
+    color: #922b21 !important;
+}
+
+/* ============================================================
+   13. Tabs / Navs
+   ============================================================ */
+.nav-tabs .nav-link {
+    color: var(--custom-muted) !important;
+    border-color: transparent !important;
+}
+
+.nav-tabs .nav-link:hover {
+    color: var(--custom-text) !important;
+    border-color: var(--custom-border) !important;
+    background-color: rgba(200,169,107,0.08) !important;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--custom-primary) !important;
+    border-color: var(--custom-border) !important;
+    border-bottom-color: var(--custom-card) !important;
+    background-color: var(--custom-card) !important;
+}
+
+/* ============================================================
+   14. Modals
+   ============================================================ */
+.modal-content {
+    background-color: var(--custom-card) !important;
+    border: 1px solid var(--custom-border) !important;
+    border-radius: 12px !important;
+}
+
+.modal-header {
+    border-bottom-color: var(--custom-border) !important;
+}
+
+.modal-footer {
+    border-top-color: var(--custom-border) !important;
+}
+
+/* ============================================================
+   15. Dropdowns
+   ============================================================ */
+.dropdown-menu {
+    background-color: var(--custom-card) !important;
+    border: 1px solid var(--custom-border) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(64,58,52,0.1) !important;
+}
+
+.dropdown-item {
+    color: var(--custom-text) !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background-color: rgba(200,169,107,0.12) !important;
+    color: var(--custom-text) !important;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+    background-color: var(--custom-primary) !important;
+    color: #fff !important;
+}
+
+/* ============================================================
+   16. Pagination
+   ============================================================ */
+.page-link {
+    color: var(--custom-primary) !important;
+    border-color: var(--custom-border) !important;
+}
+
+.page-item.active .page-link {
+    background-color: var(--custom-primary) !important;
+    border-color: var(--custom-primary) !important;
+}
+
+.page-link:hover {
+    background-color: rgba(200,169,107,0.12) !important;
+    color: var(--custom-primary) !important;
+}
+
+/* ============================================================
+   17. Badges / Labels
+   ============================================================ */
+.badge-primary {
+    background-color: var(--custom-primary) !important;
+}
+
+.badge-secondary {
+    background-color: var(--custom-secondary) !important;
+}
+
+/* ============================================================
+   18. Preloader
+   ============================================================ */
+.preloader {
+    background-color: var(--custom-bg) !important;
+}
+
+/* ============================================================
+   19. Login Page Override
+   ============================================================ */
+.login-page,
+.login-box,
+.login-logo {
+    color: var(--custom-text) !important;
+}
+
+/* ============================================================
+   20. SweetAlert2 Custom
+   ============================================================ */
+.swal2-popup {
+    border-radius: 12px !important;
+    border: 1px solid var(--custom-border) !important;
+}
+
+.swal2-confirm {
+    background-color: var(--custom-primary) !important;
+    border-radius: 6px !important;
+}
+
+.swal2-cancel {
+    background-color: var(--custom-secondary) !important;
+    border-radius: 6px !important;
+}
+
+/* ============================================================
+   21. OverlayScrollbars
+   ============================================================ */
+.overlayScrollbars::-webkit-scrollbar-thumb {
+    background: rgba(200,169,107,0.3);
+}
+
+/* ============================================================
+   22. User Header in Dropdown
+   ============================================================ */
+.main-header .user-header {
+    background-color: var(--custom-sidebar) !important;
+}
+
+.main-header .user-header p {
+    color: #e8dfd3 !important;
+}
+
+.main-header .user-header small {
+    color: var(--custom-sidebar-text) !important;
+}
+
+/* ============================================================
+   23. Sub-nav / Breadcrumb area
+   ============================================================ */
+#sub-menu .breadcrumb,
+#sub-menu a {
+    color: var(--custom-muted) !important;
+}
+
+#sub-menu a:hover {
+    color: var(--custom-primary) !important;
+}
+
+/* ============================================================
+   24. Print Overrides
+   ============================================================ */
+@media print {
+    .main-sidebar,
+    .main-header,
+    .main-footer {
+        display: none !important;
+    }
+
+    .content-wrapper {
+        margin-left: 0 !important;
+        background: #fff !important;
+    }
+}
+
+/* ============================================================
+   25. Transaksi edit page — fix hardcoded gray background
+   ============================================================ */
+div[style*="background:#f8f9fa"],
+div[style*="background: #f8f9fa"] {
+    background: var(--custom-card) !important;
+}
+
+/* ============================================================
+   26. Settings page — fix hardcoded border
+   ============================================================ */
+.settings-index .border-bottom,
+div[style*="border-bottom: 1px solid #ddd"] {
+    border-bottom-color: var(--custom-border) !important;
+}

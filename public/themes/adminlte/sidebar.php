@@ -34,6 +34,53 @@
             <?php
             $navMenus = Contextslte::render_menu('text', 'normal');
 
+            // Menu SK Tidak Mampu sementara disembunyikan dari navigasi.
+            // Source code dan fitur tetap dipertahankan.
+            // Untuk menampilkan kembali, hapus baris preg_replace berikut.
+            $navMenus = preg_replace(
+                '/<li class=\'nav-item\'>\s*<a href=\'[^\']*sk_tidak_mampu[^\']*\'[^>]*>.*?<\/li>\s*/is',
+                '',
+                $navMenus
+            );
+
+            // Hapus context "reports" dan "developer" dari menu utama sidebar
+            // (akan dipindahkan ke dalam Settings).
+            // Menggunakan pendekatan string-based untuk menghapus elemen <li> secara akurat.
+            foreach (array('/reports', '/developer') as $ctxPath) {
+                $marker = strpos($ctxPath, 'reports') !== false ? '/reports' : '/developer';
+                $searchPos = strpos($navMenus, "href='" . site_url(SITE_AREA . $marker) . "'");
+                if ($searchPos !== false) {
+                    // Cari pembuka <li> sebelum link
+                    $liOpenPos = strrpos(substr($navMenus, 0, $searchPos), '<li');
+                    if ($liOpenPos !== false) {
+                        // Hitung kedalaman nested <li> untuk menemukan closing yang tepat
+                        $depth = 0;
+                        $scanPos = $liOpenPos;
+                        $len = strlen($navMenus);
+                        while ($scanPos < $len) {
+                            $nextLiOpen = strpos($navMenus, '<li', $scanPos);
+                            $nextLiClose = strpos($navMenus, '</li>', $scanPos);
+                            if ($nextLiClose === false) break;
+                            if ($nextLiOpen !== false && $nextLiOpen < $nextLiClose) {
+                                $depth++;
+                                $scanPos = $nextLiOpen + 3;
+                            } else {
+                                $depth--;
+                                $scanPos = $nextLiClose + 5;
+                                if ($depth <= 0) {
+                                    // Sertakan whitespace setelah closing </li>
+                                    while ($scanPos < $len && ctype_space($navMenus[$scanPos])) {
+                                        $scanPos++;
+                                    }
+                                    $navMenus = substr($navMenus, 0, $liOpenPos) . substr($navMenus, $scanPos);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             // --- CONTENT dropdown (replace empty context) ---
             $isContent = ($this->uri->segment(2) == 'content');
             $isContentOrder = ($this->uri->segment(2) == 'content' && $this->uri->segment(3) == 'order_baju');
@@ -269,6 +316,172 @@
             $pos6 = strrpos($navMenus, '</ul>');
             if ($pos6 !== false) {
                 $navMenus = substr($navMenus, 0, $pos6) . $riwayatSection . substr($navMenus, $pos6);
+            }
+
+            // --- Inject Reports and Developer as sub-items under Settings ---
+            // Reports dan Developer dipindahkan dari menu utama sidebar ke dalam Settings.
+            $isSettings = ($this->uri->segment(2) == 'settings');
+            $isReportsCtx = ($this->uri->segment(2) == 'reports');
+            $isDeveloperCtx = ($this->uri->segment(2) == 'developer');
+
+            // Build Reports sub-items
+            $isRptPdf   = ($isReportsCtx && $this->uri->segment(3) == 'report_pdf');
+            $isRptExcel = ($isReportsCtx && $this->uri->segment(3) == 'report_excel');
+            $isRptMain  = ($isReportsCtx && empty($this->uri->segment(3)));
+            $reportsSubItems = '';
+            if ($this->auth->has_permission('Bonfire.reports.View') || $this->auth->has_permission('Reports.Reports.View') || $isReportsCtx) {
+                $rptActive = $isRptMain ? ' active' : '';
+                $reportsSubItems .= "<li class='nav-item'>\n"
+                    . "<a href='" . site_url(SITE_AREA . '/reports') . "' class='nav-link{$rptActive}'>\n"
+                    . "<i class='nav-icon far fa-circle'></i>\n<p>Reports</p>\n"
+                    . "</a>\n"
+                    . "</li>\n";
+            }
+            if ($this->auth->has_permission('Bonfire.report_pdf.View') || $this->auth->has_permission('Report_pdf.Reports.View') || $isRptPdf) {
+                $rptPdfActive = $isRptPdf ? ' active' : '';
+                $reportsSubItems .= "<li class='nav-item'>\n"
+                    . "<a href='" . site_url(SITE_AREA . '/reports/report_pdf') . "' class='nav-link{$rptPdfActive}'>\n"
+                    . "<i class='nav-icon far fa-circle'></i>\n<p>Laporan Transaksi PDF</p>\n"
+                    . "</a>\n"
+                    . "</li>\n";
+            }
+            if ($this->auth->has_permission('Bonfire.report_excel.View') || $this->auth->has_permission('Report_excel.Reports.View') || $isRptExcel) {
+                $rptExcelActive = $isRptExcel ? ' active' : '';
+                $reportsSubItems .= "<li class='nav-item'>\n"
+                    . "<a href='" . site_url(SITE_AREA . '/reports/report_excel') . "' class='nav-link{$rptExcelActive}'>\n"
+                    . "<i class='nav-icon far fa-circle'></i>\n<p>Laporan Transaksi Excel</p>\n"
+                    . "</a>\n"
+                    . "</li>\n";
+            }
+
+            // Build Developer sub-items
+            $isDevDb      = ($isDeveloperCtx && $this->uri->segment(3) == 'database');
+            $isDevBuilder = ($isDeveloperCtx && $this->uri->segment(3) == 'builder');
+            $isDevLogs    = ($isDeveloperCtx && $this->uri->segment(3) == 'logs');
+            $isDevSysinfo = ($isDeveloperCtx && $this->uri->segment(3) == 'sysinfo');
+            $isDevTrans   = ($isDeveloperCtx && $this->uri->segment(3) == 'translate');
+            $devSubItems = '';
+            if ($this->auth->has_permission('Bonfire.database.View') || $this->auth->has_permission('Database.Developer.View') || $isDevDb) {
+                $devDbActive = $isDevDb ? ' active' : '';
+                $devSubItems .= "<li class='nav-item'>\n"
+                    . "<a href='" . site_url(SITE_AREA . '/developer/database') . "' class='nav-link{$devDbActive}'>\n"
+                    . "<i class='nav-icon far fa-circle'></i>\n<p>Database Tools</p>\n"
+                    . "</a>\n"
+                    . "</li>\n";
+            }
+            if ($this->auth->has_permission('Bonfire.builder.View') || $this->auth->has_permission('Builder.Developer.View') || $isDevBuilder) {
+                $devBuilderActive = $isDevBuilder ? ' active' : '';
+                $devSubItems .= "<li class='nav-item'>\n"
+                    . "<a href='" . site_url(SITE_AREA . '/developer/builder') . "' class='nav-link{$devBuilderActive}'>\n"
+                    . "<i class='nav-icon far fa-circle'></i>\n<p>Code Builder</p>\n"
+                    . "</a>\n"
+                    . "</li>\n";
+            }
+            if ($this->auth->has_permission('Bonfire.logs.View') || $this->auth->has_permission('Logs.Developer.View') || $isDevLogs) {
+                $devLogsActive = $isDevLogs ? ' active' : '';
+                $devSubItems .= "<li class='nav-item'>\n"
+                    . "<a href='" . site_url(SITE_AREA . '/developer/logs') . "' class='nav-link{$devLogsActive}'>\n"
+                    . "<i class='nav-icon far fa-circle'></i>\n<p>Logs</p>\n"
+                    . "</a>\n"
+                    . "</li>\n";
+            }
+            if ($this->auth->has_permission('Bonfire.sysinfo.View') || $this->auth->has_permission('Sysinfo.Developer.View') || $isDevSysinfo) {
+                $devSysinfoActive = $isDevSysinfo ? ' active' : '';
+                $devSubItems .= "<li class='nav-item'>\n"
+                    . "<a href='" . site_url(SITE_AREA . '/developer/sysinfo') . "' class='nav-link{$devSysinfoActive}'>\n"
+                    . "<i class='nav-icon far fa-circle'></i>\n<p>System Information</p>\n"
+                    . "</a>\n"
+                    . "</li>\n";
+            }
+            if ($this->auth->has_permission('Bonfire.translate.View') || $this->auth->has_permission('Translate.Developer.View') || $isDevTrans) {
+                $devTransActive = $isDevTrans ? ' active' : '';
+                $devSubItems .= "<li class='nav-item'>\n"
+                    . "<a href='" . site_url(SITE_AREA . '/developer/translate') . "' class='nav-link{$devTransActive}'>\n"
+                    . "<i class='nav-icon far fa-circle'></i>\n<p>Translate</p>\n"
+                    . "</a>\n"
+                    . "</li>\n";
+            }
+
+            // Build the Reports grouping inside Settings (if any sub-items)
+            $reportsGroup = '';
+            if (!empty($reportsSubItems)) {
+                $reportsGroup = "<li class='nav-item'>\n"
+                    . "<a href='#' class='nav-link'>\n"
+                    . "<i class='nav-icon far fa-circle'></i>\n"
+                    . "<p>\nReports\n<i class='right fas fa-angle-left'></i>\n</p>\n"
+                    . "</a>\n"
+                    . "<ul class='nav nav-treeview'>\n"
+                    . $reportsSubItems
+                    . "</ul>\n"
+                    . "</li>\n";
+            }
+
+            // Build the Developer grouping inside Settings (if any sub-items)
+            $developerGroup = '';
+            if (!empty($devSubItems)) {
+                $isDevAny = $isDevDb || $isDevBuilder || $isDevLogs || $isDevSysinfo || $isDevTrans;
+                $devGroupClass = $isDevAny ? "nav-item menu-is-opening menu-open" : "nav-item";
+                $devGroupActive = $isDevAny ? ' active' : '';
+                $developerGroup = "<li class='{$devGroupClass}'>\n"
+                    . "<a href='#' class='nav-link{$devGroupActive}'>\n"
+                    . "<i class='nav-icon far fa-circle'></i>\n"
+                    . "<p>\nDeveloper\n<i class='right fas fa-angle-left'></i>\n</p>\n"
+                    . "</a>\n"
+                    . "<ul class='nav nav-treeview'>\n"
+                    . $devSubItems
+                    . "</ul>\n"
+                    . "</li>\n";
+            }
+
+            // Inject Reports and Developer into the Settings <li> submenu.
+            // Find the Settings context <li> and insert Reports/Developer before its closing </ul>.
+            $settingsUrl = site_url(SITE_AREA . '/settings');
+            $settingsLiPos = strpos($navMenus, "href='" . $settingsUrl . "'");
+            if ($settingsLiPos !== false) {
+                // Cari pembuka <li> dari settings
+                $settingsLiOpen = strrpos(substr($navMenus, 0, $settingsLiPos), '<li');
+                if ($settingsLiOpen !== false) {
+                    // Hitung seimbang <li>/</li> dan <ul>/</ul> untuk menemukan penutup yang tepat
+                    $depthLi = 0;
+                    $depthUl = 0;
+                    $scanPos = $settingsLiOpen;
+                    $len = strlen($navMenus);
+                    $insertPos = -1;
+                    while ($scanPos < $len) {
+                        $liOpen  = strpos($navMenus, '<li', $scanPos);
+                        $liClose = strpos($navMenus, '</li>', $scanPos);
+                        $ulOpen  = strpos($navMenus, '<ul', $scanPos);
+                        $ulClose = strpos($navMenus, '</ul>', $scanPos);
+
+                        $nextPositions = array_filter(array($liOpen, $liClose, $ulOpen, $ulClose), function($p) { return $p !== false; });
+                        if (empty($nextPositions)) break;
+                        $nextPos = min($nextPositions);
+
+                        if (($liOpen !== false && $liOpen === $nextPos)) {
+                            $depthLi++;
+                            $scanPos = $liOpen + 3;
+                        } elseif (($ulOpen !== false && $ulOpen === $nextPos)) {
+                            $depthUl++;
+                            $scanPos = $ulOpen + 3;
+                        } elseif (($liClose !== false && $liClose === $nextPos)) {
+                            $depthLi--;
+                            $scanPos = $liClose + 5;
+                        } elseif (($ulClose !== false && $ulClose === $nextPos)) {
+                            $depthUl--;
+                            $scanPos = $ulClose + 5;
+                            // Ketika treeview settings ditutup (depthUl kembali ke 0) dan
+                            // masih dalam settings <li> (depthLi=1), ini titik injection.
+                            if ($depthLi === 1 && $depthUl === 0) {
+                                $insertPos = $ulClose;
+                                break;
+                            }
+                        }
+                    }
+                    if ($insertPos > 0) {
+                        // Insert Reports dan Developer sebelum penutup </ul> dari treeview settings
+                        $navMenus = substr($navMenus, 0, $insertPos) . $reportsGroup . $developerGroup . substr($navMenus, $insertPos);
+                    }
+                }
             }
 
             echo $navMenus;

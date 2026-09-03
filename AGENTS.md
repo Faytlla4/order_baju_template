@@ -14,6 +14,7 @@ CodeIgniter 3 + Bonfire HMVC app for garment order management. PostgreSQL, Admin
   - `.env`, `application/config/database.php` are gitignored (`.gitignore:93,100`) — edits won't appear in `git status`.
 - **Custom business logic:** `application/modules/`
 - **Do not edit:** `bonfire/` (framework: core `bonfire/ci3/` + modules + `bonfire/migrations/`)
+- **Gitignore trap:** `application/modules/*` is gitignored; only the 11 known modules are whitelisted via `.gitignore:48-72`. If you create a new module, add a `!application/modules/<name>/` + `!application/modules/<name>/**` pair to `.gitignore` or it won't be tracked.
 - **Logs:** `application/logs/`
 
 ## Environment Setup

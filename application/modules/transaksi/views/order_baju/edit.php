@@ -67,7 +67,7 @@
                             <div id="dokumen-existing" class="mb-2">
                                 <strong>Dokumen yang sudah ada:</strong>
                                 <?php foreach ($dokumen_files as $idx => $fname) : ?>
-                                <div class="dokumen-existing-row mb-1" style="display:flex;align-items:center;gap:8px;background:#f8f9fa;padding:4px 8px;border-radius:4px;">
+                                <div class="dokumen-existing-row mb-1" style="display:flex;align-items:center;gap:8px;background:#FFFDF9;padding:4px 8px;border-radius:4px;border:1px solid #E4D6C2;">
                                     <input type="checkbox" name="hapus_dokumen[]" value="<?php echo html_escape($fname); ?>" id="hapus_<?php echo $idx; ?>" />
                                     <label for="hapus_<?php echo $idx; ?>" style="margin:0;font-size:13px;">
                                         <i class="fas fa-file"></i> <?php echo html_escape($fname); ?>
