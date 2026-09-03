@@ -27,6 +27,8 @@
     	echo Assets::css();
     ?>
 
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-admin.css'); ?>">
+
     <script type="text/javascript" async>
     var run_title_text = " <?=$title_text?> ";
     var run_title_speed = 300;
@@ -44,11 +46,20 @@
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
-        <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="<?php echo base_url('assets/images/logo.png'); ?>" height="300" width="300">
+    <!-- Tailor Thread Transition -->
+    <div id="f-transition" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#F8F5EF;transition:opacity 0.35s ease,visibility 0.35s ease;pointer-events:none;">
+        <div style="text-align:center;animation:f-center-in 0.5s cubic-bezier(.22,.68,0,1.1) both;">
+            <img src="<?php echo base_url('assets/images/logo-transparent.png'); ?>" alt="FASHIONER" style="width:80px;height:80px;object-fit:contain;mix-blend-mode:multiply;">
         </div>
+    </div>
+    <style>
+    @keyframes f-center-in {
+        from { opacity:0; transform:translateY(12px) scale(0.97); }
+        to   { opacity:1; transform:translateY(0) scale(1); }
+    }
+    </style>
 
+    <div class="wrapper">
         <?php
         	echo theme_view('header');
         	echo theme_view('sidebar');
@@ -60,7 +71,7 @@
                     <div class="row mb-2">
                         <div class="col-sm-6">
                             <?php if (isset($toolbar_title)): ?>
-                            <h1 class="m-0"><?php echo $toolbar_title; ?></h1>
+                            <h1 class="m-0" style="font-size:1.2rem;font-weight:600;"><?php echo $toolbar_title; ?></h1>
                             <?php endif;?>
                         </div>
                         <div class="col-sm-6" id="sub-menu">
@@ -103,23 +114,25 @@
     	echo Assets::js();
     ?>
     <script>
-    // Sidebar submenus rely on CSS hover (see <style> above); Treeview JS is not used.
-    // On load, auto-expand the submenu containing the active item.
+    // Sidebar submenus
     $(function() {
         $('.nav-sidebar .nav-item.active').parents('.nav-treeview').each(function() {
             $(this).prev('.nav-link').addClass('active');
             $(this).parent().addClass('menu-open');
         });
     });
-    // Fallback: if preloader still visible after 2s, force-hide it
-    setTimeout(function() {
-        var $pre = $('.preloader');
-        if ($pre.length && $pre.css('display') !== 'none' && $pre.height() > 0) {
-            $pre.css({'height': 0, 'overflow': 'hidden'});
-            $pre.children().hide();
+    // Fade out transition
+    window.addEventListener('load', function() {
+        var t = document.getElementById('f-transition');
+        if (t) {
+            setTimeout(function() { t.style.opacity = '0'; t.style.visibility = 'hidden'; }, 300);
+            setTimeout(function() { t.remove(); }, 700);
         }
+    });
+    // Force-remove hold-transition
+    setTimeout(function() {
         $('body.hold-transition').removeClass('hold-transition');
-    }, 2000);
+    }, 1000);
     </script>
 </body>
 

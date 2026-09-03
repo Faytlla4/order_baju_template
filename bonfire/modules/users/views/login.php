@@ -1,40 +1,23 @@
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <style type="text/css">
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
 .wrapper {
     width: 100%;
+    background: #F8F5EF;
+    background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 24px, rgba(200,169,107,0.03) 24px, rgba(200,169,107,0.03) 25px),
+        repeating-linear-gradient(-45deg, transparent, transparent 24px, rgba(138,106,71,0.02) 24px, rgba(138,106,71,0.02) 25px),
+        linear-gradient(180deg, #F8F5EF 0%, #EFE7D8 100%);
+    min-height: 100vh;
 }
 
 nav.navbar {
     display: none;
 }
 
-/* Background login */
-.login-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    background-image: url('<?php echo base_url('assets/images/bg.jfif'); ?>');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-.login-bg::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 253, 249, 0.15);
-    z-index: 1;
-}
-
-/* Login wrapper */
 .login-wrapper {
     position: relative;
     z-index: 2;
@@ -45,76 +28,75 @@ nav.navbar {
     padding: 2rem;
 }
 
-/* Login card */
 .login-card {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: rgba(255,253,249,0.85);
-    border: 1px solid rgba(228,214,194,0.55);
-    border-radius: 18px;
-    box-shadow: 0 8px 32px rgba(64, 58, 52, 0.06);
+    background: #FFFDF9;
+    border: 1px solid rgba(228,214,194,0.6);
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(64,58,52,0.08);
     width: 100%;
     max-width: 400px;
     padding: 2.5rem 2rem;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
 }
 
-/* Logo inside card */
 .login-card .logo-wrapper {
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
 }
 
 .login-card .logo-wrapper img {
-    height: 80px;
+    height: 64px;
     width: auto;
+    object-fit: contain;
 }
 
 .login-card .brand-name {
     text-align: center;
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     font-weight: 600;
     color: #403A34;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin-top: 0.5rem;
+    letter-spacing: 0.04em;
+    margin-top: 0.4rem;
 }
 
-/* Form */
 .login-card .input-group {
-    margin-bottom: 1rem;
+    margin-bottom: 0.85rem;
 }
 
 .login-card .form-control {
     font-family: 'Inter', sans-serif;
-    border: 1px solid #D8C9B4;
-    border-radius: 10px;
-    padding: 0.65rem 1rem;
-    font-size: 0.88rem;
+    border: 1px solid #E4D6C2;
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
     color: #403A34;
-    background: rgba(255,253,249,0.9);
-    transition: border-color 0.2s;
+    background: #FFFDF9;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .login-card .form-control:focus {
     border-color: #C8A96B;
-    box-shadow: 0 0 0 0.15rem rgba(200, 169, 107, 0.15);
+    box-shadow: 0 0 0 3px rgba(200,169,107,0.12);
+    outline: none;
 }
 
 .login-card .form-control::placeholder {
     color: #8C8175;
+    font-weight: 400;
 }
 
 .login-card .input-group-append .input-group-text {
-    background: #F8F5EF;
-    border: 1px solid #D8C9B4;
-    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    background: rgba(239,231,216,0.5);
+    border: 1px solid #E4D6C2;
+    border-radius: 8px;
     color: #8A6A47;
+    font-size: 0.85rem;
 }
 
 .login-card .input-group-append {
-    border-radius: 0 10px 10px 0;
+    border-radius: 0 8px 8px 0;
 }
 
 .login-card .input-group-append .input-group-text {
@@ -123,37 +105,34 @@ nav.navbar {
 
 .login-card .input-group .form-control {
     border-right: 0;
-    border-radius: 10px 0 0 10px;
+    border-radius: 8px 0 0 8px;
 }
 
-/* Buttons */
 .login-card .btn-primary {
     font-family: 'Inter', sans-serif;
-    background: #C8A96B;
+    background: #8A6A47;
     border: none;
-    border-radius: 10px;
-    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    padding: 0.55rem 1.5rem;
     font-weight: 600;
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     color: #fff;
-    letter-spacing: 0.01em;
-    transition: background 0.2s;
+    transition: background 0.15s ease;
 }
 
 .login-card .btn-primary:hover {
-    background: #b89a5c;
+    background: #7a5d3e;
 }
 
 .login-card .btn-secondary {
     font-family: 'Inter', sans-serif;
     background: transparent;
     border: 1px solid #E4D6C2;
-    border-radius: 10px;
+    border-radius: 8px;
     color: #8A6A47;
     font-weight: 500;
-    font-size: 0.88rem;
-    letter-spacing: 0.01em;
-    transition: all 0.2s;
+    font-size: 0.85rem;
+    transition: all 0.15s ease;
 }
 
 .login-card .btn-secondary:hover {
@@ -162,35 +141,30 @@ nav.navbar {
     color: #403A34;
 }
 
-/* Checkbox */
 .login-card .icheck-primary label {
     font-family: 'Inter', sans-serif;
     color: #8C8175;
-    font-size: 0.84rem;
+    font-size: 0.82rem;
     font-weight: 400;
 }
 
-/* Alert */
 .login-card .alert {
     font-family: 'Inter', sans-serif;
-    border-radius: 10px;
-    font-size: 0.85rem;
+    border-radius: 8px;
+    font-size: 0.83rem;
+    border: none;
 }
 
-/* Responsive */
 @media (max-width: 576px) {
     .login-card {
         margin: 1rem;
         padding: 2rem 1.5rem;
     }
-
     .login-card .logo-wrapper img {
-        height: 52px;
+        height: 48px;
     }
 }
 </style>
-
-<section class="login-bg"></section>
 
 <div class="login-wrapper">
     <div class="login-card">
@@ -202,7 +176,7 @@ nav.navbar {
         <?php if (!empty($error)): ?>
         <div class="alert alert-danger alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <h5><i class="icon fas fa-ban"></i> Alert!</h5>
+            <h5 style="font-size:0.9rem;font-weight:600;margin:0;"><i class="icon fas fa-ban"></i> Alert!</h5>
             <?php echo $error; ?>
         </div>
         <?php endif;?>

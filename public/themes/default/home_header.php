@@ -1,4 +1,3 @@
-<!-- FASHIONER Navbar — replaces default header on home page only -->
 <div class="f-navbar" role="navigation" aria-label="Main navigation">
     <a href="<?php echo site_url(); ?>" class="f-navbar-brand">
         <img src="<?php echo base_url('assets/images/logo-transparent.png'); ?>" alt="Logo">
