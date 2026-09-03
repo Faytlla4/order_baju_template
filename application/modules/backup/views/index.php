@@ -61,6 +61,7 @@ $(function() {
     // Tabel 1: Laporan (PDF/Excel) — checkbox report_ids[]
     function initTableReport(data) {
         allReportData = data || [];
+        if (!$('#tbl-riwayat-cetak').length) { return; }
         if (tblCetak) tblCetak.destroy();
         var tbody = '';
         if (data.length === 0) {
@@ -323,6 +324,7 @@ Assets::add_js($inline_js, 'inline');
         </div>
 
         <!-- RIWAYAT CETAK DOKUMEN (LAPORAN PDF/EXCEL) -->
+        <?php if (!empty($riwayat_cetak)) : ?>
         <div class="card mt-3" id="card-data">
             <div class="card-header">
                 <h3 class="card-title"><i class="fas fa-print text-info"></i> Riwayat Cetak (Laporan PDF/Excel)</h3>
@@ -345,6 +347,7 @@ Assets::add_js($inline_js, 'inline');
                 </table>
             </div>
         </div>
+        <?php endif; ?>
 
         <!-- RIWAYAT BACKUP DOKUMEN -->
         <div class="card">

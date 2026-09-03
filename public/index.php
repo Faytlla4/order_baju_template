@@ -125,6 +125,12 @@ if (ini_get('date.timezone') == ''
 	}
 }
 
+// Wajib WIB terlepas dari date.timezone di php.ini (mis. Europe/Berlin):
+// jika tidak dipaksa, timestamp (created_on transaksi/order) tersimpan salah.
+if (function_exists('date_default_timezone_set')) {
+	date_default_timezone_set('Asia/Jakarta');
+}
+
 /*
  *------------------------------------------------------------------------------
  * BONFIRE PATH
