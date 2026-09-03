@@ -216,6 +216,126 @@ class Backup_model extends CI_Model
 		return $out;
 	}
 
+	/**
+	 * Ambil daftar transaksi yang memiliki dokumen, dikelompokkan per ID.
+	 *
+	 * SATU ID = SATU BARIS. Jumlah dokumen dihitung dari kolom `dokumen`
+	 * (JSON array nama file) — diambil dari struktur & data sebenarnya.
+	 *
+	 * @param string $tgl_mulai YYYY-MM-DD (opsional)
+	 * @param string $tgl_akhir YYYY-MM-DD (opsional)
+	 * @return array of objects (id, created_on_str, jumlah_dokumen, files[])
+	 */
+	public function get_dokumen_per_id($tgl_mulai = '', $tgl_akhir = '')
+	{
+		$sql = "SELECT id,
+				to_char(created_on, 'DD-MM-YYYY HH24:MI') AS created_on_str,
+				dokumen
+			FROM transaksi
+			WHERE dokumen IS NOT NULL
+			  AND dokumen <> ''
+			  AND dokumen <> '[]'
+			  AND dokumen <> '[[]]'";
+
+		$params = array();
+		$conditions = array();
+
+		if ($tgl_mulai !== '') {
+			$conditions[] = 'created_on::date >= ?';
+			$params[] = $tgl_mulai;
+		}
+		if ($tgl_akhir !== '') {
+			$conditions[] = 'created_on::date <= ?';
+			$params[] = $tgl_akhir;
+		}
+
+		if (!empty($conditions)) {
+			$sql .= ' AND ' . implode(' AND ', $conditions);
+		}
+
+		$sql .= ' ORDER BY created_on DESC, id DESC';
+
+		$rows = empty($params)
+			? $this->db->query($sql)->result()
+			: $this->db->query($sql, $params)->result();
+
+		$out = array();
+		foreach ($rows as $r) {
+			$files = json_decode($r->dokumen, true);
+			if (!is_array($files)) {
+				continue;
+			}
+			$clean = array();
+			foreach ($files as $f) {
+				$f = basename(trim((string) $f));
+				if ($f === '' || $f === 'null') {
+					continue;
+				}
+				$clean[] = $f;
+			}
+			if (empty($clean)) {
+				continue;
+			}
+			$out[] = (object) array(
+				'id'             => (int) $r->id,
+				'created_on_str' => $r->created_on_str,
+				'jumlah_dokumen' => count($clean),
+				'files'          => $clean,
+			);
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Ambil transaksi yang dokumennya akan dibackup berdasarkan ID terpilih.
+	 * Mengembalikan peta id => daftar file (nama file) yang benar terdaftar.
+	 *
+	 * @param array $ids
+	 * @return array id => array of file names
+	 */
+	public function get_transaksi_files_by_ids($ids)
+	{
+		$out = array();
+		if (empty($ids)) {
+			return $out;
+		}
+
+		$id_list = array();
+		foreach ($ids as $id) {
+			$id = (int) $id;
+			if ($id > 0) {
+				$id_list[$id] = true;
+			}
+		}
+		if (empty($id_list)) {
+			return $out;
+		}
+
+		$this->db->select('id, dokumen');
+		$this->db->where_in('id', array_keys($id_list));
+		$rows = $this->db->get('transaksi')->result();
+
+		foreach ($rows as $row) {
+			$files = json_decode($row->dokumen, true);
+			$clean = array();
+			if (is_array($files)) {
+				foreach ($files as $f) {
+					$f = basename(trim((string) $f));
+					if ($f === '' || $f === 'null') {
+						continue;
+					}
+					$clean[] = $f;
+				}
+			}
+			if (!empty($clean)) {
+				$out[(int) $row->id] = $clean;
+			}
+		}
+
+		return $out;
+	}
+
 	// --- Database Config ---
 
 	public function get_database_config()

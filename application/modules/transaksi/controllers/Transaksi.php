@@ -886,7 +886,7 @@ class Transaksi extends App_Controller
 	}
 
 	/**
-	 * Direktori dokumen transaksi per ID, di FCPATH/assets/dokumen/dokumen_transaksi/[id]/.
+	 * Direktori dokumen transaksi per ID, di public/assets/dokumen/dokumen_transaksi/[id]/.
 	 * Folder dibuat bila belum ada (kecuali $create = false).
 	 * Pada kegagalan pembuatan folder, log error ditulis dan false dikembalikan.
 	 *
@@ -922,7 +922,9 @@ class Transaksi extends App_Controller
 	 */
 	private function staging_dir()
 	{
-		$dir = FCPATH . 'assets/dokumen/_staging/';
+		// Staging disimpan di luar public/assets/dokumen/ agar tidak ikut
+		// dibackup oleh modul Backup Dokumen dan tidak terekspos web.
+		$dir = APPPATH . 'uploads' . DIRECTORY_SEPARATOR . 'dokumen_staging' . DIRECTORY_SEPARATOR;
 		if (!is_dir($dir)) {
 			mkdir($dir, 0755, true);
 		}

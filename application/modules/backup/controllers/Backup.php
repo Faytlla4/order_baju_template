@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') || exit('No direct script access allowed');
+﻿<?php defined('BASEPATH') || exit('No direct script access allowed');
 
 class Backup extends App_Controller
 {
@@ -13,7 +13,7 @@ class Backup extends App_Controller
 	}
 
 	// --------------------------------------------------------------------
-	// INDEX — Filter Riwayat Cetak + Riwayat Backup Dokumen
+	// INDEX â€” Filter Riwayat Cetak + Riwayat Backup Dokumen
 	// --------------------------------------------------------------------
 	public function index()
 	{
@@ -26,6 +26,7 @@ class Backup extends App_Controller
 			Template::set_message('Tanggal Mulai tidak boleh setelah Tanggal Akhir.', 'error');
 		}
 
+		// Report (PDF/Excel) DIAKTIFKAN KEMBALI.
 		$riwayat_cetak = $this->backup_model->get_riwayat_cetak($tgl_mulai, $tgl_akhir);
 		$dokumen_transaksi = $this->backup_model->get_dokumen_transaksi($tgl_mulai, $tgl_akhir);
 		$backup_history = $this->backup_model->get_document_history();
@@ -42,7 +43,7 @@ class Backup extends App_Controller
 	}
 
 	// --------------------------------------------------------------------
-	// AJAX FILTER — return Riwayat Cetak rows as JSON
+	// AJAX FILTER â€” return Riwayat Cetak rows as JSON
 	// --------------------------------------------------------------------
 	public function filter()
 	{
@@ -51,6 +52,7 @@ class Backup extends App_Controller
 		$tgl_mulai = $this->normalize_tgl($this->input->get('tgl_mulai'));
 		$tgl_akhir = $this->normalize_tgl($this->input->get('tgl_akhir'));
 
+		// Report (PDF/Excel) DIAKTIFKAN KEMBALI.
 		$riwayat_cetak = $this->backup_model->get_riwayat_cetak($tgl_mulai, $tgl_akhir);
 		$dokumen_transaksi = $this->backup_model->get_dokumen_transaksi($tgl_mulai, $tgl_akhir);
 
@@ -86,7 +88,7 @@ class Backup extends App_Controller
 	}
 
 	// --------------------------------------------------------------------
-	// BACKUP DOKUMEN — POST, copy existing files from Riwayat Cetak, return JSON
+	// BACKUP DOKUMEN â€” POST, copy existing files from Riwayat Cetak, return JSON
 	// --------------------------------------------------------------------
 	public function document()
 	{
@@ -97,6 +99,7 @@ class Backup extends App_Controller
 
 		$this->load->model('backup/backup_model');
 
+		// Report (PDF/Excel) DIAKTIFKAN KEMBALI.
 		$report_ids = $this->input->post('report_ids');
 		$trx_docs   = $this->input->post('trx_docs');
 		if ((!is_array($report_ids) || empty($report_ids)) && (!is_array($trx_docs) || empty($trx_docs))) {
@@ -160,7 +163,7 @@ class Backup extends App_Controller
 			$added = array();
 			$missing = array();
 
-			// Bagian A: Report PDF/Excel — masuk folder "dokumen/report/".
+			// Bagian A: Report PDF/Excel â€” masuk folder "dokumen/report/".
 			foreach ($reports as $report) {
 				$fileName = trim((string) $report->nama_file);
 
@@ -174,7 +177,7 @@ class Backup extends App_Controller
 				$filePath = APPPATH . '../' . ltrim((string) $report->path_file, '/\\');
 				if ($fileName === '' || !is_file($filePath) || filesize($filePath) <= 0) {
 					$missing[] = '/report/' . ($fileName !== '' ? $fileName : '#' . $report->id);
-					log_message('error', 'Backup Dokumen: file report tidak ditemukan — ' . $report->path_file);
+					log_message('error', 'Backup Dokumen: file report tidak ditemukan â€” ' . $report->path_file);
 					continue;
 				}
 
@@ -183,14 +186,14 @@ class Backup extends App_Controller
 				$added[] = $zipNameEntry;
 			}
 
-			// Bagian B: Dokumen transaksi (upload user) — masuk folder "dokumen/dokumen_transaksi/[id]/".
+			// Bagian B: Dokumen transaksi (upload user) â€” masuk folder "dokumen/dokumen_transaksi/[id]/".
 			foreach ($trx_items as $item) {
 				$filePath = $this->resolve_transaksi_file((int) $item->id, $item->nama_file);
 				$fileName = basename((string) $item->nama_file);
 
 				if ($filePath === null || !is_file($filePath) || filesize($filePath) <= 0) {
 					$missing[] = 'dokumen/dokumen_transaksi/' . (int) $item->id . '/' . $fileName;
-					log_message('error', 'Backup Dokumen: file transaksi tidak ditemukan — transaksi #' . (int) $item->id . ', file ' . $fileName);
+					log_message('error', 'Backup Dokumen: file transaksi tidak ditemukan â€” transaksi #' . (int) $item->id . ', file ' . $fileName);
 					continue;
 				}
 
@@ -298,10 +301,402 @@ class Backup extends App_Controller
 	}
 
 	// --------------------------------------------------------------------
+	// BACKUP DOKUMEN PER ID â€” page
+	// --------------------------------------------------------------------
+	public function dokumen_per_id()
+	{
+		Template::set_block('sub_nav', 'backup/_sub_nav');
+		$this->load->model('backup/backup_model');
+
+		$tgl_mulai = $this->normalize_tgl($this->input->get('tgl_mulai'));
+		$tgl_akhir = $this->normalize_tgl($this->input->get('tgl_akhir'));
+
+		if ($tgl_mulai !== '' && $tgl_akhir !== '' && $tgl_mulai > $tgl_akhir) {
+			Template::set_message('Tanggal Mulai tidak boleh setelah Tanggal Akhir.', 'error');
+		}
+
+		$dokumen = $this->backup_model->get_dokumen_per_id($tgl_mulai, $tgl_akhir);
+		$backup_history = $this->backup_model->get_document_history();
+
+		Template::set('tgl_mulai', $tgl_mulai);
+		Template::set('tgl_akhir', $tgl_akhir);
+		Template::set('dokumen', $dokumen);
+		Template::set('backup_history', $backup_history);
+		Template::set('can_document', $this->auth->has_permission($this->permissionDocument));
+		Template::set('toolbar_title', 'Backup Dokumen ID');
+		Template::set_view('backup/dokumen_per_id');
+		Template::render();
+	}
+
+	// --------------------------------------------------------------------
+	// BACKUP DOKUMEN PER ID â€” POST process
+	// --------------------------------------------------------------------
+	public function dokumen_per_id_process()
+	{
+		if ($this->input->method() !== 'post') {
+			redirect(SITE_AREA . '/backup/per_id');
+			return;
+		}
+
+		$this->load->model('backup/backup_model');
+
+		$ids = $this->input->post('ids');
+		if (!is_array($ids) || empty($ids)) {
+			$msg = 'Tidak ada ID transaksi yang dipilih.';
+			if ($this->input->is_ajax_request()) {
+				echo json_encode(array('success' => false, 'message' => $msg));
+				exit;
+			}
+			Template::set_message($msg, 'warning');
+			redirect(SITE_AREA . '/backup/per_id');
+			return;
+		}
+
+		if (!class_exists('ZipArchive')) {
+			$msg = 'ZipArchive tidak tersedia.';
+			if ($this->input->is_ajax_request()) {
+				echo json_encode(array('success' => false, 'message' => $msg));
+				exit;
+			}
+			Template::set_message($msg, 'error');
+			redirect(SITE_AREA . '/backup/per_id');
+			return;
+		}
+
+		// Build map id => [file names] from DB. Backend determines the files
+		// for each ID â€” never trusts arbitrary paths from the request.
+		$map = $this->backup_model->get_transaksi_files_by_ids($ids);
+		if (empty($map)) {
+			$msg = 'Data dokumen untuk ID yang dipilih tidak ditemukan.';
+			if ($this->input->is_ajax_request()) {
+				echo json_encode(array('success' => false, 'message' => $msg));
+				exit;
+			}
+			Template::set_message($msg, 'warning');
+			redirect(SITE_AREA . '/backup/per_id');
+			return;
+		}
+
+		$wib = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
+		$stamp = $wib->format('Y-m-d_His') . '_' . substr(uniqid('', true), -5);
+		$zipName = 'backup_dokumen_per_id_' . $stamp . '.zip';
+		$tmpZip  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $zipName;
+
+		try {
+			$zip = new ZipArchive();
+			if ($zip->open($tmpZip, ZipArchive::CREATE) !== true) {
+				throw new Exception('Gagal membuat ZIP');
+			}
+
+			$added = array();
+			$missing = array();
+
+			foreach ($map as $id => $files) {
+				$id = (int) $id;
+				foreach ($files as $file) {
+					$filePath = $this->resolve_transaksi_file($id, $file);
+					$fileName = basename((string) $file);
+
+					if ($filePath === null || !is_file($filePath) || filesize($filePath) <= 0) {
+						$missing[] = 'ID_' . $id . '/' . $fileName;
+						log_message('error', 'Backup Per ID: file tidak ditemukan â€” transaksi #' . $id . ', file ' . $fileName);
+						continue;
+					}
+
+					$zipEntry = 'ID_' . $id . '/' . $fileName;
+					$zip->addFile($filePath, $zipEntry);
+					$added[] = $zipEntry;
+				}
+			}
+
+			if (empty($added)) {
+				$zip->close();
+				@unlink($tmpZip);
+				throw new Exception('Semua file tidak ditemukan di server.');
+			}
+
+			$zip->close();
+			if (!is_file($tmpZip) || filesize($tmpZip) <= 0) {
+				throw new Exception('ZIP kosong');
+			}
+			$head = @file_get_contents($tmpZip, false, null, 0, 2);
+			if ($head === false || strncmp($head, 'PK', 2) !== 0) {
+				@unlink($tmpZip);
+				throw new Exception('ZIP tidak valid');
+			}
+
+			$stored_path = $this->backup_model->store_zip($tmpZip, $zipName);
+			if ($stored_path === false) {
+				throw new Exception('Gagal menyimpan ZIP');
+			}
+
+			$this->backup_model->save_document_history(
+				$zipName,
+				$stored_path,
+				filesize($stored_path),
+				count($added),
+				'Per ID: ' . implode(', ', array_keys($map))
+			);
+
+			@unlink($tmpZip);
+
+			$msg = 'Backup dokumen per ID berhasil. ' . count($added) . ' file diarsipkan dari ' . count($map) . ' ID.';
+			if (!empty($missing)) {
+				$msg .= ' ' . count($missing) . ' file tidak ditemukan: ' . implode(', ', $missing);
+			}
+
+			if ($this->input->is_ajax_request()) {
+				echo json_encode(array(
+					'success' => true,
+					'message' => $msg,
+					'download_url' => site_url(SITE_AREA . '/backup/download/doc/' . $this->db->insert_id()),
+				));
+				exit;
+			}
+
+			$storedFile = $stored_path;
+			if (is_file($storedFile) && filesize($storedFile) > 0) {
+				while (ob_get_level() > 0) { @ob_end_clean(); }
+				header('Content-Type: application/zip');
+				header('Content-Disposition: attachment; filename="' . $zipName . '"');
+				header('Content-Length: ' . filesize($storedFile));
+				header('Cache-Control: max-age=0');
+				readfile($storedFile);
+				exit;
+			}
+			Template::set_message($msg, 'success');
+			redirect(SITE_AREA . '/backup/per_id');
+			return;
+
+		} catch (Exception $e) {
+			log_message('error', 'Backup Dokumen per ID gagal: ' . $e->getMessage());
+			@unlink($tmpZip);
+			$msg = 'Backup dokumen per ID gagal. ' . $e->getMessage();
+			if ($this->input->is_ajax_request()) {
+				echo json_encode(array('success' => false, 'message' => $msg));
+				exit;
+			}
+			Template::set_message($msg, 'error');
+			redirect(SITE_AREA . '/backup/per_id');
+			return;
+		}
+	}
+
+	// --------------------------------------------------------------------
+	// BACKUP DOKUMEN PER FOLDER â€” page
+	// --------------------------------------------------------------------
+	public function dokumen_per_folder()
+	{
+		Template::set_block('sub_nav', 'backup/_sub_nav');
+		$this->load->model('backup/backup_model');
+
+		// Define the selectable folders. Backend fixes the real paths â€” the
+		// request never supplies a free-form path.
+		$trxRoot = FCPATH . 'assets/dokumen/dokumen_transaksi/';
+		$reportRoot = FCPATH . 'assets/dokumen/report/';
+
+		$folders = array(
+			'transaksi' => array(
+				'label' => 'Dokumen Transaksi',
+				'path'  => $trxRoot,
+				'icon'  => 'fas fa-folder-open',
+			),
+			'report' => array(
+				'label' => 'Report',
+				'path'  => $reportRoot,
+				'icon'  => 'fas fa-file-alt',
+			),
+		);
+
+		// Determine presence + counts per folder for display.
+		foreach ($folders as $key => $folder) {
+			$count = 0;
+			if (is_dir($folder['path'])) {
+				$count = $this->count_files_recursive($folder['path']);
+			}
+			$folders[$key]['exists'] = is_dir($folder['path']);
+			$folders[$key]['count'] = $count;
+		}
+
+		$backup_history = $this->backup_model->get_document_history();
+
+		Template::set('folders', $folders);
+		Template::set('backup_history', $backup_history);
+		Template::set('can_document', $this->auth->has_permission($this->permissionDocument));
+		Template::set('toolbar_title', 'Backup Dokumen Folder');
+		Template::set_view('backup/dokumen_per_folder');
+		Template::render();
+	}
+
+	// --------------------------------------------------------------------
+	// BACKUP DOKUMEN PER FOLDER â€” POST process (recursive)
+	// --------------------------------------------------------------------
+	public function dokumen_per_folder_process()
+	{
+		if ($this->input->method() !== 'post') {
+			redirect(SITE_AREA . '/backup/per_folder');
+			return;
+		}
+
+		$this->load->model('backup/backup_model');
+
+		$selected = $this->input->post('folders');
+		if (!is_array($selected) || empty($selected)) {
+			$msg = 'Tidak ada folder yang dipilih.';
+			if ($this->input->is_ajax_request()) {
+				echo json_encode(array('success' => false, 'message' => $msg));
+				exit;
+			}
+			Template::set_message($msg, 'warning');
+			redirect(SITE_AREA . '/backup/per_folder');
+			return;
+		}
+
+		if (!class_exists('ZipArchive')) {
+			$msg = 'ZipArchive tidak tersedia.';
+			if ($this->input->is_ajax_request()) {
+				echo json_encode(array('success' => false, 'message' => $msg));
+				exit;
+			}
+			Template::set_message($msg, 'error');
+			redirect(SITE_AREA . '/backup/per_folder');
+			return;
+		}
+
+		// Only allow whitelisted folders. Backend resolves the real path.
+		$allowed = array(
+			'transaksi' => FCPATH . 'assets/dokumen/dokumen_transaksi/',
+			'report'    => FCPATH . 'assets/dokumen/report/',
+		);
+
+		$chosen = array();
+		foreach ($selected as $key) {
+			$key = (string) $key;
+			if (isset($allowed[$key])) {
+				$chosen[$key] = $allowed[$key];
+			}
+		}
+		if (empty($chosen)) {
+			$msg = 'Folder yang dipilih tidak valid.';
+			if ($this->input->is_ajax_request()) {
+				echo json_encode(array('success' => false, 'message' => $msg));
+				exit;
+			}
+			Template::set_message($msg, 'error');
+			redirect(SITE_AREA . '/backup/per_folder');
+			return;
+		}
+
+		$wib = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
+		$stamp = $wib->format('Y-m-d_His') . '_' . substr(uniqid('', true), -5);
+		$zipName = 'backup_dokumen_per_folder_' . $stamp . '.zip';
+		$tmpZip  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $zipName;
+
+		try {
+			$zip = new ZipArchive();
+			if ($zip->open($tmpZip, ZipArchive::CREATE) !== true) {
+				throw new Exception('Gagal membuat ZIP');
+			}
+
+			$added = array();
+			$skippedEmpty = array();
+
+			foreach ($chosen as $key => $rootPath) {
+				$rootPath = rtrim($rootPath, '/\\');
+				// Strip any symlink/security concern â€” rootPath is backend-defined.
+				$label = ($key === 'transaksi') ? 'dokumen_transaksi' : 'report';
+
+				if (!is_dir($rootPath)) {
+					$skippedEmpty[] = $label;
+					continue;
+				}
+
+				$localBaseReal = realpath($rootPath);
+				$this->add_dir_recursive($zip, $rootPath, $label, $localBaseReal, $added);
+			}
+
+			if (empty($added)) {
+				$zip->close();
+				@unlink($tmpZip);
+				if (!empty($skippedEmpty)) {
+					throw new Exception('Folder yang dipilih kosong atau tidak tersedia: ' . implode(', ', $skippedEmpty));
+				}
+				throw new Exception('Tidak ada file yang ditemukan di folder terpilih.');
+			}
+
+			$zip->close();
+			if (!is_file($tmpZip) || filesize($tmpZip) <= 0) {
+				throw new Exception('ZIP kosong');
+			}
+			$head = @file_get_contents($tmpZip, false, null, 0, 2);
+			if ($head === false || strncmp($head, 'PK', 2) !== 0) {
+				@unlink($tmpZip);
+				throw new Exception('ZIP tidak valid');
+			}
+
+			$stored_path = $this->backup_model->store_zip($tmpZip, $zipName);
+			if ($stored_path === false) {
+				throw new Exception('Gagal menyimpan ZIP');
+			}
+
+			$this->backup_model->save_document_history(
+				$zipName,
+				$stored_path,
+				filesize($stored_path),
+				count($added),
+				'Per Folder: ' . implode(', ', array_keys($chosen))
+			);
+
+			@unlink($tmpZip);
+
+			$msg = 'Backup dokumen per folder berhasil. ' . count($added) . ' file diarsipkan.';
+			if (!empty($skippedEmpty)) {
+				$msg .= ' Folder kosong/tidak tersedia: ' . implode(', ', $skippedEmpty) . '.';
+			}
+
+			if ($this->input->is_ajax_request()) {
+				echo json_encode(array(
+					'success' => true,
+					'message' => $msg,
+					'download_url' => site_url(SITE_AREA . '/backup/download/doc/' . $this->db->insert_id()),
+				));
+				exit;
+			}
+
+			$storedFile = $stored_path;
+			if (is_file($storedFile) && filesize($storedFile) > 0) {
+				while (ob_get_level() > 0) { @ob_end_clean(); }
+				header('Content-Type: application/zip');
+				header('Content-Disposition: attachment; filename="' . $zipName . '"');
+				header('Content-Length: ' . filesize($storedFile));
+				header('Cache-Control: max-age=0');
+				readfile($storedFile);
+				exit;
+			}
+			Template::set_message($msg, 'success');
+			redirect(SITE_AREA . '/backup/per_folder');
+			return;
+
+		} catch (Exception $e) {
+			log_message('error', 'Backup Dokumen per Folder gagal: ' . $e->getMessage());
+			@unlink($tmpZip);
+			$msg = 'Backup dokumen per folder gagal. ' . $e->getMessage();
+			if ($this->input->is_ajax_request()) {
+				echo json_encode(array('success' => false, 'message' => $msg));
+				exit;
+			}
+			Template::set_message($msg, 'error');
+			redirect(SITE_AREA . '/backup/per_folder');
+			return;
+		}
+	}
+
+	// --------------------------------------------------------------------
 	// DATABASE PAGE
 	// --------------------------------------------------------------------
 	public function database_page()
 	{
+		Template::set_block('sub_nav', 'backup/_sub_nav');
 		if ($this->auth->permission_exists($this->permissionDatabase)) {
 			$this->auth->restrict($this->permissionDatabase);
 		}
@@ -322,7 +717,7 @@ class Backup extends App_Controller
 	}
 
 	// --------------------------------------------------------------------
-	// BACKUP DATABASE — POST, store ZIP + record history, return JSON
+	// BACKUP DATABASE â€” POST, store ZIP + record history, return JSON
 	// Uses proc_open() for clean stdout/stderr separation.
 	// pg_dump output is written directly to file with ZERO modification.
 	// --------------------------------------------------------------------
@@ -435,8 +830,8 @@ class Backup extends App_Controller
 		);
 		$descriptors = array(
 			0 => array('pipe', 'r'),  // stdin
-			1 => array('pipe', 'w'),  // stdout — pg_dump writes to -f file, stdout is empty
-			2 => array('pipe', 'w'),  // stderr — captured separately
+			1 => array('pipe', 'w'),  // stdout â€” pg_dump writes to -f file, stdout is empty
+			2 => array('pipe', 'w'),  // stderr â€” captured separately
 		);
 
 		// ponytail: use array command to avoid cmd.exe space-mangling on Windows
@@ -454,14 +849,14 @@ class Backup extends App_Controller
 			return;
 		}
 
-		// Close stdin — pg_dump doesn't read from it
+		// Close stdin â€” pg_dump doesn't read from it
 		fclose($pipes[0]);
 
 		// Read stdout (empty since -f writes to file)
 		$stdout = stream_get_contents($pipes[1]);
 		fclose($pipes[1]);
 
-		// Read stderr — captured separately, never mixed into SQL
+		// Read stderr â€” captured separately, never mixed into SQL
 		$stderr = stream_get_contents($pipes[2]);
 		fclose($pipes[2]);
 
@@ -504,7 +899,7 @@ class Backup extends App_Controller
 			return;
 		}
 
-		// --- Strip PG18 \restrict/\unrestrict — incompatible with older PG versions ---
+		// --- Strip PG18 \restrict/\unrestrict â€” incompatible with older PG versions ---
 		$sqlContent = file_get_contents($tmpSql);
 		$cleaned = preg_replace('/^\\\\(un)?restrict\s+\S+\s*$/m', '', $sqlContent);
 		if ($cleaned !== $sqlContent) {
@@ -609,7 +1004,7 @@ class Backup extends App_Controller
 	}
 
 	// --------------------------------------------------------------------
-	// DOWNLOAD — serve stored ZIP from history
+	// DOWNLOAD â€” serve stored ZIP from history
 	// --------------------------------------------------------------------
 	public function download($type = '', $id = 0)
 	{
@@ -660,8 +1055,8 @@ class Backup extends App_Controller
 	 *
 	 * Urutan pencarian (sesuai struktur penyimpanan saat ini & historis):
 	 * 1. public/assets/dokumen/dokumen_transaksi/[id]/   (struktur baru)
-	 * 2. public/assets/dokumen_transaksi/[id]/           (struktur lama)
-	 * 3. uploads/transaksi/                              (legacy)
+	 * 2. public/assets/dokumen_transaksi/[id]/                 (struktur lama)
+	 * 3. uploads/transaksi/                                    (legacy)
 	 *
 	 * @param int    $id   ID transaksi.
 	 * @param string $file Nama file.
@@ -713,7 +1108,7 @@ class Backup extends App_Controller
 	}
 
 	// --------------------------------------------------------------------
-	// Test Restore — create temp DB, restore dump, verify tables, drop DB
+	// Test Restore â€” create temp DB, restore dump, verify tables, drop DB
 	// Returns true if restore succeeds with zero syntax errors.
 	// --------------------------------------------------------------------
 	private function test_restore($testDbName, $sqlFile, $cfg, $pgDump, $pass)
@@ -880,6 +1275,68 @@ class Backup extends App_Controller
 			return '<= ' . date('d-m-Y', strtotime($tgl_akhir));
 		}
 		return 'Semua';
+	}
+
+	/**
+	 * Hitung jumlah file (rekursif) di dalam sebuah folder.
+	 *
+	 * @param string $dir
+	 * @return int
+	 */
+	private function count_files_recursive($dir)
+	{
+		$count = 0;
+		$items = @scandir($dir);
+		if ($items === false) {
+			return 0;
+		}
+		foreach ($items as $item) {
+			if ($item === '.' || $item === '..') {
+				continue;
+			}
+			$full = $dir . DIRECTORY_SEPARATOR . $item;
+			if (is_dir($full)) {
+				$count += $this->count_files_recursive($full);
+			} elseif (is_file($full)) {
+				$count++;
+			}
+		}
+		return $count;
+	}
+
+	/**
+	 * Tambahkan seluruh isi folder (rekursif) ke dalam ZIP.
+	 * Path di dalam ZIP dibatasi di dalam root folder (prevent traversal).
+	 *
+	 * @param ZipArchive $zip
+	 * @param string     $rootPath  Path folder absolut di server.
+	 * @param string     $prefix    Prefix entry ZIP (mis. 'report', 'dokumen_transaksi').
+	 * @param string     $baseReal  realpath($rootPath).
+	 * @param array      &$added    Daftar entry yang ditambahkan.
+	 */
+	private function add_dir_recursive($zip, $rootPath, $prefix, $baseReal, &$added)
+	{
+		$items = @scandir($rootPath);
+		if ($items === false) {
+			return;
+		}
+		foreach ($items as $item) {
+			if ($item === '.' || $item === '..') {
+				continue;
+			}
+			$full = $rootPath . DIRECTORY_SEPARATOR . $item;
+			if (is_dir($full)) {
+				$this->add_dir_recursive($zip, $full, $prefix . '/' . $item, $baseReal, $added);
+			} elseif (is_file($full)) {
+				$realFull = realpath($full);
+				if ($realFull === false || $baseReal === false || strpos($realFull, $baseReal) !== 0) {
+					continue;
+				}
+				$entry = $prefix . '/' . $item;
+				$zip->addFile($realFull, $entry);
+				$added[] = $entry;
+			}
+		}
 	}
 
 	private function normalize_tgl($tgl)

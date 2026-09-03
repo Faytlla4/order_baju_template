@@ -159,12 +159,14 @@
 
             // --- Section BACKUP (dropdown) ---
             $isBackup       = ($this->uri->segment(2) == 'backup');
-            $isBackupDoc    = ($this->uri->segment(2) == 'backup' && $this->uri->segment(3) == 'document');
             $isBackupDb     = ($this->uri->segment(2) == 'backup' && $this->uri->segment(3) == 'database');
+            $isBackupPerId  = ($this->uri->segment(2) == 'backup' && $this->uri->segment(3) == 'per_id');
+            $isBackupPerFld = ($this->uri->segment(2) == 'backup' && $this->uri->segment(3) == 'per_folder');
             $backupParentClass = $isBackup ? "nav-item menu-is-opening menu-open" : "nav-item";
             $backupParentLink  = $isBackup ? ' active' : '';
-            $backupDocActive   = $isBackupDoc ? ' active' : '';
             $backupDbActive    = $isBackupDb ? ' active' : '';
+            $backupPerIdActive = $isBackupPerId ? ' active' : '';
+            $backupPerFldActive= $isBackupPerFld ? ' active' : '';
 
             $backupSection = "<li class='{$backupParentClass}'>\n"
                 . "<a href='" . site_url(SITE_AREA . '/backup') . "' class='nav-link{$backupParentLink}'>\n"
@@ -173,8 +175,13 @@
                 . "</a>\n"
                 . "<ul class='nav nav-treeview'>\n"
                 . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/backup/document') . "' class='nav-link{$backupDocActive}'>\n"
-                . "<i class='nav-icon far fa-circle'></i>\n<p>Backup Dokumen</p>\n"
+                . "<a href='" . site_url(SITE_AREA . '/backup/per_id') . "' class='nav-link{$backupPerIdActive}'>\n"
+                . "<i class='nav-icon far fa-circle'></i>\n<p>Backup Dokumen ID</p>\n"
+                . "</a>\n"
+                . "</li>\n"
+                . "<li class='nav-item'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/backup/per_folder') . "' class='nav-link{$backupPerFldActive}'>\n"
+                . "<i class='nav-icon far fa-circle'></i>\n<p>Backup Dokumen Folder</p>\n"
                 . "</a>\n"
                 . "</li>\n"
                 . "<li class='nav-item'>\n"
