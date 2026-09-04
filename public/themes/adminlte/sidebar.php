@@ -1,17 +1,21 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar sidebar-dark-primary elevation-1">
     <a href="<?php echo base_url(); ?>" class="brand-link">
-        <img src="<?php echo base_url('assets/images/logo-transparent.png'); ?>" class="brand-image" style="width:32px;height:32px;object-fit:contain;border-radius:6px;">
-        <span class="brand-text">FASHIONER</span>
+        <img src="<?php echo base_url('assets/images/logo-transparent.png'); ?>" class="brand-image">
+        <div class="brand-text">
+            <span>FASHIONER</span>
+            <small class="brand-subtitle">Fashion Management System</small>
+        </div>
     </a>
 
     <div class="sidebar">
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <?php $userDisplayName = isset($current_user->display_name) && !empty($current_user->display_name) ? $current_user->display_name : ($this->settings_lib->item('auth.use_usernames') ? $current_user->username : $current_user->email); ?>
+        <div class="user-panel">
             <div class="image">
-                <img src="<?php echo base_url('assets/images/anonym.png'); ?>" class="img-circle elevation-2" style="width:32px;height:32px;">
+                <img src="<?php echo base_url('assets/images/anonym.png'); ?>" class="img-circle" style="width:36px;height:36px;">
             </div>
             <div class="info">
-                <?php $userDisplayName = isset($current_user->display_name) && !empty($current_user->display_name) ? $current_user->display_name : ($this->settings_lib->item('auth.use_usernames') ? $current_user->username : $current_user->email); ?>
-                <a href="#" class="d-block" style="font-size:0.85rem;font-weight:500;"><?php echo $userDisplayName; ?></a>
+                <a href="#" class="d-block"><?php echo $userDisplayName; ?></a>
+                <small><?php echo ucfirst($this->settings_lib->item('auth.use_usernames') ? 'Administrator' : 'Member'); ?></small>
             </div>
         </div>
 
@@ -22,6 +26,8 @@
             $a = site_url(SITE_AREA);
             ?>
 
+            <li class="nav-header">MENU UTAMA</li>
+
             <!-- Dashboard -->
             <li class="nav-item">
                 <a href="<?php echo $a; ?>" class="nav-link<?php if (!$uri2 && !$uri3) echo ' active'; ?>">
@@ -30,9 +36,9 @@
             </li>
 
             <!-- Order Baju -->
-            <li style="border-top:1px solid rgba(248,245,239,0.08);margin:6px 14px 0;padding-top:6px;" class="nav-item<?php if ($uri2 == 'content') echo ' menu-is-opening menu-open'; ?>">
-                <a href="#" class="nav-link" data-widget="treeview">
-                    <i class="nav-icon fas fa-tshirt"></i><p>Order Baju <i class="right fas fa-angle-left"></i></p>
+            <li class="nav-item<?php if ($uri2 == 'content') echo ' menu-is-opening menu-open'; ?>">
+                <a href="#" class="nav-link" data-fdb-toggle="treeview">
+                    <i class="nav-icon fas fa-tshirt"></i><p>Order Baju <i class="right fas fa-angle-left nav-arrow"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
@@ -44,9 +50,9 @@
             </li>
 
             <!-- Master -->
-            <li style="border-top:1px solid rgba(248,245,239,0.08);margin:6px 14px 0;padding-top:6px;" class="nav-item<?php if ($uri2 == 'master') echo ' menu-is-opening menu-open'; ?>">
-                <a href="#" class="nav-link" data-widget="treeview">
-                    <i class="nav-icon fas fa-database"></i><p>Master <i class="right fas fa-angle-left"></i></p>
+            <li class="nav-item<?php if ($uri2 == 'master') echo ' menu-is-opening menu-open'; ?>">
+                <a href="#" class="nav-link" data-fdb-toggle="treeview">
+                    <i class="nav-icon fas fa-layer-group"></i><p>Master <i class="right fas fa-angle-left nav-arrow"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
@@ -68,9 +74,9 @@
             </li>
 
             <!-- Transaksi -->
-            <li style="border-top:1px solid rgba(248,245,239,0.08);margin:6px 14px 0;padding-top:6px;" class="nav-item<?php if ($uri2 == 'transaksi') echo ' menu-is-opening menu-open'; ?>">
-                <a href="#" class="nav-link" data-widget="treeview">
-                    <i class="nav-icon fas fa-file-invoice"></i><p>Transaksi <i class="right fas fa-angle-left"></i></p>
+            <li class="nav-item<?php if ($uri2 == 'transaksi') echo ' menu-is-opening menu-open'; ?>">
+                <a href="#" class="nav-link" data-fdb-toggle="treeview">
+                    <i class="nav-icon fas fa-file-invoice-dollar"></i><p>Transaksi <i class="right fas fa-angle-left nav-arrow"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
@@ -83,15 +89,14 @@
 
             <!-- Laporan -->
             <?php $isLaporan = ($uri2 == 'reports' || $uri2 == 'laporan-dokumen' || $uri2 == 'laporan-database' || $uri2 == 'laporan-history'); ?>
-            <li style="border-top:1px solid rgba(248,245,239,0.08);margin:6px 14px 0;padding-top:6px;" class="nav-item<?php if ($isLaporan) echo ' menu-is-opening menu-open'; ?>">
-                <a href="#" class="nav-link" data-widget="treeview">
-                    <i class="nav-icon fas fa-chart-bar"></i><p>Laporan <i class="right fas fa-angle-left"></i></p>
+            <li class="nav-item<?php if ($isLaporan) echo ' menu-is-opening menu-open'; ?>">
+                <a href="#" class="nav-link" data-fdb-toggle="treeview">
+                    <i class="nav-icon fas fa-chart-line"></i><p>Laporan <i class="right fas fa-angle-left nav-arrow"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
-                    <!-- Laporan Transaksi -->
                     <li class="nav-item<?php if ($uri2 == 'reports') echo ' menu-is-opening menu-open'; ?>">
-                        <a href="#" class="nav-link" data-widget="treeview">
-                            <i class="nav-icon far fa-circle"></i><p>Laporan Transaksi <i class="right fas fa-angle-left"></i></p>
+                        <a href="#" class="nav-link" data-fdb-toggle="treeview">
+                            <i class="nav-icon far fa-circle"></i><p>Laporan Transaksi <i class="right fas fa-angle-left nav-arrow"></i></p>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
@@ -106,10 +111,9 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- Laporan Dokumen -->
                     <li class="nav-item<?php if ($uri2 == 'laporan-dokumen') echo ' menu-is-opening menu-open'; ?>">
-                        <a href="#" class="nav-link" data-widget="treeview">
-                            <i class="nav-icon far fa-circle"></i><p>Laporan Dokumen <i class="right fas fa-angle-left"></i></p>
+                        <a href="#" class="nav-link" data-fdb-toggle="treeview">
+                            <i class="nav-icon far fa-circle"></i><p>Laporan Dokumen <i class="right fas fa-angle-left nav-arrow"></i></p>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
@@ -124,10 +128,9 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- Laporan Database -->
                     <li class="nav-item<?php if ($uri2 == 'laporan-database') echo ' menu-is-opening menu-open'; ?>">
-                        <a href="#" class="nav-link" data-widget="treeview">
-                            <i class="nav-icon far fa-circle"></i><p>Laporan Database <i class="right fas fa-angle-left"></i></p>
+                        <a href="#" class="nav-link" data-fdb-toggle="treeview">
+                            <i class="nav-icon far fa-circle"></i><p>Laporan Database <i class="right fas fa-angle-left nav-arrow"></i></p>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
@@ -142,7 +145,6 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- Riwayat Cetak Laporan -->
                     <li class="nav-item">
                         <a href="<?php echo $a.'/laporan-history'; ?>" class="nav-link<?php if ($uri2 == 'laporan-history') echo ' active'; ?>">
                             <i class="nav-icon far fa-circle"></i><p>Riwayat Cetak Laporan</p>
@@ -152,9 +154,9 @@
             </li>
 
             <!-- Backup -->
-            <li style="border-top:1px solid rgba(248,245,239,0.08);margin:6px 14px 0;padding-top:6px;" class="nav-item<?php if ($uri2 == 'backup') echo ' menu-is-opening menu-open'; ?>">
-                <a href="#" class="nav-link" data-widget="treeview">
-                    <i class="nav-icon fas fa-download"></i><p>Backup <i class="right fas fa-angle-left"></i></p>
+            <li class="nav-item<?php if ($uri2 == 'backup') echo ' menu-is-opening menu-open'; ?>">
+                <a href="#" class="nav-link" data-fdb-toggle="treeview">
+                    <i class="nav-icon fas fa-folder-open"></i><p>Backup <i class="right fas fa-angle-left nav-arrow"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
@@ -175,10 +177,12 @@
                 </ul>
             </li>
 
+            <li class="nav-header">SISTEM</li>
+
             <!-- Pengaturan -->
-            <li style="border-top:1px solid rgba(248,245,239,0.08);margin:6px 14px 0;padding-top:6px;" class="nav-item<?php if ($uri2 == 'settings' || $uri2 == 'developer') echo ' menu-is-opening menu-open'; ?>">
-                <a href="#" class="nav-link" data-widget="treeview">
-                    <i class="nav-icon fas fa-cog"></i><p>Pengaturan <i class="right fas fa-angle-left"></i></p>
+            <li class="nav-item<?php if ($uri2 == 'settings' || $uri2 == 'developer') echo ' menu-is-opening menu-open'; ?>">
+                <a href="#" class="nav-link" data-fdb-toggle="treeview">
+                    <i class="nav-icon fas fa-sliders-h"></i><p>Pengaturan <i class="right fas fa-angle-left nav-arrow"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">

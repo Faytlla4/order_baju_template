@@ -27,34 +27,8 @@
     	echo Assets::css();
     ?>
 
-    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-admin.css?v=3'); ?>">
-    <style>
-    /* Sidebar — white modern compact */
-    .main-sidebar.sidebar-dark-primary { background: #FFFDF9 !important; box-shadow: 2px 0 12px rgba(0,0,0,0.06) !important; }
-    .main-sidebar .brand-link { padding: 14px 18px !important; display: flex !important; align-items: center !important; gap: 10px !important; background: #FFFDF9 !important; border-bottom: 1px solid #E4D6C2 !important; }
-    .main-sidebar .brand-link .brand-image { width: 30px !important; height: 30px !important; border-radius: 6px !important; }
-    .main-sidebar .brand-link .brand-text { color: #403A34 !important; font-family: 'Cormorant Garamond', Georgia, serif !important; font-size: 1.05rem !important; font-weight: 600 !important; letter-spacing: 0.04em !important; text-transform: uppercase !important; }
-    .sidebar-dark-primary .user-panel { border-bottom: 1px solid #E4D6C2 !important; padding: 10px 18px !important; margin-bottom: 4px !important; }
-    .sidebar-dark-primary .user-panel .image img { width: 30px !important; height: 30px !important; }
-    .sidebar-dark-primary .user-panel .info a { color: #403A34 !important; font-size: 0.8rem !important; font-weight: 500 !important; }
-    .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link { color: #8C8175 !important; border-radius: 7px !important; margin: 2px 12px !important; padding: 8px 12px !important; font-size: 0.8rem !important; font-weight: 500 !important; transition: all 0.15s ease !important; line-height: 1.3 !important; background: transparent !important; }
-    .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link:hover { color: #FFFDF9 !important; background: #8A6A47 !important; }
-    .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link:focus { color: #FFFDF9 !important; background: #8A6A47 !important; }
-    .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link:active { color: #FFFDF9 !important; background: #7a5d3e !important; }
-    .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active { color: #8A6A47 !important; background: rgba(200,169,107,0.12) !important; font-weight: 600 !important; }
-    .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link .nav-icon { color: #8C8175 !important; width: 18px !important; margin-right: 8px !important; font-size: 0.85rem !important; transition: color 0.15s ease !important; }
-    .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link:hover .nav-icon { color: #FFFDF9 !important; }
-    .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active .nav-icon { color: #8A6A47 !important; }
-    .sidebar-dark-primary .nav-treeview > .nav-item > .nav-link { padding-left: 42px !important; font-size: 0.78rem !important; color: #8C8175 !important; padding: 6px 12px !important; }
-    .sidebar-dark-primary .nav-treeview > .nav-item > .nav-link:hover { color: #FFFDF9 !important; background: #8A6A47 !important; }
-    .sidebar-dark-primary .nav-treeview > .nav-item > .nav-link.active { color: #8A6A47 !important; background: rgba(200,169,107,0.08) !important; }
-    .sidebar-dark-primary .nav-sidebar .nav-item .nav-link .nav-arrow { color: #8C8175 !important; font-size: 0.65rem !important; transition: all 0.15s ease !important; }
-    .sidebar-dark-primary .nav-sidebar .nav-item > .nav-link:hover .nav-arrow { color: #FFFDF9 !important; }
-    .sidebar-dark-primary .nav-sidebar .nav-item.menu-open > .nav-link .nav-arrow { color: #8A6A47 !important; transform: rotate(90deg) !important; }
-    .sidebar-dark-primary .nav-sidebar > .nav-item + .nav-item { border-top: 1px solid #E4D6C2 !important; margin-top: 4px !important; padding-top: 4px !important; }
-    .sidebar-dark-primary .nav-treeview { display: none !important; }
-    .sidebar-dark-primary .nav-item.menu-open > .nav-treeview { display: block !important; }
-    </style>
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-admin.css?v=5'); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-dashboard.css?v=7'); ?>">
 
     <script type="text/javascript" async>
     var run_title_text = " <?=$title_text?> ";
@@ -202,32 +176,57 @@
     	echo Assets::js();
     ?>
     <script>
-    $(document).ready(function() {
-        // Only expand parent of currently active submenu item
-        $('.nav-treeview .nav-link.active').each(function() {
+    // Sidebar treeview — fully custom (does NOT use AdminLTE's plugin, so there
+    // is zero conflict). The toggle triggers are tagged `data-fdb-toggle="treeview"`
+    // in sidebar.php. AdminLTE's selector `[data-widget="treeview"]` no longer
+    // matches anything, so the built-in plugin is bypassed entirely.
+    $(function() {
+        var $sidebar = $('.main-sidebar');
+        if (!$sidebar.length) { return; }
+
+        // Auto-open the parent of any currently active submenu item.
+        $sidebar.find('.nav-treeview .nav-link.active').each(function() {
             var $parent = $(this).closest('.nav-item').parent('.nav-treeview').closest('.nav-item');
             if ($parent.length) {
                 $parent.addClass('menu-open');
-                $parent.children('.nav-treeview').show();
                 $parent.children('.nav-link').addClass('active');
             }
         });
-        // Toggle submenu on click
-        $(document).on('click', 'a[data-widget="treeview"]', function(e) {
-            e.preventDefault();
-            var $parent = $(this).closest('.nav-item');
-            var $submenu = $parent.children('.nav-treeview');
-            if ($submenu.length) {
+
+        // Click handler — bound directly on each toggle, NOT delegated through
+        // document, so AdminLTE or any other plugin can't intercept it.
+        $sidebar.find('[data-fdb-toggle="treeview"]').each(function() {
+            var $trigger = $(this);
+            $trigger.on('click.fdbTreeview', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var $parent = $trigger.closest('.nav-item');
+                var $sub = $parent.children('.nav-treeview').first();
+                if (!$sub.length) { return; }
                 if ($parent.hasClass('menu-open')) {
-                    $submenu.slideUp(200);
+                    $sub.stop(true, true).slideUp(180, function() {
+                        $sub.css('display', '');
+                    });
                     $parent.removeClass('menu-open');
-                    $(this).removeClass('active');
+                    $trigger.removeClass('active');
                 } else {
-                    $submenu.slideDown(200);
+                    // Sibling submenus (only at the same nesting level) close.
+                    $parent.siblings('.nav-item.menu-open').each(function() {
+                        var $sib = $(this);
+                        var $sibSub = $sib.children('.nav-treeview').first();
+                        if ($sibSub.length) {
+                            $sibSub.stop(true, true).slideUp(180, function() {
+                                $sibSub.css('display', '');
+                            });
+                        }
+                        $sib.removeClass('menu-open');
+                        $sib.children('[data-fdb-toggle="treeview"]').removeClass('active');
+                    });
+                    $sub.stop(true, true).slideDown(180);
                     $parent.addClass('menu-open');
-                    $(this).addClass('active');
+                    $trigger.addClass('active');
                 }
-            }
+            });
         });
     });
     // Fade out Tailor Thread Transition
