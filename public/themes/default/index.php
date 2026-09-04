@@ -34,7 +34,7 @@
     ?>
 
     <?php if ($is_fashioner): ?>
-    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-home.css?v=3'); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-home.css?v=6'); ?>">
     <?php endif; ?>
 
     <script type="text/javascript" async>
