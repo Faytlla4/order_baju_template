@@ -28,7 +28,7 @@
     	echo Assets::css();
     ?>
 
-    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-admin.css?v=6'); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-admin.css?v=8'); ?>">
     <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-dashboard.css?v=18'); ?>">
 
     <script type="text/javascript" async>
