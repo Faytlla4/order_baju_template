@@ -61,57 +61,49 @@
         align-items: center;
         justify-content: center;
         background: #F8F5EF;
-        opacity: 1;
-        transition: opacity 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+        transition: opacity 0.35s ease, visibility 0.35s ease;
         pointer-events: none;
     }
     .f-transition.f-loaded {
         opacity: 0;
-        pointer-events: none;
+        visibility: hidden;
     }
     .f-transition-threads {
         position: absolute;
         inset: 0;
         overflow: hidden;
-        z-index: 1;
-    }
-    .f-transition.f-loaded .f-transition-threads {
-        opacity: 0;
-        transition: opacity 0.6s ease;
     }
     .f-thread {
         position: absolute;
-        height: 10px;
-        background: #403A34;
-        border-radius: 5px;
-        animation: f-thread-sweep 2.2s cubic-bezier(0.4, 0, 0.2, 1) both;
-        box-shadow: 0 0 12px rgba(64,58,52,0.5);
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #403A34 30%, #403A34 70%, transparent 100%);
+        opacity: 0.5;
     }
-    .f-thread-1 { top: 12%; width: 65%; animation-delay: 0s; }
-    .f-thread-2 { top: 26%; width: 55%; animation-delay: 0.12s; }
-    .f-thread-3 { top: 40%; width: 70%; animation-delay: 0.04s; }
-    .f-thread-4 { top: 54%; width: 60%; animation-delay: 0.16s; }
-    .f-thread-5 { top: 68%; width: 62%; animation-delay: 0.08s; }
-    .f-thread-6 { top: 82%; width: 52%; animation-delay: 0.14s; }
-    @keyframes f-thread-sweep {
-        0%   { left: -70%; }
-        100% { left: 115%; }
+    .f-thread-1 { top: 25%; width: 35%; left: -35%; animation: f-thread-move 4s linear infinite; }
+    .f-thread-2 { top: 40%; width: 30%; left: -30%; animation: f-thread-move 4.5s linear 0.8s infinite; }
+    .f-thread-3 { top: 55%; width: 40%; left: -40%; animation: f-thread-move 3.8s linear 1.5s infinite; }
+    .f-thread-4 { top: 68%; width: 28%; left: -28%; animation: f-thread-move 4.2s linear 0.4s infinite; }
+    .f-thread-5 { top: 80%; width: 32%; left: -32%; animation: f-thread-move 4.3s linear 1.1s infinite; }
+    @keyframes f-thread-move {
+        0%   { left: -40%; opacity: 0; }
+        10%  { opacity: 0.5; }
+        90%  { opacity: 0.5; }
+        100% { left: 110%; opacity: 0; }
     }
     .f-transition-center {
         position: relative;
         z-index: 2;
-        opacity: 0;
-        animation: f-logo-in 1s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+        animation: f-center-in 0.5s cubic-bezier(.22,.68,0,1.1) both;
     }
     .f-transition-logo {
-        width: 140px;
-        height: 140px;
+        width: 180px;
+        height: 180px;
         object-fit: contain;
         mix-blend-mode: multiply;
     }
-    @keyframes f-logo-in {
-        0%   { opacity: 0; transform: scale(0.92); filter: blur(8px); }
-        100% { opacity: 1; transform: scale(1); filter: blur(0); }
+    @keyframes f-center-in {
+        from { opacity: 0; transform: translateY(12px) scale(0.97); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
     }
     </style>
     <?php endif; ?>
@@ -170,8 +162,8 @@
     window.addEventListener('load', function() {
         var t = document.getElementById('f-transition');
         if (t) {
-            setTimeout(function() { t.classList.add('f-loaded'); }, 800);
-            setTimeout(function() { t.remove(); }, 1700);
+            setTimeout(function() { t.classList.add('f-loaded'); }, 300);
+            setTimeout(function() { t.remove(); }, 700);
         }
     });
     </script>
