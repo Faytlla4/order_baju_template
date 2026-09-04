@@ -1,8 +1,1 @@
-<style type="text/css">
-body {
-    background-image: url('<?=base_url()?>assets/images/bg.jpg');
-    background-size: cover;
-    height: 100%;
-    overflow: hidden;
-}
-</style>
+<!-- content view for Home::index — background handled by fashioner-home.css -->

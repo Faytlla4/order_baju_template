@@ -13,6 +13,10 @@
     </title>
     <link rel="shortcut icon" href="<?php echo base_url(); ?>favicon.ico">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <?php
         $is_fashioner = (isset($fashioner_home) && $fashioner_home === TRUE);
 
@@ -85,11 +89,6 @@
         10%  { opacity: 0.5; }
         90%  { opacity: 0.5; }
         100% { left: 110%; opacity: 0; }
-    }
-    @keyframes f-thread-slide {
-        0%   { transform: translateX(-100%); }
-        50%  { transform: translateX(0%); }
-        100% { transform: translateX(100%); }
     }
     .f-transition-center {
         position: relative;
