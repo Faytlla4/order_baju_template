@@ -448,10 +448,132 @@ body.fashioner-page nav.navbar { display: none !important; }
   .f-features-grid { grid-template-columns: 1fr; }
   .f-swatch { min-height: 90px; padding: 12px 10px; }
 }
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-  .f-hero-measure-track { animation: none !important; }
+
+/* === TENTANG === */
+.f-tentang {
+  background: #FFFDF9;
+  padding: 80px 48px;
+}
+.f-tentang-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.f-tentang-title {
+  font-family: var(--f-serif);
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: var(--f-ink);
+  line-height: 1.2;
+  margin: 16px 0 24px;
+}
+.f-tentang-desc {
+  font-size: 1rem;
+  color: var(--f-muted);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+.f-tentang-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+.f-stat-card {
+  background: #2A2520;
+  border: 3px solid #2A2520;
+  border-radius: 50%;
+  width: 130px;
+  height: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0 auto;
+  padding: 0;
+}
+.f-stat-num {
+  font-family: var(--f-serif);
+  font-size: 2rem;
+  font-weight: 700;
+  color: #FFFDF9;
+}
+.f-stat-label {
+  font-size: 0.7rem;
+  color: #FFFDF9;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-top: 4px;
+}
+
+/* === KONTAK === */
+.f-kontak {
+  background: var(--f-gold-light);
+  padding: 80px 48px;
+}
+.f-kontak-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+.f-kontak-title {
+  font-family: var(--f-serif);
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: var(--f-ink);
+  margin: 16px 0 20px;
+}
+.f-kontak-desc {
+  font-size: 1rem;
+  color: var(--f-muted);
+  margin-bottom: 40px;
+}
+.f-kontak-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.f-kontak-card {
+  background: var(--f-surface);
+  border: 2px solid #2A2520;
+  border-radius: 16px;
+  padding: 28px 20px;
+  text-align: center;
+}
+.f-kontak-icon {
+  width: 56px;
+  height: 56px;
+  background: #2A2520;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  color: white;
+  font-size: 1.4rem;
+}
+.f-kontak-card h4 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--f-ink);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.f-kontak-card p {
+  font-size: 0.9rem;
+  color: var(--f-muted);
+  margin: 0;
+}
+
+/* Smooth scroll */
+html { scroll-behavior: smooth; }
+
+@media (max-width: 768px) {
+  .f-tentang-inner { grid-template-columns: 1fr; }
+  .f-tentang-stats { grid-template-columns: 1fr 1fr; }
+  .f-kontak-cards { grid-template-columns: 1fr; }
 }

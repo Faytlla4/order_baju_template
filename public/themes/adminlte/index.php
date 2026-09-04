@@ -28,8 +28,8 @@
     	echo Assets::css();
     ?>
 
-    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-admin.css?v=5'); ?>">
-    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-dashboard.css?v=7'); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-admin.css?v=6'); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-dashboard.css?v=8'); ?>">
 
     <script type="text/javascript" async>
     var run_title_text = " <?=$title_text?> ";
@@ -51,74 +51,58 @@
     <!-- Tailor Thread Transition -->
     <!-- Tailor Thread Transition -->
     <div id="f-transition" class="f-transition">
-        <div class="f-transition-threads">
-            <div class="f-thread f-thread-1"></div>
-            <div class="f-thread f-thread-2"></div>
-            <div class="f-thread f-thread-3"></div>
-            <div class="f-thread f-thread-4"></div>
-            <div class="f-thread f-thread-5"></div>
-        </div>
-        <div class="f-transition-center">
-            <img src="<?php echo base_url('assets/images/logo-transparent.png'); ?>" alt="FASHIONER" class="f-transition-logo">
-        </div>
+        <div class="f-circle"></div>
+        <img src="<?php echo base_url('assets/images/logo-transparent.png'); ?>" alt="FASHIONER" class="f-logo">
     </div>
     <style>
     .f-transition {
         position: fixed;
         inset: 0;
         z-index: 9999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #F8F5EF;
-        transition: opacity 0.35s ease, visibility 0.35s ease;
         pointer-events: none;
-    }
-    .f-transition.f-loaded {
-        opacity: 0;
-        visibility: hidden;
-    }
-    .f-transition-threads {
-        position: absolute;
-        inset: 0;
         overflow: hidden;
+        background: #2A2520;
     }
-    .f-thread {
+    .f-circle {
         position: absolute;
-        height: 2px;
-        background: linear-gradient(90deg, transparent 0%, #403A34 30%, #403A34 70%, transparent 100%);
-        opacity: 0.5;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle, #C8A96B 0%, #8A6A47 50%, #5C5048 100%);
+        transform: translate(-50%, -50%);
     }
-    .f-thread-1 { top: 25%; width: 35%; left: -35%; animation: f-thread-move 4s linear infinite; }
-    .f-thread-2 { top: 40%; width: 30%; left: -30%; animation: f-thread-move 4.5s linear 0.8s infinite; }
-    .f-thread-3 { top: 55%; width: 40%; left: -40%; animation: f-thread-move 3.8s linear 1.5s infinite; }
-    .f-thread-4 { top: 68%; width: 28%; left: -28%; animation: f-thread-move 4.2s linear 0.4s infinite; }
-    .f-thread-5 { top: 80%; width: 32%; left: -32%; animation: f-thread-move 4.3s linear 1.1s infinite; }
-    @keyframes f-thread-move {
-        0%   { left: -40%; opacity: 0; }
-        10%  { opacity: 0.5; }
-        90%  { opacity: 0.5; }
-        100% { left: 110%; opacity: 0; }
+    .f-circle.animate {
+        animation: f-circle-expand 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
-    @keyframes f-thread-slide {
-        0%   { transform: translateX(-100%); }
-        50%  { transform: translateX(0%); }
-        100% { transform: translateX(100%); }
-    }
-    .f-transition-center {
-        position: relative;
-        z-index: 2;
-        animation: f-center-in 0.5s cubic-bezier(.22,.68,0,1.1) both;
-    }
-    .f-transition-logo {
-        width: 180px;
-        height: 180px;
+    .f-logo {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 160px;
+        height: 160px;
         object-fit: contain;
-        mix-blend-mode: multiply;
+        mix-blend-mode: normal;
+        filter: brightness(0) invert(1);
+        opacity: 0;
     }
-    @keyframes f-center-in {
-        from { opacity: 0; transform: translateY(12px) scale(0.97); }
-        to   { opacity: 1; transform: translateY(0) scale(1); }
+    .f-logo.animate {
+        animation: f-logo-show 0.4s ease 0.25s forwards,
+                   f-logo-hide 0.35s ease 0.55s forwards;
+    }
+    @keyframes f-circle-expand {
+        from { width: 0; height: 0; }
+        to   { width: 280vmax; height: 280vmax; }
+    }
+    @keyframes f-logo-show {
+        from { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+        to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+    @keyframes f-logo-hide {
+        from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        to   { opacity: 0; transform: translate(-50%, -50%) scale(0.85); }
     }
     </style>
 
@@ -230,14 +214,16 @@
             });
         });
     });
-    // Fade out Tailor Thread Transition
-    window.addEventListener('load', function() {
+    // Page Transition
+    (function() {
         var t = document.getElementById('f-transition');
-        if (t) {
-            setTimeout(function() { t.classList.add('f-loaded'); }, 350);
-            setTimeout(function() { t.remove(); }, 800);
-        }
-    });
+        if (!t) return;
+        var circle = t.querySelector('.f-circle');
+        var logo = t.querySelector('.f-logo');
+        circle.classList.add('animate');
+        logo.classList.add('animate');
+        setTimeout(function() { if (t && t.parentNode) t.remove(); }, 1000);
+    })();
     // Force-remove hold-transition
     setTimeout(function() {
         $('body.hold-transition').removeClass('hold-transition');

@@ -1,6 +1,6 @@
 <?php
 	$checkSegment = $this->uri->segment(4);
-	$areaUrl = SITE_AREA . '/master/master_ukuran';
+	$areaUrl = SITE_AREA . '/master/ukuran';
 ?>
 <div class="float-sm-right">
     <a href="<?php echo site_url($areaUrl); ?>" id='list' class="btn btn-flat btn-<?php echo $checkSegment == '' ? 'primary' : 'default'; ?>">

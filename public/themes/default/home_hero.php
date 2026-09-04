@@ -92,4 +92,54 @@ $desc = 'Kelola data pakaian, transaksi, laporan, hingga backup dokumen dan data
     </div>
 </section>
 
+<section class="f-tentang" id="tentang">
+    <div class="f-tentang-inner">
+        <div class="f-tentang-text">
+            <p class="f-hero-eyebrow"><span class="f-hero-eyebrow-num">05</span><span>TENTANG KAMI</span></p>
+            <h2 class="f-tentang-title">Mempermudah Gestão<br>Usaha garment Anda</h2>
+            <p class="f-tentang-desc">FASHIONER adalah sistem manajemen garment berbasis web yang dirancang untuk membantu usaha kecil dan menengah di Indonesia dalam mengelola pesanan, transaksi, dan laporan secara lebih terstruktur.</p>
+            <p class="f-tentang-desc">Dikembangkan dengan mempertimbangkan kebutuhan pelaku usaha garment Sidoarjo dan sekitarnya, sistem ini hadir sebagai solusi praktis untuk menggantikan pencatatan manual yang sering kali rumit dan rentan kesalahan.</p>
+        </div>
+        <div class="f-tentang-stats">
+            <div class="f-stat-card">
+                <span class="f-stat-num">100%</span>
+                <span class="f-stat-label">Web-Based</span>
+            </div>
+            <div class="f-stat-card">
+                <span class="f-stat-num">24/7</span>
+                <span class="f-stat-label">Akses Online</span>
+            </div>
+            <div class="f-stat-card">
+                <span class="f-stat-num">∞</span>
+                <span class="f-stat-label">Tanpa Batas</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="f-kontak" id="kontak">
+    <div class="f-kontak-inner">
+        <p class="f-hero-eyebrow"><span class="f-hero-eyebrow-num">06</span><span>HUBUNGI KAMI</span></p>
+        <h2 class="f-kontak-title">Butuh Bantuan?</h2>
+        <p class="f-kontak-desc">Tim kami siap membantu Anda. Jangan ragu untuk menghubungi kami kapan saja.</p>
+        <div class="f-kontak-cards">
+            <div class="f-kontak-card">
+                <div class="f-kontak-icon"><i class="fas fa-envelope"></i></div>
+                <h4>Email</h4>
+                <p>support@fashioner.id</p>
+            </div>
+            <div class="f-kontak-card">
+                <div class="f-kontak-icon"><i class="fas fa-phone"></i></div>
+                <h4>Telepon</h4>
+                <p>+62 812 3456 7890</p>
+            </div>
+            <div class="f-kontak-card">
+                <div class="f-kontak-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <h4>Alamat</h4>
+                <p>Sidoarjo, Jawa Timur</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <footer class="f-footer">&copy; <?php echo date('Y'); ?> FASHIONER. All rights reserved.</footer>
