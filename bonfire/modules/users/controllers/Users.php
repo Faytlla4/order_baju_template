@@ -63,9 +63,9 @@ class Users extends Front_Controller
 	 */
 	public function login()
 	{
-		// If the user is already logged in, go home.
+		// If the user is already logged in, go to admin area.
 		if ($this->auth->is_logged_in() !== false) {
-			Template::redirect('/');
+			Template::redirect(site_url(SITE_AREA));
 		}
 
 		// Try to login.

@@ -1,0 +1,278 @@
+/* ===================================================
+   FASHIONER — Public Landing Page
+   Typography: Inter + Cormorant Garamond
+   Background: CSS fabric pattern
+   =================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --f-ivory: #F8F5EF;
+  --f-cream: #EFE7D8;
+  --f-beige: #E4D6C2;
+  --f-gold: #C8A96B;
+  --f-brown: #8A6A47;
+  --f-charcoal: #403A34;
+  --f-muted: #8C8175;
+  --f-card-bg: rgba(255,253,249,0.82);
+  --f-nav-bg: rgba(255,253,249,0.92);
+  --f-border: rgba(228,214,194,0.55);
+  --f-font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --f-font-brand: 'Cormorant Garamond', Georgia, serif;
+}
+
+body.fashioner-page {
+  margin: 0;
+  padding: 0;
+  font-family: var(--f-font);
+  color: var(--f-charcoal);
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: var(--f-ivory);
+  background-image:
+    repeating-linear-gradient(45deg, transparent, transparent 24px, rgba(200,169,107,0.03) 24px, rgba(200,169,107,0.03) 25px),
+    repeating-linear-gradient(-45deg, transparent, transparent 24px, rgba(138,106,71,0.02) 24px, rgba(138,106,71,0.02) 25px),
+    linear-gradient(180deg, #F8F5EF 0%, #EFE7D8 100%);
+}
+
+body.fashioner-page,
+body.fashioner-page .wrapper {
+  overflow: visible !important;
+  height: auto !important;
+}
+
+body.fashioner-page .wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* NAVBAR */
+.f-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  background: var(--f-nav-bg);
+  border-bottom: 1px solid var(--f-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.f-navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.f-navbar-brand img {
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+}
+
+.f-navbar-brand-text {
+  font-family: var(--f-font-brand);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--f-charcoal);
+  text-transform: uppercase;
+}
+
+.f-navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+body.fashioner-page nav.navbar {
+  display: none !important;
+}
+
+/* BUTTONS */
+.f-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-family: var(--f-font);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  border: none;
+  outline: none;
+  white-space: nowrap;
+}
+
+.f-btn:focus-visible {
+  outline: 2px solid var(--f-gold);
+  outline-offset: 3px;
+}
+
+.f-btn-primary {
+  background: var(--f-brown);
+  color: #fff;
+}
+
+.f-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(138,106,71,0.25);
+  background: #7a5d3e;
+  color: #fff;
+  text-decoration: none;
+}
+
+.f-btn-secondary {
+  background: transparent;
+  color: var(--f-brown);
+  border: 1px solid var(--f-beige);
+}
+
+.f-btn-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(138,106,71,0.12);
+  background: rgba(239,231,216,0.5);
+  color: var(--f-brown);
+  text-decoration: none;
+}
+
+.f-btn-cta {
+  padding: 11px 28px;
+  font-size: 0.85rem;
+  border-radius: 9px;
+}
+
+/* HERO */
+.f-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px 0;
+  overflow: hidden;
+}
+
+.f-hero-card {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 560px;
+  width: 100%;
+  padding: 48px 44px 44px;
+  background: var(--f-card-bg);
+  border: 1px solid var(--f-border);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 24px rgba(64,58,52,0.06);
+}
+
+.f-hero-logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  margin-bottom: 16px;
+}
+
+.f-hero-brand {
+  font-family: var(--f-font-brand);
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  line-height: 1.08;
+  color: var(--f-charcoal);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.f-hero-brand::after {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 2px;
+  background: var(--f-gold);
+  margin: 12px auto 0;
+  border-radius: 2px;
+}
+
+.f-hero-subtitle {
+  font-family: var(--f-font);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--f-brown);
+  margin: 16px 0 0;
+}
+
+.f-hero-desc {
+  font-family: var(--f-font);
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--f-muted);
+  margin: 12px 0 0;
+  max-width: 380px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.f-hero-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+
+/* FOOTER */
+.f-footer {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 16px 24px;
+  font-family: var(--f-font);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--f-muted);
+  opacity: 0.75;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .f-navbar { padding: 0 16px; }
+  .f-navbar-brand-text { font-size: 1rem; }
+  .f-hero-card { padding: 36px 24px 32px; border-radius: 16px; margin: 8px; }
+  .f-hero-brand { font-size: clamp(2rem, 8vw, 2.6rem); letter-spacing: 0.03em; }
+  .f-btn-cta { padding: 10px 22px; font-size: 0.82rem; }
+}
+
+@media (max-width: 420px) {
+  .f-navbar-brand img { display: none; }
+  .f-hero-card { padding: 28px 18px 24px; }
+  .f-hero-cta { flex-direction: column; gap: 10px; }
+  .f-btn-cta { width: 100%; max-width: 220px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

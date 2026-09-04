@@ -64,6 +64,9 @@ class Home extends MX_Controller
 		$this->load->library('users/auth');
 		$this->set_current_user();
 
+		$this->load->helper('url');
+		Template::set('fashioner_home', TRUE);
+
 		Template::render();
 	}//end index()
 

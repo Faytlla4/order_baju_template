@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        SI-Reklame (Sistem Informasi Reklame)    </title>
+    <link rel="shortcut icon" href="http://apktemplate.test/favicon.ico">
+
+    <link rel='stylesheet' type='text/css' href='http://apktemplate.test/assets/plugins/fontawesome-free/css/all.min.css' media='screen' />
+<link rel='stylesheet' type='text/css' href='http://apktemplate.test/assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css' media='screen' />
+<link rel='stylesheet' type='text/css' href='http://apktemplate.test/assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' media='screen' />
+<link rel='stylesheet' type='text/css' href='http://apktemplate.test/assets/plugins/datatables-select/css/select.bootstrap4.min.css' media='screen' />
+<link rel='stylesheet' type='text/css' href='http://apktemplate.test/assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css' media='screen' />
+<link rel='stylesheet' type='text/css' href='http://apktemplate.test/assets/plugins/select2/css/select2.min.css' media='screen' />
+<link rel='stylesheet' type='text/css' href='http://apktemplate.test/assets/plugins/sweetalert2/sweetalert2.min.css' media='screen' />
+<link rel='stylesheet' type='text/css' href='http://apktemplate.test/assets/css/adminlte.min.css' media='screen' />
+
+    <script type="text/javascript" async>
+    var run_title_text = " SI-Reklame (Sistem Informasi Reklame) ";
+    var run_title_speed = 300;
+    var run_title_refresh = null;
+
+    function running_title_text() {
+        document.title = run_title_text;
+        run_title_text = run_title_text.substring(1, run_title_text.length) + run_title_text.charAt(0);
+        run_title_refresh = setTimeout("running_title_text()", run_title_speed);
+    }
+    running_title_text();
+
+    var site_url = 'http://apktemplate.test/';
+    </script>
+</head>
+
+<body class="hold-transition">
+    <div class="wrapper">
+        <div class="preloader flex-column justify-content-center align-items-center">
+            <img class="animation__shake" src="http://apktemplate.test/assets/images/logo.png" height="300" width="300">
+        </div>
+
+        <nav class="navbar navbar-expand">
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <div class="btn-group">
+                <a href="http://apktemplate.test/" class="btn btn-primary">Home</a>
+                <a href="http://apktemplate.test/login" class="btn btn-primary">Login</a>
+            </div>
+        </li>
+    </ul>
+</nav> <div class="alert alert-error alert-dismissable">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<div>You must be logged in to view that page.</div>
+	</div><style type="text/css">
+.wrapper {
+    width: 100%;
+}
+
+nav.navbar {
+    display: none;
+}
+
+.login-box {
+    margin-top: 5%;
+}
+
+section {
+    position: relative;
+    background-color: black;
+    height: 100%;
+    min-height: 25rem;
+    width: 100%;
+    overflow: hidden;
+}
+
+section video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-height: 100%;
+    min-width: 100%;
+    height: auto;
+    width: auto;
+    z-index: 0;
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+
+section .overlay-wcs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: black;
+    opacity: 0.5;
+    z-index: 1;
+}
+
+section .container {
+    position: relative;
+    z-index: 2;
+}
+</style>
+
+<section class="content">
+    <div class="overlay-wcs"></div>
+    <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+        <source src="http://apktemplate.test/assets/videos/kota_jayapura.mp4" type="video/mp4">
+    </video>
+
+    <div class="container login-box">
+        <div class="login-logo">
+            <img src="http://apktemplate.test/assets/images/LOGO-SI-REKLAME-v2.png" width="80%"><br>
+        </div>
+
+        <div class="card">
+            <div class="card-body login-card-body">
+                
+                <form action="http://apktemplate.test/login" method="post" accept-charset="utf-8">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="login" placeholder="Username" autocomplete="off">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" class="form-control" name="password" placeholder="Password" autocomplete="off">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-between">
+                    <div class="col-sm-12">
+                        <div class="icheck-primary">
+                            <input type="checkbox" name="remember_me" id="remember" value="1">
+                            <label for="remember">
+                                Remember me                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="submit" class="btn btn-primary btn-block" name="log-me-in" value="Sign In">
+                    </div>
+                    <div class="col-sm-3">
+                        <a href="http://apktemplate.test/" class="btn btn-secondary">Home</a>
+                    </div>
+                </div>
+                </form>            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+document.body.classList.add('login-page');
+</script>
+    </div>
+
+    <script src='http://apktemplate.test/assets/plugins/jquery/jquery.min.js' type='text/javascript'></script>
+<script src='http://apktemplate.test/assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' type='text/javascript'></script>
+<script src='http://apktemplate.test/assets/plugins/moment/moment.min.js' type='text/javascript'></script>
+<script src='http://apktemplate.test/assets/plugins/bootstrap/js/bootstrap.bundle.min.js' type='text/javascript'></script>
+<script src='http://apktemplate.test/assets/plugins/datatables/jquery.dataTables.min.js' type='text/javascript'></script>
+<script src='http://apktemplate.test/assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' type='text/javascript'></script>
+<script src='http://apktemplate.test/assets/plugins/datatables-select/js/dataTables.select.min.js' type='text/javascript'></script>
+<script src='http://apktemplate.test/assets/plugins/datatables-select/js/select.bootstrap4.min.js' type='text/javascript'></script>
+<script src='http://apktemplate.test/assets/plugins/select2/js/select2.full.min.js' type='text/javascript'></script>
+<script src='http://apktemplate.test/assets/plugins/sweetalert2/sweetalert2.min.js' type='text/javascript'></script>
+<script src='http://apktemplate.test/assets/plugins/lodash/lodash.min.js' type='text/javascript'></script>
+<script src='http://apktemplate.test/assets/js/adminlte.js' type='text/javascript'></script>
+</body>
+
+</html>
