@@ -448,10 +448,3 @@ body.fashioner-page nav.navbar { display: none !important; }
   .f-features-grid { grid-template-columns: 1fr; }
   .f-swatch { min-height: 90px; padding: 12px 10px; }
 }
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-  .f-hero-measure-track { animation: none !important; }
-}
