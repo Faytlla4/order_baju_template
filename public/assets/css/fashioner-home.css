@@ -4,7 +4,7 @@
    Background: CSS fabric pattern
    =================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+/* Google Fonts loaded via <link> in index.php for non-blocking */
 
 :root {
   --f-ivory: #F8F5EF;
@@ -29,11 +29,12 @@ body.fashioner-page {
   min-height: 100vh;
   overflow-x: hidden;
   overflow-y: auto;
-  background-color: var(--f-ivory);
-  background-image:
-    repeating-linear-gradient(45deg, transparent, transparent 24px, rgba(200,169,107,0.03) 24px, rgba(200,169,107,0.03) 25px),
-    repeating-linear-gradient(-45deg, transparent, transparent 24px, rgba(138,106,71,0.02) 24px, rgba(138,106,71,0.02) 25px),
-    linear-gradient(180deg, #F8F5EF 0%, #EFE7D8 100%);
+  background-color: #2a231c;
+  background-image: url('../images/bg1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 body.fashioner-page,
@@ -46,6 +47,16 @@ body.fashioner-page .wrapper {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: transparent !important;
+}
+
+body.fashioner-page .content-wrapper,
+body.fashioner-page .content,
+body.fashioner-page .content-header,
+body.fashioner-page main.content,
+body.fashioner-page .main-sidebar,
+body.fashioner-page .main-header {
+  background: transparent !important;
 }
 
 /* NAVBAR */
@@ -123,29 +134,30 @@ body.fashioner-page nav.navbar {
 }
 
 .f-btn-primary {
-  background: var(--f-brown);
+  background: #1a1a1a;
   color: #fff;
 }
 
 .f-btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(138,106,71,0.25);
-  background: #7a5d3e;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  background: #333;
   color: #fff;
   text-decoration: none;
 }
 
 .f-btn-secondary {
   background: transparent;
-  color: var(--f-brown);
-  border: 1px solid var(--f-beige);
+  color: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.3);
 }
 
 .f-btn-secondary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(138,106,71,0.12);
-  background: rgba(239,231,216,0.5);
-  color: var(--f-brown);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.5);
+  color: #1a1a1a;
   text-decoration: none;
 }
 
@@ -173,12 +185,28 @@ body.fashioner-page nav.navbar {
   max-width: 560px;
   width: 100%;
   padding: 48px 44px 44px;
-  background: var(--f-card-bg);
-  border: 1px solid var(--f-border);
+  background: rgba(255,253,249,0.88);
+  border: 1px solid rgba(228,214,194,0.45);
+  border-top: 2px solid rgba(200,169,107,0.6);
   border-radius: 20px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 24px rgba(64,58,52,0.06);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow:
+    0 2px 4px rgba(64,58,52,0.03),
+    0 8px 16px rgba(64,58,52,0.04),
+    0 24px 48px rgba(64,58,52,0.07),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+  transform: translateY(0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.f-hero-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 4px 8px rgba(64,58,52,0.04),
+    0 12px 24px rgba(64,58,52,0.06),
+    0 32px 64px rgba(64,58,52,0.09),
+    inset 0 1px 0 rgba(255,255,255,0.6);
 }
 
 .f-hero-logo {
