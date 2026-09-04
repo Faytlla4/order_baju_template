@@ -1,3 +1,4 @@
+<!-- Summary Cards -->
 <div class="row mb-4">
     <div class="col-lg-3 col-md-6 col-sm-6">
         <div class="small-box" style="background:linear-gradient(135deg,#FFFDF9,#EFE7D8);border-left:4px solid #C8A96B;">
@@ -40,36 +41,41 @@
     </div>
 </div>
 
+<!-- Charts Row: Donut + Bar -->
 <div class="row mb-4">
-    <div class="col-lg-4 col-md-6">
+    <div class="col-lg-5 col-md-6">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title" style="font-size:0.9rem;font-weight:600;">Status Order</h3>
+                <h3 class="card-title" style="font-size:0.95rem;font-weight:600;">Status Order</h3>
             </div>
             <div class="card-body" style="text-align:center;">
-                <canvas id="statusChart" height="200"></canvas>
+                <canvas id="statusChart" height="220"></canvas>
             </div>
         </div>
     </div>
-    <div class="col-lg-4 col-md-6">
+    <div class="col-lg-7 col-md-6">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title" style="font-size:0.9rem;font-weight:600;">Order per Bulan</h3>
+                <h3 class="card-title" style="font-size:0.95rem;font-weight:600;">Order Per Bulan</h3>
             </div>
             <div class="card-body">
-                <canvas id="monthlyChart" height="200"></canvas>
+                <canvas id="monthlyChart" height="220"></canvas>
             </div>
         </div>
     </div>
-    <div class="col-lg-4 col-md-12">
+</div>
+
+<!-- Recent Orders + Activity Timeline -->
+<div class="row mb-4">
+    <div class="col-lg-6 col-md-6">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title" style="font-size:0.9rem;font-weight:600;">Order Terbaru</h3>
+                <h3 class="card-title" style="font-size:0.95rem;font-weight:600;">Order Terbaru</h3>
             </div>
             <div class="card-body" style="padding:0;">
                 <?php if (!empty($recent_orders)): ?>
                 <div class="table-responsive">
-                    <table class="table table-sm mb-0" style="font-size:0.8rem;">
+                    <table class="table table-sm mb-0" style="font-size:0.82rem;">
                         <thead>
                             <tr>
                                 <th style="font-weight:600;">Kode</th>
@@ -104,13 +110,43 @@
             </div>
         </div>
     </div>
+    <div class="col-lg-6 col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" style="font-size:0.95rem;font-weight:600;">Aktivitas Terbaru</h3>
+            </div>
+            <div class="card-body" style="padding:12px 20px;">
+                <?php if (!empty($recent_activity)): ?>
+                <div class="timeline" style="font-size:0.82rem;">
+                    <?php foreach ($recent_activity as $act): ?>
+                    <div class="timeline-item" style="margin-bottom:14px;position:relative;padding-left:20px;border-left:2px solid #E4D6C2;">
+                        <div class="time" style="color:#8C8175;font-size:0.75rem;margin-bottom:2px;">
+                            <i class="fas fa-clock" style="margin-right:4px;"></i><?php echo date('d M Y H:i', strtotime($act->created_on)); ?>
+                        </div>
+                        <div class="timeline-header" style="color:#403A34;font-weight:500;">
+                            <?php echo $act->activity; ?>
+                        </div>
+                        <div style="color:#8C8175;font-size:0.75rem;margin-top:2px;">
+                            <i class="fas fa-user" style="margin-right:3px;"></i><?php echo $act->username ? $act->username : 'System'; ?>
+                            <span style="margin-left:6px;padding:1px 6px;background:rgba(200,169,107,0.12);border-radius:3px;color:#8A6A47;"><?php echo $act->module; ?></span>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php else: ?>
+                <p class="text-muted" style="padding:16px;text-align:center;font-size:0.82rem;">Belum ada aktivitas.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
 </div>
 
+<!-- Customer Data -->
 <div class="row">
     <div class="col-12">
         <div class="card" id="customer-table">
             <div class="card-header">
-                <h3 class="card-title" style="font-size:0.9rem;font-weight:600;">Data Pelanggan</h3>
+                <h3 class="card-title" style="font-size:0.95rem;font-weight:600;">Data Pelanggan</h3>
             </div>
             <div class="card-body" style="padding:0;">
                 <?php if (!empty($customers)): ?>
@@ -147,7 +183,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Status Order Pie Chart
+    // Status Order Doughnut Chart
     var statusCtx = document.getElementById('statusChart');
     if (statusCtx) {
         new Chart(statusCtx, {

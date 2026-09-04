@@ -1,13 +1,15 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar sidebar-dark-primary elevation-1">
     <a href="<?php echo base_url(); ?>" class="brand-link">
-        <img src="<?php echo base_url('assets/images/logo.png'); ?>" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">
-            <?php echo html_escape($this->settings_lib->item('site.subtitle')); ?>
-        </span>
+        <img src="<?php echo base_url('assets/images/logo-transparent.png'); ?>" class="brand-image">
+        <div class="brand-text">
+            <span>FASHIONER</span>
+            <small class="brand-subtitle">Fashion Management System</small>
+        </div>
     </a>
 
     <div class="sidebar">
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <?php $userDisplayName = isset($current_user->display_name) && !empty($current_user->display_name) ? $current_user->display_name : ($this->settings_lib->item('auth.use_usernames') ? $current_user->username : $current_user->email); ?>
+        <div class="user-panel">
             <div class="image">
                 <img src="<?php echo base_url('assets/images/anonym.png'); ?>" class="img-circle elevation-2">
             </div>

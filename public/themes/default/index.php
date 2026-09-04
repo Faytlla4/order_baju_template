@@ -30,11 +30,12 @@
     		'plugins/sweetalert2/sweetalert2.min.css',
     		'css/adminlte.min.css',
     	]);
-        if ($is_fashioner) {
-            Assets::add_css('css/fashioner-home.css');
-        }
     	echo Assets::css();
     ?>
+
+    <?php if ($is_fashioner): ?>
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-home.css?v=2'); ?>">
+    <?php endif; ?>
 
     <script type="text/javascript" async>
     var run_title_text = " <?=$title_text?> ";
@@ -61,7 +62,7 @@
         align-items: center;
         justify-content: center;
         background: #F8F5EF;
-        transition: opacity 0.35s ease, visibility 0.35s ease;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
         pointer-events: none;
     }
     .f-transition.f-loaded {
@@ -76,8 +77,8 @@
     .f-thread {
         position: absolute;
         height: 2px;
-        background: linear-gradient(90deg, transparent 0%, #403A34 30%, #403A34 70%, transparent 100%);
-        opacity: 0.5;
+        background: linear-gradient(90deg, transparent 0%, #C8A96B 30%, #C8A96B 70%, transparent 100%);
+        opacity: 0.25;
     }
     .f-thread-1 { top: 25%; width: 35%; left: -35%; animation: f-thread-move 4s linear infinite; }
     .f-thread-2 { top: 40%; width: 30%; left: -30%; animation: f-thread-move 4.5s linear 0.8s infinite; }
@@ -128,8 +129,6 @@
     <div class="wrapper">
         <?php if ($is_fashioner): ?>
             <?php echo theme_view('home_header'); ?>
-            <?php echo Template::message(); ?>
-            <?php echo isset($content) ? $content : Template::content(); ?>
             <?php echo theme_view('home_hero'); ?>
         <?php else: ?>
             <?php echo theme_view('header'); ?>
@@ -159,13 +158,21 @@
 
     <?php if ($is_fashioner): ?>
     <script>
-    window.addEventListener('load', function() {
+    (function() {
         var t = document.getElementById('f-transition');
-        if (t) {
-            setTimeout(function() { t.classList.add('f-loaded'); }, 300);
-            setTimeout(function() { t.remove(); }, 700);
+        if (!t) return;
+        function dismiss() {
+            t.classList.add('f-loaded');
+            setTimeout(function() { t.remove(); }, 300);
         }
-    });
+        if (document.readyState === 'complete') {
+            setTimeout(dismiss, 200);
+        } else {
+            window.addEventListener('load', function() { setTimeout(dismiss, 200); });
+        }
+        // Safety: force-remove after 2s max even if load event never fires
+        setTimeout(function() { if (t && t.parentNode) t.remove(); }, 2000);
+    })();
     </script>
     <?php endif; ?>
 </body>
