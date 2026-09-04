@@ -40,7 +40,7 @@ $id = isset($master_ukuran->id) ? $master_ukuran->id : '';
             <div class="card-footer">
                 <input type='submit' name='save' class='btn btn-primary' value="<?php echo lang('master_ukuran_action_edit'); ?>" />
                 <?php echo lang('bf_or'); ?>
-                <?php echo anchor(SITE_AREA . '/master/master_ukuran', lang('master_ukuran_cancel'), 'class="btn btn-warning"'); ?>
+                <?php echo anchor(SITE_AREA . '/master/ukuran', lang('master_ukuran_cancel'), 'class="btn btn-warning"'); ?>
 
                 <?php if ($this->auth->has_permission('Master_ukuran.Master.Delete')) : ?>
                     <?php echo lang('bf_or'); ?>

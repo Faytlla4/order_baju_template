@@ -40,7 +40,7 @@ $id = isset($master_warna->id) ? $master_warna->id : '';
             <div class="card-footer">
                 <input type='submit' name='save' class='btn btn-primary' value="<?php echo lang('master_warna_action_edit'); ?>" />
                 <?php echo lang('bf_or'); ?>
-                <?php echo anchor(SITE_AREA . '/master/master_warna', lang('master_warna_cancel'), 'class="btn btn-warning"'); ?>
+                <?php echo anchor(SITE_AREA . '/master/warna', lang('master_warna_cancel'), 'class="btn btn-warning"'); ?>
 
                 <?php if ($this->auth->has_permission('Master_warna.Master.Delete')) : ?>
                     <?php echo lang('bf_or'); ?>

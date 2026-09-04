@@ -1,6 +1,6 @@
 $('#master_warna_table').bfDataTable({
     url: site_url + 'admin/master/warna/get_data',
-    targetUrl: site_url + 'admin/master/warna/edit/',
+    targetUrl: site_url + 'admin/master/warna/edit',
     filterCols: [2],
     sortCols: { created_on: 'desc', id: 'desc' },
     lengthMenu: [10, 100, 1000],

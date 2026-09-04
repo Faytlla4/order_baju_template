@@ -110,6 +110,7 @@ Assets::add_js($inline_js, 'inline');
             'tgl_akhir'   => $tgl_akhir,
             'show_pdf'    => ($page_type === 'pdf'),
             'show_excel'  => ($page_type === 'excel'),
+            'export_url'  => $export_url . '?tgl_mulai=' . rawurlencode($tgl_mulai) . '&tgl_akhir=' . rawurlencode($tgl_akhir),
         ), true); ?>
     </div>
 </div>

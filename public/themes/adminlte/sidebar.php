@@ -18,6 +18,7 @@
                 	$userDisplayName = isset($current_user->display_name) && !empty($current_user->display_name) ? $current_user->display_name : ($this->settings_lib->item('auth.use_usernames') ? $current_user->username : $current_user->email);
                 ?>
                 <a href="#" class="d-block"><?php echo $userDisplayName; ?></a>
+                <small>Administrator</small>
             </div>
         </div>
 
@@ -34,7 +35,11 @@
 
         <nav class="mt-2">
             <?php
-            $navMenus = Contextslte::render_menu('text', 'normal');
+            if (!class_exists('Contexts', false)) {
+                require_once APPPATH . '../bonfire/modules/ui/libraries/Contexts.php';
+                new Contexts();
+            }
+            $navMenus = Contexts::render_menu('text', 'normal');
 
             // Menu SK Tidak Mampu sementara disembunyikan dari navigasi.
             // Source code dan fitur tetap dipertahankan.
@@ -92,8 +97,8 @@
 
             $contentSection = "<li class='{$contentParentClass}'>\n"
                 . "<a href='" . site_url(SITE_AREA . '/content') . "' class='nav-link{$contentParentLink}'>\n"
-                . "<i class='nav-icon fas fa-tachometer-alt'></i>\n"
-                . "<p>\nContent\n<i class='right fas fa-angle-left'></i>\n</p>\n"
+                . "<i class='nav-icon fas fa-tshirt'></i>\n"
+                . "<p>\nOrder Baju\n<i class='right fas fa-angle-left'></i>\n</p>\n"
                 . "</a>\n"
                 . "<ul class='nav nav-treeview'>\n"
                 . "<li class='nav-item'>\n"
@@ -176,14 +181,14 @@
             // --- Section LAPORAN TRANSAKSI (dropdown) ---
             $isPdf   = ($this->uri->segment(2) == 'reports' && $this->uri->segment(3) == 'report_pdf');
             $isExcel = ($this->uri->segment(2) == 'reports' && $this->uri->segment(3) == 'report_excel');
-            $isLaporan = $isPdf || $isExcel;
+            $isLaporan = $isPdf || $isExcel || in_array($this->uri->segment(2), array('laporan-dokumen', 'laporan-database', 'laporan-history'), true);
             $laporanParentClass = $isLaporan ? "nav-item menu-is-opening menu-open" : "nav-item";
             $laporanParentLink  = $isLaporan ? ' active' : '';
             $laporanPdfActive   = $isPdf ? ' active' : '';
             $laporanExcelActive = $isExcel ? ' active' : '';
 
             $laporanSection = "<li class='{$laporanParentClass}'>\n"
-                . "<a href='#' class='nav-link{$laporanParentLink}'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/reports') . "' class='nav-link{$laporanParentLink}'>\n"
                 . "<i class='nav-icon fas fa-file-invoice'></i>\n"
                 . "<p>\nLaporan Transaksi\n<i class='right fas fa-angle-left'></i>\n</p>\n"
                 . "</a>\n"
@@ -201,14 +206,9 @@
                 . "</ul>\n"
                 . "</li>\n";
 
-            $pos2 = strrpos($navMenus, '</ul>');
-            if ($pos2 !== false) {
-                $navMenus = substr($navMenus, 0, $pos2) . $laporanSection . substr($navMenus, $pos2);
-            }
-
             // --- Section BACKUP (dropdown) ---
             $isBackup       = ($this->uri->segment(2) == 'backup');
-            $isBackupDb     = ($this->uri->segment(2) == 'backup' && $this->uri->segment(3) == 'database');
+            $isBackupDb     = ($this->uri->segment(2) == 'backup' && in_array($this->uri->segment(3), array('database', 'database-page'), true));
             $isBackupPerId  = ($this->uri->segment(2) == 'backup' && $this->uri->segment(3) == 'per_id');
             $isBackupPerFld = ($this->uri->segment(2) == 'backup' && $this->uri->segment(3) == 'per_folder');
             $backupParentClass = $isBackup ? "nav-item menu-is-opening menu-open" : "nav-item";
@@ -234,17 +234,12 @@
                 . "</a>\n"
                 . "</li>\n"
                 . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/backup/database') . "' class='nav-link{$backupDbActive}'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/backup/database-page') . "' class='nav-link{$backupDbActive}'>\n"
                 . "<i class='nav-icon far fa-circle'></i>\n<p>Backup Database</p>\n"
                 . "</a>\n"
                 . "</li>\n"
                 . "</ul>\n"
                 . "</li>\n";
-
-            $pos3 = strrpos($navMenus, '</ul>');
-            if ($pos3 !== false) {
-                $navMenus = substr($navMenus, 0, $pos3) . $backupSection . substr($navMenus, $pos3);
-            }
 
             // --- Section LAPORAN DOKUMEN (dropdown) ---
             $isLapDoc    = ($this->uri->segment(2) == 'laporan-dokumen');
@@ -270,11 +265,6 @@
                 . "</ul>\n"
                 . "</li>\n";
 
-            $pos4 = strrpos($navMenus, '</ul>');
-            if ($pos4 !== false) {
-                $navMenus = substr($navMenus, 0, $pos4) . $laporanDokumenSection . substr($navMenus, $pos4);
-            }
-
             // --- Section LAPORAN DATABASE (dropdown) ---
             $isLapDb    = ($this->uri->segment(2) == 'laporan-database');
             $lapDbParentClass = $isLapDb ? "nav-item menu-is-opening menu-open" : "nav-item";
@@ -299,11 +289,6 @@
                 . "</ul>\n"
                 . "</li>\n";
 
-            $pos5 = strrpos($navMenus, '</ul>');
-            if ($pos5 !== false) {
-                $navMenus = substr($navMenus, 0, $pos5) . $laporanDatabaseSection . substr($navMenus, $pos5);
-            }
-
             // --- Section RIWAYAT CETAK LAPORAN (standalone) ---
             $isRiwayat = ($this->uri->segment(2) == 'laporan-history');
             $riwayatClass = $isRiwayat ? ' active' : '';
@@ -315,9 +300,21 @@
                 . "</a>\n"
                 . "</li>\n";
 
-            $pos6 = strrpos($navMenus, '</ul>');
-            if ($pos6 !== false) {
-                $navMenus = substr($navMenus, 0, $pos6) . $riwayatSection . substr($navMenus, $pos6);
+            // Keep every report destination under one compact Laporan accordion.
+            $laporanSection = str_replace(
+                "</ul>\n</li>\n",
+                $laporanDokumenSection . $laporanDatabaseSection . $riwayatSection . "</ul>\n</li>\n",
+                $laporanSection
+            );
+            $pos2 = strrpos($navMenus, '</ul>');
+            if ($pos2 !== false) {
+                $navMenus = substr($navMenus, 0, $pos2) . $laporanSection . substr($navMenus, $pos2);
+            }
+
+            // Keep Backup after the complete Laporan group, matching the sidebar order.
+            $pos3 = strrpos($navMenus, '</ul>');
+            if ($pos3 !== false) {
+                $navMenus = substr($navMenus, 0, $pos3) . $backupSection . substr($navMenus, $pos3);
             }
 
             // --- Inject Reports and Developer as sub-items under Settings ---
@@ -483,6 +480,82 @@
                         // Insert Reports dan Developer sebelum penutup </ul> dari treeview settings
                         $navMenus = substr($navMenus, 0, $insertPos) . $reportsGroup . $developerGroup . substr($navMenus, $insertPos);
                     }
+                }
+            }
+
+            // Keep the generated permission-aware Settings menu at the bottom,
+            // after the custom main menu sections.
+            $settingsBlock = '';
+            $settingsUrl = site_url(SITE_AREA . '/settings');
+            $settingsLinkPos = strpos($navMenus, "href='" . $settingsUrl . "'");
+            if ($settingsLinkPos !== false) {
+                $settingsOpenPos = strrpos(substr($navMenus, 0, $settingsLinkPos), '<li');
+                if ($settingsOpenPos !== false) {
+                    $depth = 0;
+                    $scanPos = $settingsOpenPos;
+                    $navLength = strlen($navMenus);
+                    $settingsEndPos = false;
+                    while ($scanPos < $navLength) {
+                        $nextOpen = strpos($navMenus, '<li', $scanPos);
+                        $nextClose = strpos($navMenus, '</li>', $scanPos);
+                        if ($nextClose === false) {
+                            break;
+                        }
+                        if ($nextOpen !== false && $nextOpen < $nextClose) {
+                            $depth++;
+                            $scanPos = $nextOpen + 3;
+                        } else {
+                            $depth--;
+                            $scanPos = $nextClose + 5;
+                            if ($depth === 0) {
+                                $settingsEndPos = $scanPos;
+                                break;
+                            }
+                        }
+                    }
+                    if ($settingsEndPos !== false) {
+                        $settingsBlock = substr($navMenus, $settingsOpenPos, $settingsEndPos - $settingsOpenPos);
+                        $navMenus = substr($navMenus, 0, $settingsOpenPos) . substr($navMenus, $settingsEndPos);
+
+                        // Rebuild only the Settings parent to prevent generated styles from
+                        // moving its icon into the SISTEM heading. Keep its permission-aware submenu.
+                        $settingsTreeStart = strpos($settingsBlock, '<ul');
+                        $settingsTreeEnd = strrpos($settingsBlock, '</ul>');
+                        if ($settingsTreeStart !== false && $settingsTreeEnd !== false) {
+                            $settingsTree = substr($settingsBlock, $settingsTreeStart, $settingsTreeEnd - $settingsTreeStart + 5);
+                            $settingsBlock = "<li class='nav-item settings-menu-item'>\n"
+                                . "<a href='" . $settingsUrl . "' class='nav-link" . ($isSettings ? ' active' : '') . "'>\n"
+                                . "<i class='nav-icon fas fa-cog'></i>\n"
+                                . "<p>Settings<i class='right fas fa-angle-left'></i></p>\n"
+                                . "</a>\n"
+                                . $settingsTree
+                                . "\n</li>\n";
+                        }
+                    }
+                }
+            }
+
+            // Add the two visual section labels used by the reference design.
+            $firstUlEnd = strpos($navMenus, '>');
+            if ($firstUlEnd !== false) {
+                $dashboardActive = ($this->uri->segment(2) === '') ? ' active' : '';
+                $dashboardSection = "<li class='nav-item'>\n"
+                    . "<a href='" . site_url(SITE_AREA) . "' class='nav-link{$dashboardActive}'>\n"
+                    . "<i class='nav-icon fas fa-th-large'></i>\n<p>Dashboard</p>\n"
+                    . "</a>\n"
+                    . "</li>\n";
+                $navMenus = substr($navMenus, 0, $firstUlEnd + 1)
+                    . "\n<li class='nav-header'>MENU UTAMA</li>\n"
+                    . $dashboardSection
+                    . substr($navMenus, $firstUlEnd + 1);
+            }
+            if ($settingsBlock !== '') {
+                $lastUlClose = strrpos($navMenus, '</ul>');
+                if ($lastUlClose !== false) {
+                    $navMenus = substr($navMenus, 0, $lastUlClose)
+                        . "\n<li class='nav-header system-nav-header'>SISTEM</li>\n"
+                        . $settingsBlock
+                        . substr($navMenus, $lastUlClose);
                 }
             }
 

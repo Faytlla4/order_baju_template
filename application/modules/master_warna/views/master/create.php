@@ -55,7 +55,7 @@
             <div class="card-footer">
                 <button type="submit" name="save" class="btn btn-primary"><?php echo lang('master_warna_action_create'); ?></button>
                 <?php echo lang('bf_or'); ?>
-                <?php echo anchor(SITE_AREA . '/master/master_warna', lang('master_warna_cancel'), 'class="btn btn-warning"'); ?>
+                <?php echo anchor(SITE_AREA . '/master/warna', lang('master_warna_cancel'), 'class="btn btn-warning"'); ?>
             </div>
             <?php echo form_close(); ?>
         </div>

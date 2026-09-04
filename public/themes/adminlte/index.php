@@ -29,7 +29,7 @@
     ?>
 
     <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-admin.css?v=6'); ?>">
-    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-dashboard.css?v=8'); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-dashboard.css?v=18'); ?>">
 
     <script type="text/javascript" async>
     var run_title_text = " <?=$title_text?> ";
@@ -162,32 +162,34 @@
     ?>
     <script>
     // Sidebar treeview — fully custom (does NOT use AdminLTE's plugin, so there
-    // is zero conflict). The toggle triggers are tagged `data-fdb-toggle="treeview"`
-    // in sidebar.php. AdminLTE's selector `[data-widget="treeview"]` no longer
-    // matches anything, so the built-in plugin is bypassed entirely.
+    // is zero conflict). Any menu link with a sibling treeview becomes a toggle;
+    // links without children retain their normal navigation behavior.
     $(function() {
         var $sidebar = $('.main-sidebar');
         if (!$sidebar.length) { return; }
 
-        // Auto-open the parent of any currently active submenu item.
+        // Auto-open every ancestor of any currently active submenu item.
         $sidebar.find('.nav-treeview .nav-link.active').each(function() {
-            var $parent = $(this).closest('.nav-item').parent('.nav-treeview').closest('.nav-item');
-            if ($parent.length) {
+            var $parent = $(this).closest('.nav-treeview').closest('.nav-item');
+            while ($parent.length) {
+                var $sub = $parent.children('.nav-treeview').first();
                 $parent.addClass('menu-open');
                 $parent.children('.nav-link').addClass('active');
+                if ($sub.length) { $sub.show(); }
+                $parent = $parent.parent('.nav-treeview').closest('.nav-item');
             }
         });
 
         // Click handler — bound directly on each toggle, NOT delegated through
         // document, so AdminLTE or any other plugin can't intercept it.
-        $sidebar.find('[data-fdb-toggle="treeview"]').each(function() {
+        $sidebar.find('.nav-item > .nav-link').each(function() {
             var $trigger = $(this);
             $trigger.on('click.fdbTreeview', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
                 var $parent = $trigger.closest('.nav-item');
                 var $sub = $parent.children('.nav-treeview').first();
                 if (!$sub.length) { return; }
+                e.preventDefault();
+                e.stopPropagation();
                 if ($parent.hasClass('menu-open')) {
                     $sub.stop(true, true).slideUp(180, function() {
                         $sub.css('display', '');
@@ -205,7 +207,7 @@
                             });
                         }
                         $sib.removeClass('menu-open');
-                        $sib.children('[data-fdb-toggle="treeview"]').removeClass('active');
+                        $sib.children('.nav-link').removeClass('active');
                     });
                     $sub.stop(true, true).slideDown(180);
                     $parent.addClass('menu-open');

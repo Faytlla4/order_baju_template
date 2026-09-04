@@ -69,7 +69,7 @@
             <div class="card-footer">
                 <button type="submit" name="save" class="btn btn-primary"><?php echo lang('master_jenis_baju_action_create'); ?></button>
                 <?php echo lang('bf_or'); ?>
-                <?php echo anchor(SITE_AREA . '/master/master_jenis_baju', lang('master_jenis_baju_cancel'), 'class="btn btn-warning"'); ?>
+                <?php echo anchor(SITE_AREA . '/master/jenis_baju', lang('master_jenis_baju_cancel'), 'class="btn btn-warning"'); ?>
             </div>
             <?php echo form_close(); ?>
         </div>

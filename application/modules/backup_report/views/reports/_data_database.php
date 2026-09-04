@@ -52,12 +52,12 @@ if (!empty($tgl_mulai) && !empty($tgl_akhir)) {
     </div>
     <div class="card-footer text-right">
         <?php if ($show_pdf) : ?>
-        <a href="javascript:void(0)" id="btn-pdf" class="btn btn-danger">
+        <a href="<?php echo html_escape($export_url ?? site_url(SITE_AREA . '/laporan-database/cetak-pdf')); ?>" id="btn-pdf" class="btn btn-danger">
             <i class="fas fa-file-pdf"></i> Cetak PDF
         </a>
         <?php endif; ?>
         <?php if ($show_excel) : ?>
-        <a href="javascript:void(0)" id="btn-excel" class="btn btn-success">
+        <a href="<?php echo html_escape($export_url ?? site_url(SITE_AREA . '/laporan-database/cetak-excel')); ?>" id="btn-excel" class="btn btn-success">
             <i class="fas fa-file-excel"></i> Cetak Excel
         </a>
         <?php endif; ?>

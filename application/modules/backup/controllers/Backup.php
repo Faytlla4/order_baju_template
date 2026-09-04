@@ -724,7 +724,7 @@ class Backup extends App_Controller
 	public function database()
 	{
 		if ($this->input->method() !== 'post') {
-			redirect(SITE_AREA . '/backup/database');
+			redirect(SITE_AREA . '/backup/database-page');
 			return;
 		}
 
@@ -739,7 +739,7 @@ class Backup extends App_Controller
 				exit;
 			}
 			Template::set_message($msg, 'error');
-			redirect(SITE_AREA . '/backup/database');
+			redirect(SITE_AREA . '/backup/database-page');
 			return;
 		}
 
@@ -752,7 +752,7 @@ class Backup extends App_Controller
 				exit;
 			}
 			Template::set_message($msg, 'error');
-			redirect(SITE_AREA . '/backup/database');
+			redirect(SITE_AREA . '/backup/database-page');
 			return;
 		}
 
@@ -764,7 +764,7 @@ class Backup extends App_Controller
 				exit;
 			}
 			Template::set_message($msg, 'error');
-			redirect(SITE_AREA . '/backup/database');
+			redirect(SITE_AREA . '/backup/database-page');
 			return;
 		}
 
@@ -777,7 +777,7 @@ class Backup extends App_Controller
 				exit;
 			}
 			Template::set_message($msg, 'error');
-			redirect(SITE_AREA . '/backup/database');
+			redirect(SITE_AREA . '/backup/database-page');
 			return;
 		}
 
@@ -790,7 +790,7 @@ class Backup extends App_Controller
 				exit;
 			}
 			Template::set_message($msg, 'error');
-			redirect(SITE_AREA . '/backup/database');
+			redirect(SITE_AREA . '/backup/database-page');
 			return;
 		}
 
@@ -845,7 +845,7 @@ class Backup extends App_Controller
 				exit;
 			}
 			Template::set_message($msg, 'error');
-			redirect(SITE_AREA . '/backup/database');
+			redirect(SITE_AREA . '/backup/database-page');
 			return;
 		}
 
@@ -895,7 +895,7 @@ class Backup extends App_Controller
 				exit;
 			}
 			Template::set_message($msg, 'error');
-			redirect(SITE_AREA . '/backup/database');
+			redirect(SITE_AREA . '/backup/database-page');
 			return;
 		}
 
@@ -920,7 +920,7 @@ class Backup extends App_Controller
 					exit;
 				}
 				Template::set_message($msg, 'error');
-				redirect(SITE_AREA . '/backup/database');
+				redirect(SITE_AREA . '/backup/database-page');
 				return;
 			}
 		}
@@ -935,7 +935,7 @@ class Backup extends App_Controller
 				exit;
 			}
 			Template::set_message($msg, 'error');
-			redirect(SITE_AREA . '/backup/database');
+			redirect(SITE_AREA . '/backup/database-page');
 			return;
 		}
 		$zip->addFile($tmpSql, 'database_backup.sql');
@@ -949,7 +949,7 @@ class Backup extends App_Controller
 				exit;
 			}
 			Template::set_message($msg, 'error');
-			redirect(SITE_AREA . '/backup/database');
+			redirect(SITE_AREA . '/backup/database-page');
 			return;
 		}
 
@@ -962,7 +962,7 @@ class Backup extends App_Controller
 				exit;
 			}
 			Template::set_message($msg, 'error');
-			redirect(SITE_AREA . '/backup/database');
+			redirect(SITE_AREA . '/backup/database-page');
 			return;
 		}
 
@@ -976,7 +976,7 @@ class Backup extends App_Controller
 				exit;
 			}
 			Template::set_message($msg, 'error');
-			redirect(SITE_AREA . '/backup/database');
+			redirect(SITE_AREA . '/backup/database-page');
 			return;
 		}
 
@@ -999,7 +999,7 @@ class Backup extends App_Controller
 			exit;
 		}
 		Template::set_message('Backup database berhasil dibuat.', 'success');
-		redirect(SITE_AREA . '/backup/database');
+		redirect(SITE_AREA . '/backup/database-page');
 		return;
 	}
 

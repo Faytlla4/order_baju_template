@@ -65,7 +65,7 @@ $id = isset($master_jenis_baju->id) ? $master_jenis_baju->id : '';
             <div class="card-footer">
                 <input type='submit' name='save' class='btn btn-primary' value="<?php echo lang('master_jenis_baju_action_edit'); ?>" />
                 <?php echo lang('bf_or'); ?>
-                <?php echo anchor(SITE_AREA . '/master/master_jenis_baju', lang('master_jenis_baju_cancel'), 'class="btn btn-warning"'); ?>
+                <?php echo anchor(SITE_AREA . '/master/jenis_baju', lang('master_jenis_baju_cancel'), 'class="btn btn-warning"'); ?>
 
                 <?php if ($this->auth->has_permission('Master_jenis_baju.Master.Delete')) : ?>
                     <?php echo lang('bf_or'); ?>

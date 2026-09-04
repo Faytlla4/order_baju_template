@@ -1,6 +1,6 @@
 $('#master_ukuran_table').bfDataTable({
     url: site_url + 'admin/master/ukuran/get_data',
-    targetUrl: site_url + 'admin/master/ukuran/edit/',
+    targetUrl: site_url + 'admin/master/ukuran/edit',
     filterCols: [2],
     sortCols: { created_on: 'desc', id: 'desc' },
     lengthMenu: [10, 100, 1000],

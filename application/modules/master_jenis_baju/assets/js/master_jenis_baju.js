@@ -1,6 +1,6 @@
 $('#master_jenis_baju_table').bfDataTable({
     url: site_url + 'admin/master/jenis_baju/get_data',
-    targetUrl: site_url + 'admin/master/jenis_baju/edit/',
+    targetUrl: site_url + 'admin/master/jenis_baju/edit',
     filterCols: [0, 1, 2],
     sortCols: { created_on: 'desc', id: 'desc' },
     lengthMenu: [10, 100, 1000],

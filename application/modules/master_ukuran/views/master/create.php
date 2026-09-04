@@ -55,7 +55,7 @@
             <div class="card-footer">
                 <button type="submit" name="save" class="btn btn-primary"><?php echo lang('master_ukuran_action_create'); ?></button>
                 <?php echo lang('bf_or'); ?>
-                <?php echo anchor(SITE_AREA . '/master/master_ukuran', lang('master_ukuran_cancel'), 'class="btn btn-warning"'); ?>
+                <?php echo anchor(SITE_AREA . '/master/ukuran', lang('master_ukuran_cancel'), 'class="btn btn-warning"'); ?>
             </div>
             <?php echo form_close(); ?>
         </div>
