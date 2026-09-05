@@ -211,7 +211,7 @@ $trend_pct = '+12%';
                     <span class="fdb-eyebrow"><span class="fdb-eyebrow-num">06</span> NASABAH</span>
                     <h3 class="fdb-card-title">Data Pelanggan</h3>
                 </div>
-                <a class="fdb-link" href="<?php echo site_url(SITE_AREA . '/content/master'); ?>">Lihat semua <i class="fas fa-arrow-right"></i></a>
+                <a class="fdb-link" href="<?php echo site_url(SITE_AREA . '/content/order_baju'); ?>">Lihat semua <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="fdb-card-body fdb-card-body--flush">
                 <?php if (!empty($customers)): ?>
