@@ -234,7 +234,7 @@
                 . "</a>\n"
                 . "</li>\n"
                 . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/backup/database-page') . "' class='nav-link{$backupDbActive}'>\n"
+                . "<a href='" . site_url(SITE_AREA . '/backup/database') . "' class='nav-link{$backupDbActive}'>\n"
                 . "<i class='nav-icon far fa-circle'></i>\n<p>Backup Database</p>\n"
                 . "</a>\n"
                 . "</li>\n"
