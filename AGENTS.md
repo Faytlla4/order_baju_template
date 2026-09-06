@@ -20,6 +20,7 @@ CodeIgniter 3 + Bonfire HMVC garment-order system ("SI-Reklame", folder name `or
   - Root domain (e.g. `apktemplate.test`) → `RewriteBase /`
   - Subfolder (e.g. `localhost/order_baju_template/public/`) → `RewriteBase /order_baju_template/public/`
   - **Never push changes to `RewriteBase`** — it will break other developers' local setups.
+- **⚠️ Never `git add` files listed in `.gitignore`** — once a file is tracked by git, `.gitignore` has no effect. If accidentally added, use `git rm --cached <file>` to untrack. This prevents developer-specific configs (e.g. `.htaccess`, `.env`) from being pushed and overwriting teammates' local settings.
 
 ## Environment Setup
 
