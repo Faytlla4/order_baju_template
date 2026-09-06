@@ -29,7 +29,7 @@
     ?>
 
     <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-admin.css?v=8'); ?>">
-    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-dashboard.css?v=20'); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/fashioner-dashboard.css?v=21'); ?>">
 
     <script type="text/javascript" async>
     var run_title_text = " <?=$title_text?> ";

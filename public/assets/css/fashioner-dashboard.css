@@ -739,7 +739,7 @@
 
 /* Section labels (MENU UTAMA / SISTEM) */
 .nav-sidebar .nav-header {
-    color: #5C5048;
+    color: #5C5048 !important;
     font-size: 0.66rem;
     font-weight: 700;
     letter-spacing: 0.18em;
