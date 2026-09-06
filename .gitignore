@@ -88,6 +88,7 @@ sparks/*
 *.dump
 *.sqlite
 *.sqlite3
+public/.htaccess
 .env
 .env.*
 !*.env.example

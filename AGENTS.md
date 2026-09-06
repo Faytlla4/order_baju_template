@@ -16,6 +16,10 @@ CodeIgniter 3 + Bonfire HMVC garment-order system ("SI-Reklame", folder name `or
 - **Do not edit:** `bonfire/` (framework: core `bonfire/ci3/` + modules + `bonfire/migrations/`)
 - **Gitignore trap:** `application/modules/*` is gitignored; only the 11 known modules are whitelisted via `.gitignore:48-72`. If you create a new module, add a `!application/modules/<name>/` + `!application/modules/<name>/**` pair to `.gitignore` or it won't be tracked.
 - **Logs:** `application/logs/`
+- **⚠️ .htaccess RewriteBase conflict:** `public/.htaccess` is gitignored — each developer configures their own. The `RewriteBase` value depends on the local setup:
+  - Root domain (e.g. `apktemplate.test`) → `RewriteBase /`
+  - Subfolder (e.g. `localhost/order_baju_template/public/`) → `RewriteBase /order_baju_template/public/`
+  - **Never push changes to `RewriteBase`** — it will break other developers' local setups.
 
 ## Environment Setup
 
