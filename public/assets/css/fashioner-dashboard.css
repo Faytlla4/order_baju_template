@@ -738,6 +738,9 @@
 }
 
 /* Section labels (MENU UTAMA / SISTEM) */
+aside.main-sidebar .nav-header,
+aside.main-sidebar .sidebar .nav-header,
+aside.main-sidebar .sidebar .nav-sidebar .nav-header,
 .nav-sidebar .nav-header {
     color: #5C5048 !important;
     font-size: 0.66rem;
