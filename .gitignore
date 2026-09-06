@@ -68,6 +68,10 @@ application/modules/*
 !application/modules/sk_tidak_mampu/**
 !application/modules/transaksi/
 !application/modules/transaksi/**
+!application/modules/profil/
+!application/modules/profil/**
+!application/modules/pengaturan/
+!application/modules/pengaturan/**
 
 # Remove PHPStorm Project folders
 bonfire/.ideas

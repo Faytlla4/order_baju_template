@@ -549,16 +549,6 @@
                     . $dashboardSection
                     . substr($navMenus, $firstUlEnd + 1);
             }
-            if ($settingsBlock !== '') {
-                $lastUlClose = strrpos($navMenus, '</ul>');
-                if ($lastUlClose !== false) {
-                    $navMenus = substr($navMenus, 0, $lastUlClose)
-                        . "\n<li class='nav-header system-nav-header'>SISTEM</li>\n"
-                        . $settingsBlock
-                        . substr($navMenus, $lastUlClose);
-                }
-            }
-
             echo $navMenus;
             ?>
         </nav>
