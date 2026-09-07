@@ -300,15 +300,10 @@
                 . "</a>\n"
                 . "</li>\n";
 
-            // Keep every report destination under one compact Laporan accordion.
-            $laporanSection = str_replace(
-                "</ul>\n</li>\n",
-                $laporanDokumenSection . $laporanDatabaseSection . $riwayatSection . "</ul>\n</li>\n",
-                $laporanSection
-            );
+            // Add Laporan Dokumen, Laporan Database, and Riwayat as SEPARATE top-level menu items.
             $pos2 = strrpos($navMenus, '</ul>');
             if ($pos2 !== false) {
-                $navMenus = substr($navMenus, 0, $pos2) . $laporanSection . substr($navMenus, $pos2);
+                $navMenus = substr($navMenus, 0, $pos2) . $laporanSection . $laporanDokumenSection . $laporanDatabaseSection . $riwayatSection . substr($navMenus, $pos2);
             }
 
             // Keep Backup after the complete Laporan group, matching the sidebar order.
