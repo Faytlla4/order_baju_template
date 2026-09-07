@@ -1,5 +1,5 @@
 /*
- * Custom Theme Override — SI-Reklame
+ * Custom Theme Override — FASHIONER
  * Warm, clean, elegant palette
  * Loaded AFTER adminlte.min.css to override defaults.
  */
@@ -309,10 +309,11 @@ input[type="datetime-local"]:focus {
    ============================================================ */
 
 /* Primary buttons */
-.btn-primary {
+.btn-primary,
+.btn-primary.btn-flat {
     background-color: var(--custom-primary) !important;
     border-color: var(--custom-primary) !important;
-    color: #fff !important;
+    color: #2A2520 !important;
     border-radius: 6px !important;
     font-weight: 600;
 }
@@ -332,12 +333,13 @@ input[type="datetime-local"]:focus {
 
 /* Secondary buttons */
 .btn-secondary,
-.btn-default {
+.btn-secondary.btn-flat,
+.btn-default,
+.btn-default.btn-flat {
     background-color: var(--custom-secondary) !important;
     border-color: var(--custom-secondary) !important;
-    color: #fff !important;
+    color: #2A2520 !important;
     border-radius: 6px !important;
-    font-weight: 600;
 }
 
 /* Success buttons (keep green for status) */
@@ -352,6 +354,7 @@ input[type="datetime-local"]:focus {
     background-color: #c0392b !important;
     border-color: #c0392b !important;
     border-radius: 6px !important;
+    color: #fff !important;
 }
 
 /* Info buttons */
@@ -359,6 +362,7 @@ input[type="datetime-local"]:focus {
     background-color: #7a9bb5 !important;
     border-color: #7a9bb5 !important;
     border-radius: 6px !important;
+    color: #fff !important;
 }
 
 /* Warning buttons */
@@ -582,7 +586,10 @@ a {
    ============================================================ */
 #sub-menu .breadcrumb,
 #sub-menu a {
-    color: var(--custom-muted) !important;
+    color: #fff !important;
+}
+#sub-menu a:hover {
+    color: rgba(255,255,255,0.8) !important;
 }
 
 /* ============================================================
