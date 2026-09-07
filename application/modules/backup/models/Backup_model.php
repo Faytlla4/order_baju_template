@@ -5,11 +5,13 @@ class Backup_model extends CI_Model
 	private $doc_history_table = 'backup_document_history';
 	private $db_history_table = 'backup_database_history';
 	private $upload_dir;
+	private $document_root;
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->upload_dir = APPPATH . 'uploads' . DIRECTORY_SEPARATOR . 'backup' . DIRECTORY_SEPARATOR;
+		$this->document_root = FCPATH . 'assets' . DIRECTORY_SEPARATOR . 'dokumen' . DIRECTORY_SEPARATOR;
 		if (!is_dir($this->upload_dir)) {
 			mkdir($this->upload_dir, 0755, true);
 		}
@@ -219,8 +221,9 @@ class Backup_model extends CI_Model
 	/**
 	 * Ambil daftar transaksi yang memiliki dokumen, dikelompokkan per ID.
 	 *
-	 * SATU ID = SATU BARIS. Jumlah dokumen dihitung dari kolom `dokumen`
-	 * (JSON array nama file) — diambil dari struktur & data sebenarnya.
+	 * SATU ID = SATU BARIS. Folder fisik menjadi sumber utama daftar file.
+	 * JSON tetap menjadi fallback untuk transaksi lama yang belum mempunyai
+	 * folder fisik pada struktur dokumen_transaksi/[id].
 	 *
 	 * @param string $tgl_mulai YYYY-MM-DD (opsional)
 	 * @param string $tgl_akhir YYYY-MM-DD (opsional)
@@ -232,10 +235,7 @@ class Backup_model extends CI_Model
 				to_char(created_on, 'DD-MM-YYYY HH24:MI') AS created_on_str,
 				dokumen
 			FROM transaksi
-			WHERE dokumen IS NOT NULL
-			  AND dokumen <> ''
-			  AND dokumen <> '[]'
-			  AND dokumen <> '[[]]'";
+			WHERE 1 = 1";
 
 		$params = array();
 		$conditions = array();
@@ -261,17 +261,9 @@ class Backup_model extends CI_Model
 
 		$out = array();
 		foreach ($rows as $r) {
-			$files = json_decode($r->dokumen, true);
-			if (!is_array($files)) {
-				continue;
-			}
-			$clean = array();
-			foreach ($files as $f) {
-				$f = basename(trim((string) $f));
-				if ($f === '' || $f === 'null') {
-					continue;
-				}
-				$clean[] = $f;
+			$clean = $this->get_physical_transaction_files((int) $r->id);
+			if (empty($clean)) {
+				$clean = $this->clean_json_files($r->dokumen);
 			}
 			if (empty($clean)) {
 				continue;
@@ -317,16 +309,9 @@ class Backup_model extends CI_Model
 		$rows = $this->db->get('transaksi')->result();
 
 		foreach ($rows as $row) {
-			$files = json_decode($row->dokumen, true);
-			$clean = array();
-			if (is_array($files)) {
-				foreach ($files as $f) {
-					$f = basename(trim((string) $f));
-					if ($f === '' || $f === 'null') {
-						continue;
-					}
-					$clean[] = $f;
-				}
+			$clean = $this->get_physical_transaction_files((int) $row->id);
+			if (empty($clean)) {
+				$clean = $this->clean_json_files($row->dokumen);
 			}
 			if (!empty($clean)) {
 				$out[(int) $row->id] = $clean;
@@ -334,6 +319,128 @@ class Backup_model extends CI_Model
 		}
 
 		return $out;
+	}
+
+	/**
+	 * Ambil seluruh file terbaru dari folder transaksi fisik, rekursif.
+	 * Nilai yang dikembalikan adalah path relatif terhadap folder ID.
+	 */
+	public function get_physical_transaction_files($id)
+	{
+		$dir = $this->document_root . 'dokumen_transaksi' . DIRECTORY_SEPARATOR . (int) $id;
+		if ((int) $id <= 0 || !is_dir($dir)) {
+			return array();
+		}
+
+		$files = array();
+		$this->collect_files_recursive($dir, '', $files);
+		sort($files, SORT_NATURAL | SORT_FLAG_CASE);
+		return $files;
+	}
+
+	private function collect_files_recursive($dir, $relative, &$files)
+	{
+		$items = @scandir($dir);
+		if ($items === false) {
+			return;
+		}
+		foreach ($items as $item) {
+			if ($item === '.' || $item === '..') {
+				continue;
+			}
+			$full = $dir . DIRECTORY_SEPARATOR . $item;
+			$child = ($relative === '') ? $item : $relative . '/' . $item;
+			if (is_dir($full)) {
+				$this->collect_files_recursive($full, $child, $files);
+			} elseif (is_file($full)) {
+				$files[] = $child;
+			}
+		}
+	}
+
+	private function clean_json_files($json)
+	{
+		$files = json_decode((string) $json, true);
+		$clean = array();
+		if (!is_array($files)) {
+			return $clean;
+		}
+		foreach ($files as $file) {
+			$file = basename(trim((string) $file));
+			if ($file !== '' && $file !== 'null') {
+				$clean[] = $file;
+			}
+		}
+		return array_values(array_unique($clean));
+	}
+
+	/**
+	 * Scan folder dokumen utama langsung dari file system.
+	 *
+	 * Semua folder yang berada satu level di bawah public/assets/dokumen/
+	 * akan ditampilkan, termasuk folder yang dibuat manual melalui File Explorer.
+	 *
+	 * @return array keyed by nama folder
+	 */
+	public function get_document_folders()
+	{
+		$root = rtrim($this->document_root, '/\\') . DIRECTORY_SEPARATOR;
+		if (!is_dir($root)) {
+			return array();
+		}
+
+		$items = @scandir($root);
+		if ($items === false) {
+			return array();
+		}
+
+		$folders = array();
+		foreach ($items as $item) {
+			if ($item === '.' || $item === '..') {
+				continue;
+			}
+
+			$path = $root . $item;
+			if (!is_dir($path)) {
+				continue;
+			}
+
+			$folders[$item] = array(
+				'key'   => $item,
+				'label' => $item,
+				'path'  => $path,
+				'icon'  => 'fas fa-folder',
+				'exists' => true,
+				'count' => $this->count_files_recursive($path),
+			);
+		}
+
+		if (!empty($folders)) {
+			uksort($folders, 'strnatcasecmp');
+		}
+
+		return $folders;
+	}
+
+	/**
+	 * Ambil isi folder berdasarkan key folder yang sudah discan server.
+	 * Path request tidak pernah dipakai langsung sebagai path filesystem.
+	 *
+	 * @param string $key Nama folder satu level di bawah document root.
+	 * @return array|null NULL bila folder tidak valid/tidak ditemukan.
+	 */
+	public function get_document_folder_files($key)
+	{
+		$key = trim((string) $key);
+		$folders = $this->get_document_folders();
+		if ($key === '' || !isset($folders[$key])) {
+			return null;
+		}
+
+		$files = array();
+		$this->collect_files_recursive($folders[$key]['path'], '', $files);
+		sort($files, SORT_NATURAL | SORT_FLAG_CASE);
+		return $files;
 	}
 
 	// --- Database Config ---
@@ -439,5 +546,34 @@ class Backup_model extends CI_Model
 	{
 		$path = $this->upload_dir . $file_name;
 		return (is_file($path) && filesize($path) > 0) ? $path : false;
+	}
+
+	/**
+	 * Hitung jumlah file dalam folder secara rekursif.
+	 *
+	 * @param string $dir
+	 * @return int
+	 */
+	private function count_files_recursive($dir)
+	{
+		$count = 0;
+		$items = @scandir($dir);
+		if ($items === false) {
+			return 0;
+		}
+
+		foreach ($items as $item) {
+			if ($item === '.' || $item === '..') {
+				continue;
+			}
+			$full = $dir . DIRECTORY_SEPARATOR . $item;
+			if (is_dir($full)) {
+				$count += $this->count_files_recursive($full);
+			} elseif (is_file($full)) {
+				$count++;
+			}
+		}
+
+		return $count;
 	}
 }

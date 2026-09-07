@@ -286,7 +286,10 @@ array(
 			}
 
 			$dokumen_files = array();
-			if (isset($row->dokumen) && $row->dokumen !== '') {
+			$physical_files = $this->get_physical_dokumen_files((int) $row->id);
+			if ($physical_files !== null) {
+				$dokumen_files = $physical_files;
+			} elseif (isset($row->dokumen) && $row->dokumen !== '') {
 				$decoded = json_decode($row->dokumen, true);
 				if (is_array($decoded)) {
 					foreach ($decoded as $file) {
@@ -305,6 +308,41 @@ array(
 		$output['data'] = $rows;
 
 		return $output;
+	}
+
+	/**
+	 * Scan the current transaction folder without changing the database.
+	 * NULL means the current storage folder does not exist; an empty array
+	 * means it exists but currently contains no files.
+	 *
+	 * @param int $id Transaction ID.
+	 * @return array|null
+	 */
+	public function get_physical_dokumen_files($id)
+	{
+		$id = (int) $id;
+		$dir = FCPATH . 'assets/dokumen/dokumen_transaksi/' . $id . DIRECTORY_SEPARATOR;
+		if ($id <= 0 || !is_dir($dir)) {
+			return null;
+		}
+
+		$items = @scandir($dir);
+		if ($items === false) {
+			return array();
+		}
+
+		$files = array();
+		foreach ($items as $item) {
+			if ($item === '.' || $item === '..') {
+				continue;
+			}
+			if (is_file($dir . $item)) {
+				$files[] = $item;
+			}
+		}
+
+		sort($files, SORT_NATURAL | SORT_FLAG_CASE);
+		return $files;
 	}
 }
 

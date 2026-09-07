@@ -6,6 +6,8 @@ Assets::add_js('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.m
 
 $backupProcessUrl = site_url(SITE_AREA . '/backup/per_id/process');
 $backupFilterUrl  = site_url(SITE_AREA . '/backup/per_id');
+$backupRefreshUrl = $backupFilterUrl;
+$filesUrl         = site_url(SITE_AREA . '/backup/per_id/files');
 
 $js_rows = array();
 if (!empty($dokumen)) {
@@ -35,7 +37,7 @@ $(function() {
                     + '<td class=\"text-center\"><input type=\"checkbox\" name=\"ids[]\" class=\"row-check\" value=\"' + r.id + '\"></td>'
                     + '<td class=\"text-center\">' + r.id + '</td>'
                     + '<td>' + r.created_on_str + '</td>'
-                    + '<td class=\"text-center\"><span class=\"badge badge-info\">' + r.jumlah + ' Dokumen</span></td>'
+                    + '<td class=\"text-center\"><button type=\"button\" class=\"btn btn-xs btn-info btn-lihat-file-per-id\" data-id=\"' + r.id + '\"><i class=\"fas fa-folder-open\"></i> ' + r.jumlah + ' Dokumen</button></td>'
                     + '<td>ID_' + r.id + '</td>'
                     + '</tr>';
             }
@@ -101,6 +103,36 @@ $(function() {
         var total = allRows.length;
         var checked = $('#tbl-per-id tbody').find('input.row-check:checked').length;
         $('#check-all').prop('checked', total > 0 && total === checked);
+    });
+
+    $(document).on('click', '.btn-lihat-file-per-id', function() {
+        var id = parseInt($(this).attr('data-id') || '0', 10) || 0;
+        var \$title = $('#modal-per-id-files-title');
+        var \$body = $('#modal-per-id-files-body');
+        \$title.text('Daftar Dokumen - ID Transaksi ' + id);
+        \$body.html('<p class=\"text-muted mb-0\"><i class=\"fas fa-spinner fa-spin\"></i> Memindai folder fisik...</p>');
+        $('#modal-per-id-files').modal('show');
+
+        $.getJSON('" . $filesUrl . "/' + id)
+            .done(function(res) {
+                if (!res || !res.success) {
+                    \$body.html('<p class=\"text-danger mb-0\">' + $('<div>').text((res && res.message) || 'Gagal membaca folder transaksi.').html() + '</p>');
+                    return;
+                }
+                if (!res.files || !res.files.length) {
+                    \$body.html('<p class=\"text-muted mb-0\">Tidak ada file di folder fisik transaksi.</p>');
+                    return;
+                }
+                var html = '<ol class=\"mb-0 pl-4\">';
+                for (var i = 0; i < res.files.length; i++) {
+                    html += '<li class=\"mb-1\">' + $('<div>').text(res.files[i]).html() + '</li>';
+                }
+                html += '</ol>';
+                \$body.html(html);
+            })
+            .fail(function() {
+                \$body.html('<p class=\"text-danger mb-0\">Gagal membaca folder transaksi.</p>');
+            });
     });
 
     $('#form-backup-per-id').on('submit', function(e) {
@@ -175,6 +207,11 @@ Assets::add_js($inline_js, 'inline');
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title"><i class="fas fa-folder-open text-primary"></i> Dokumen per ID Transaksi</h3>
+                <div class="card-tools">
+                    <a href="<?php echo $backupRefreshUrl; ?>" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-sync-alt"></i> Scan Ulang / Refresh
+                    </a>
+                </div>
                 <span class="float-right">Total: <span id="total-id"><?php echo count($dokumen); ?></span> ID</span>
             </div>
             <div class="card-body table-responsive">
@@ -201,6 +238,23 @@ Assets::add_js($inline_js, 'inline');
             </div>
         </div>
         </form>
+
+        <div class="modal fade" id="modal-per-id-files" tabindex="-1" role="dialog" aria-labelledby="modalPerIdFilesLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-per-id-files-title">Daftar Dokumen</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modal-per-id-files-body"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- RIWAYAT BACKUP DOKUMEN -->
         <div class="card">
