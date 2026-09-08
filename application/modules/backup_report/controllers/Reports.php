@@ -46,10 +46,16 @@ class Reports extends App_Controller
 
 		$rows = $this->backup_report_model->get_document_history($tgl_mulai, $tgl_akhir);
 
+		$page_type  = isset($page_type) ? $page_type : 'pdf';
 		$html = $this->load->view('reports/_data_dokumen', array(
-			'rows'      => $rows,
-			'tgl_mulai' => $tgl_mulai,
-			'tgl_akhir' => $tgl_akhir,
+			'rows'       => $rows,
+			'tgl_mulai'  => $tgl_mulai,
+			'tgl_akhir'  => $tgl_akhir,
+			'show_pdf'   => ($page_type === 'pdf'),
+			'show_excel' => ($page_type === 'excel'),
+			'export_url' => ($page_type === 'excel')
+				? site_url(SITE_AREA . '/laporan-dokumen/cetak-excel')
+				: site_url(SITE_AREA . '/laporan-dokumen/cetak-pdf'),
 		), true);
 
 		$this->output->set_content_type('application/json')
@@ -200,10 +206,16 @@ class Reports extends App_Controller
 
 		$rows = $this->backup_report_model->get_database_history($tgl_mulai, $tgl_akhir);
 
+		$page_type  = isset($page_type) ? $page_type : 'excel';
 		$html = $this->load->view('reports/_data_database', array(
-			'rows'      => $rows,
-			'tgl_mulai' => $tgl_mulai,
-			'tgl_akhir' => $tgl_akhir,
+			'rows'       => $rows,
+			'tgl_mulai'  => $tgl_mulai,
+			'tgl_akhir'  => $tgl_akhir,
+			'show_pdf'   => ($page_type === 'pdf'),
+			'show_excel' => ($page_type === 'excel'),
+			'export_url' => ($page_type === 'excel')
+				? site_url(SITE_AREA . '/laporan-database/cetak-excel')
+				: site_url(SITE_AREA . '/laporan-database/cetak-pdf'),
 		), true);
 
 		$this->output->set_content_type('application/json')
