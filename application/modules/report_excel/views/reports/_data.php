@@ -9,7 +9,7 @@ $btn_label = isset($btn_label) ? $btn_label : 'Export Excel';
         <h3 class="card-title">Data Transaksi — Periode: <?php echo html_escape($periode_label); ?> — Status: <?php echo html_escape(isset($status) && $status !== '' ? $status : 'Semua'); ?></h3>
         <span class="float-right">Jumlah: <?php echo count($rows); ?> transaksi</span>
     </div>
-    <div class="card-body table-responsive">
+    <div class="card-body">
         <?php if (empty($rows)) : ?>
             <div class="alert alert-warning mb-0"><i class="fas fa-exclamation-triangle"></i> Tidak ada transaksi pada periode yang dipilih.</div>
         <?php else : ?>
