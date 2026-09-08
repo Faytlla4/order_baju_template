@@ -140,9 +140,7 @@
     align-items: center;
     gap: 6px;
 }
-.fdb .fdb-link:hover { color: var(--fdb-ink); gap: 9px; }
 .fdb .fdb-link i { font-size: 0.7rem; transition: transform 0.15s ease; }
-.fdb .fdb-link:hover i { transform: translateX(2px); }
 
 /* ---------- Summary cards (lead-figure) ---------- */
 .fdb .fdb-summary {
@@ -162,11 +160,6 @@
     border-radius: var(--fdb-radius);
     box-shadow: var(--fdb-shadow);
     overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.fdb .fdb-stat:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 1px 0 rgba(42, 37, 32, 0.04), 0 16px 32px -20px rgba(42, 37, 32, 0.2);
 }
 .fdb .fdb-stat::after {
     content: "";
@@ -348,7 +341,6 @@
     vertical-align: middle;
 }
 .fdb .fdb-table tbody tr:last-child td { border-bottom: 0; }
-.fdb .fdb-table tbody tr:hover td { background: rgba(239, 231, 216, 0.35); }
 .fdb .fdb-table .fdb-code {
     font-family: 'SFMono-Regular', Menlo, Consolas, monospace;
     font-size: 0.78rem;
@@ -578,10 +570,6 @@
     color: #FFFFFF;
     border-color: var(--fdb-accent);
 }
-.fdb .fdb-btn--primary:hover {
-    background: #6B5538;
-    border-color: #6B5538;
-}
 
 /* ---------- Action card (Pane: Cetak & Backup) ---------- */
 .fdb .fdb-action-card {
@@ -595,14 +583,7 @@
     box-shadow: var(--fdb-shadow);
     color: var(--fdb-ink);
     text-decoration: none;
-    transition: all 0.18s ease;
     height: 100%;
-}
-.fdb .fdb-action-card:hover {
-    border-color: var(--fdb-warm);
-    transform: translateY(-2px);
-    box-shadow: 0 1px 0 rgba(42, 37, 32, 0.04), 0 14px 28px -16px rgba(138, 106, 71, 0.25);
-    color: var(--fdb-ink);
 }
 .fdb .fdb-action-icon {
     width: 52px;
@@ -616,11 +597,6 @@
     border-radius: 12px;
     color: var(--fdb-accent);
     font-size: 1.4rem;
-}
-.fdb .fdb-action-card:hover .fdb-action-icon {
-    background: var(--fdb-accent);
-    color: #FFFFFF;
-    border-color: var(--fdb-accent);
 }
 .fdb .fdb-action-body h4 {
     font-family: var(--fdb-serif);
@@ -659,7 +635,6 @@
     align-items: center;
     gap: 10px;
 }
-.main-sidebar .brand-link:hover { background: #8A6A47; }
 .main-sidebar .brand-link .brand-image {
     width: 32px;
     height: 32px;
@@ -738,8 +713,11 @@
 }
 
 /* Section labels (MENU UTAMA / SISTEM) */
+aside.main-sidebar .nav-header,
+aside.main-sidebar .sidebar .nav-header,
+aside.main-sidebar .sidebar .nav-sidebar .nav-header,
 .nav-sidebar .nav-header {
-    color: #8C8175;
+    color: #5C5048 !important;
     font-size: 0.66rem;
     font-weight: 700;
     letter-spacing: 0.18em;
@@ -784,12 +762,6 @@
     top: 50%;
     transform: translateY(-50%);
 }
-.nav-sidebar > .nav-item > .nav-link:hover {
-    color: #2A2520;
-    background: #F4ECDC;
-}
-.nav-sidebar > .nav-item > .nav-link:hover .nav-icon { color: #6B5538; }
-.nav-sidebar > .nav-item > .nav-link:hover .nav-arrow { color: #6B5538; }
 
 /* Top-level item currently active (e.g. Dashboard on /admin) */
 .nav-sidebar > .nav-item > .nav-link.active {
@@ -817,45 +789,15 @@
 .nav-sidebar > .nav-item.menu-open > .nav-link.active .nav-icon { color: #FFFFFF; }
 .nav-sidebar > .nav-item.menu-open > .nav-link.active .nav-arrow { color: rgba(255, 255, 255, 0.95); }
 
-/* Submenu tree — display rules without !important so jQuery slideDown/slideUp
-   (which set inline style.display) can take effect. */
-.nav-treeview { display: none; padding: 2px 0 4px; background: #FAF6EE; }
+/* Submenu tree — display rules without !important so jQuery slideDown/slideUp can work */
+.nav-treeview { display: none; }
 .nav-item.menu-open > .nav-treeview { display: block; }
-.nav-treeview > .nav-item + .nav-item { border-top: none; margin-top: 0; padding-top: 0; }
-.nav-treeview > .nav-item > .nav-link {
-    padding: 8px 18px 8px 50px;
-    font-size: 0.84rem;
-    color: #6B5E4F;
-    font-weight: 500;
-    margin: 0;
-    border-radius: 0;
-    background: transparent;
-}
-.nav-treeview > .nav-item > .nav-link .nav-icon {
-    color: #B89878;
-    width: 6px;
-    font-size: 0.4rem;
-    margin-right: 10px;
-    margin-left: 0;
-    text-align: left;
-}
-.nav-treeview > .nav-item > .nav-link p { display: inline; margin: 0; }
-.nav-treeview > .nav-item > .nav-link:hover {
-    color: #2A2520;
-    background: rgba(200, 169, 107, 0.10);
-}
-.nav-treeview > .nav-item > .nav-link.active {
-    color: #8A6A47;
-    background: transparent;
-    font-weight: 600;
-}
-.nav-treeview > .nav-item > .nav-link.active .nav-icon { color: #8A6A47; }
+.nav-treeview > .nav-item > .nav-link { display: flex !important; align-items: center; }
 
 /* Scrollbar */
 .sidebar::-webkit-scrollbar { width: 6px; }
 .sidebar::-webkit-scrollbar-track { background: transparent; }
 .sidebar::-webkit-scrollbar-thumb { background: #E4D6C2; border-radius: 6px; }
-.sidebar::-webkit-scrollbar-thumb:hover { background: #C8A96B; }
 
 /* ---------- Reference sidebar: ivory panel, gold active state ---------- */
 .main-sidebar.sidebar-dark-primary,
@@ -868,19 +810,18 @@
 .main-sidebar .brand-link {
     min-height: 92px;
     padding: 20px 22px 18px !important;
-    background: #FFFDF9 !important;
-    border-bottom: 1px solid #E4D6C2 !important;
+    background: #8A6A47 !important;
+    border-bottom: none !important;
     gap: 12px;
 }
-.main-sidebar .brand-link:hover { background: #FFFDF9 !important; }
 .main-sidebar .brand-link .brand-image {
     width: 38px;
     height: 38px;
-    filter: none;
-    opacity: 0.85;
+    filter: brightness(0) invert(1);
+    opacity: 1;
 }
 .main-sidebar .brand-link .brand-text > span {
-    color: #2A2520 !important;
+    color: #FFFFFF !important;
     font-family: 'Inter', sans-serif;
     font-size: 1.15rem;
     font-weight: 700;
@@ -893,7 +834,7 @@
     justify-content: center;
 }
 .main-sidebar .brand-link .brand-text .brand-subtitle {
-    color: #7A6F62 !important;
+    color: rgba(255, 255, 255, 0.75) !important;
     font-size: 0.7rem;
 }
 .sidebar .user-panel {
@@ -911,8 +852,7 @@
     height: 42px;
     background: #F0E9DF;
 }
-.sidebar .user-panel .info a,
-.sidebar .user-panel .info a:hover {
+.sidebar .user-panel .info a {
     color: #2A2520 !important;
 }
 .sidebar .user-panel .info {
@@ -929,7 +869,7 @@
 .main-sidebar .form-inline { display: none !important; }
 .sidebar nav.mt-2 { margin-top: 0.5rem !important; }
 .nav-sidebar .nav-header {
-    color: #8C8175 !important;
+    color: #5C5048 !important;
     padding: 18px 24px 9px !important;
     font-size: 0.7rem !important;
     font-weight: 600 !important;
@@ -948,11 +888,6 @@
     color: #403A34 !important;
     margin-right: 13px !important;
     font-size: 1rem !important;
-}
-.nav-sidebar > .nav-item > .nav-link:hover,
-.nav-sidebar > .nav-item.menu-open > .nav-link {
-    background: #F4ECDC !important;
-    color: #403A34 !important;
 }
 .nav-sidebar > .nav-item > .nav-link.active,
 .nav-sidebar > .nav-item.menu-open > .nav-link.active {
@@ -978,7 +913,6 @@
     border-radius: 8px !important;
     font-size: 0.87rem !important;
 }
-.nav-treeview > .nav-item > .nav-link:hover,
 .nav-treeview > .nav-item > .nav-link.active {
     color: #8A6A47 !important;
     background: #F8F1E5 !important;
@@ -1127,10 +1061,47 @@
     padding-top: 7px !important;
     padding-bottom: 7px !important;
 }
+/* Sidebar icon-only when collapsed */
+body.sidebar-collapse .main-sidebar {
+    width: 80px !important;
+}
+body.sidebar-collapse .main-sidebar .nav-link p {
+    display: none !important;
+}
+body.sidebar-collapse .main-sidebar .nav-link span:not(.nav-icon) {
+    display: none !important;
+}
+body.sidebar-collapse .main-sidebar .nav-arrow,
+body.sidebar-collapse .main-sidebar .right {
+    display: none !important;
+}
+body.sidebar-collapse .main-sidebar .nav-treeview {
+    display: none !important;
+}
+body.sidebar-collapse .main-sidebar .nav-header,
+body.sidebar-collapse .main-sidebar .user-panel,
+body.sidebar-collapse .main-sidebar .form-inline {
+    display: none !important;
+}
+body.sidebar-collapse .content-wrapper,
+body.sidebar-collapse .main-header {
+    margin-left: 80px !important;
+}
+
 @media (max-width: 575.98px) {
     .main-sidebar.sidebar-dark-primary,
     .main-sidebar { width: min(290px, 86vw) !important; }
     .main-sidebar .brand-link { min-height: 78px; padding: 16px 18px !important; }
     .sidebar .user-panel { margin: 14px 12px 10px !important; padding: 12px !important; }
     .nav-sidebar > .nav-item > .nav-link { margin-left: 8px !important; margin-right: 8px !important; }
+}
+
+/* DateTimePicker dropdown z-index fix */
+.datetimepicker-dropdown,
+.bootstrap-datetimepicker-widget {
+    z-index: 1060 !important;
+}
+#custom-range {
+    position: relative;
+    z-index: 1050 !important;
 }

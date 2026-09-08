@@ -315,6 +315,10 @@ class Transaksi extends App_Controller
 		if (!is_array($existing_dokumen)) {
 			$existing_dokumen = array();
 		}
+		$physical_dokumen = $this->transaksi_model->get_physical_dokumen_files($id);
+		// Prioritas: daftar file dari database JSON. Folder fisik hanya fallback
+		// bila JSON kosong (transaksi lama tanpa folder fisik).
+		$display_dokumen = (!empty($existing_dokumen)) ? $existing_dokumen : $physical_dokumen;
 
 		if (isset($_POST['save'])) {
 			$jumlah = $this->input->post('jumlah');
@@ -411,7 +415,7 @@ class Transaksi extends App_Controller
 		Template::set('order', $order);
 		Template::set('detail', $this->detail_order($order));
 		Template::set('status_options', $this->status_aktual);
-		Template::set('dokumen_files', $existing_dokumen);
+		Template::set('dokumen_files', $display_dokumen);
 		Template::set_view('order_baju/edit');
 		Template::set('toolbar_title', 'Edit Transaksi');
 		Template::render();
@@ -806,12 +810,20 @@ class Transaksi extends App_Controller
 			}
 		}
 
-		if (!in_array($file, $files, true)) {
+		$path = $this->resolve_dokumen_path($id, $file);
+		if ($path === null) {
 			return null;
 		}
 
-		$path = $this->resolve_dokumen_path($id, $file);
-		if ($path === null) {
+		// Files currently present in the transaction folder are valid even
+		// when they were added manually and are absent from the JSON column.
+		$physical = $this->transaksi_model->get_physical_dokumen_files($id);
+		if ($physical !== null && in_array($file, $physical, true)) {
+			return $path;
+		}
+
+		// Keep the JSON allow-list for legacy storage locations.
+		if (!in_array($file, $files, true)) {
 			return null;
 		}
 
@@ -846,8 +858,8 @@ class Transaksi extends App_Controller
 	}
 
 	/**
-	 * Bangun daftar file dokumen (nama/ext/tipe/ukuran/url) dari JSON dokumen
-	 * suatu transaksi. Dipakai oleh get_dokumen_list() dan detail().
+	 * Bangun daftar file dokumen dari folder fisik terbaru. JSON tetap menjadi
+	 * fallback untuk transaksi lama yang belum mempunyai folder fisik.
 	 *
 	 * @param string $dokumen_json Isi kolom dokumen (JSON).
 	 * @param int    $id           ID transaksi.
@@ -857,29 +869,40 @@ class Transaksi extends App_Controller
 	private function build_dokumen_files($dokumen_json, $id)
 	{
 		$files = array();
+		$source_files = array();
+		// Prioritas JSON database, fallback folder fisik bila JSON kosong.
 		if (isset($dokumen_json) && $dokumen_json !== '') {
 			$decoded = json_decode($dokumen_json, true);
 			if (is_array($decoded)) {
 				foreach ($decoded as $item) {
 					$item = basename((string) $item);
-					if ($item === '') {
-						continue;
+					if ($item !== '') {
+						$source_files[] = $item;
 					}
-					$path = $this->resolve_dokumen_path($id, $item);
-					$ext = strtolower(pathinfo($item, PATHINFO_EXTENSION));
-					$previewable = in_array($ext, array('jpg', 'jpeg', 'jfif', 'png', 'gif', 'webp', 'pdf'), true);
-					$files[] = array(
-						'nama'         => $item,
-						'ext'          => $ext,
-						'tipe'         => $this->dokumen_tipe_label($ext),
-						'ukuran'       => ($path !== null) ? (int) filesize($path) : 0,
-						'exists'       => ($path !== null),
-						'preview'      => $previewable,
-						'view_url'     => site_url(SITE_AREA . '/transaksi/transaksi/view_dokumen/' . $id . '/' . rawurlencode($item)),
-						'download_url' => site_url(SITE_AREA . '/transaksi/transaksi/download_dokumen/' . $id . '/' . rawurlencode($item)),
-					);
 				}
 			}
+		}
+		if (empty($source_files)) {
+			$physical_files = $this->transaksi_model->get_physical_dokumen_files($id);
+			if ($physical_files !== null) {
+				$source_files = $physical_files;
+			}
+		}
+
+		foreach (array_values(array_unique($source_files)) as $item) {
+			$path = $this->resolve_dokumen_path($id, $item);
+			$ext = strtolower(pathinfo($item, PATHINFO_EXTENSION));
+			$previewable = in_array($ext, array('jpg', 'jpeg', 'jfif', 'png', 'gif', 'webp', 'pdf'), true);
+			$files[] = array(
+				'nama'         => $item,
+				'ext'          => $ext,
+				'tipe'         => $this->dokumen_tipe_label($ext),
+				'ukuran'       => ($path !== null) ? (int) filesize($path) : 0,
+				'exists'       => ($path !== null),
+				'preview'      => $previewable,
+				'view_url'     => site_url(SITE_AREA . '/transaksi/transaksi/view_dokumen/' . $id . '/' . rawurlencode($item)),
+				'download_url' => site_url(SITE_AREA . '/transaksi/transaksi/download_dokumen/' . $id . '/' . rawurlencode($item)),
+			);
 		}
 
 		return $files;

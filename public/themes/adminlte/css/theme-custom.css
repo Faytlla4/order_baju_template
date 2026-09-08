@@ -1,5 +1,5 @@
 /*
- * Custom Theme Override — SI-Reklame
+ * Custom Theme Override — FASHIONER
  * Warm, clean, elegant palette
  * Loaded AFTER adminlte.min.css to override defaults.
  */
@@ -49,12 +49,12 @@ body {
 
 /* Sidebar brand */
 .main-sidebar .brand-link {
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    background-color: var(--custom-sidebar) !important;
+    border-bottom: none;
+    background-color: #8A6A47 !important;
 }
 
 .main-sidebar .brand-text {
-    color: #e8dfd3 !important;
+    color: #FFFFFF !important;
 }
 
 /* Sidebar nav items */
@@ -62,39 +62,9 @@ body {
     color: var(--custom-sidebar-text) !important;
 }
 
-.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link:hover {
-    background-color: var(--custom-sidebar-hover) !important;
-    color: #fff !important;
-}
-
-/* Active menu item — gold accent */
-.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
-.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active:hover {
-    background-color: rgba(200,169,107,0.15) !important;
-    color: var(--custom-sidebar-text-active) !important;
-    border-radius: 6px;
-    margin: 2px 8px;
-    width: calc(100% - 16px);
-}
-
-.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active > i.nav-icon {
-    color: var(--custom-sidebar-text-active) !important;
-}
-
 /* Sub-menu items */
 .sidebar-dark-primary .nav-sidebar .nav-treeview > .nav-item > .nav-link {
     color: var(--custom-sidebar-text) !important;
-}
-
-.sidebar-dark-primary .nav-sidebar .nav-treeview > .nav-item > .nav-link:hover {
-    background-color: var(--custom-sidebar-hover) !important;
-    color: #fff !important;
-}
-
-.sidebar-dark-primary .nav-sidebar .nav-treeview > .nav-item > .nav-link.active {
-    color: var(--custom-sidebar-text-active) !important;
-    background-color: rgba(200,169,107,0.10) !important;
-    border-radius: 4px;
 }
 
 /* Sidebar treeview arrows */
@@ -124,8 +94,21 @@ body {
 }
 
 /* Sidebar scrollbar */
+.sidebar-dark-primary {
+    overflow-y: auto;
+}
+.sidebar-dark-primary::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar-dark-primary::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
 .sidebar-dark-primary::-webkit-scrollbar-thumb {
-    background: rgba(200,169,107,0.3);
+    background: rgba(200, 169, 107, 0.4);
+    border-radius: 3px;
+}
+.sidebar-dark-primary::-webkit-scrollbar-thumb:hover {
+    background: rgba(200, 169, 107, 0.6);
 }
 
 /* ============================================================
@@ -138,10 +121,6 @@ body {
 
 .main-header .nav-link {
     color: var(--custom-text) !important;
-}
-
-.main-header .nav-link:hover {
-    color: var(--custom-primary) !important;
 }
 
 /* ============================================================
@@ -198,7 +177,7 @@ body {
 }
 
 .table tbody tr:hover {
-    background-color: rgba(200,169,107,0.06) !important;
+    background-color: transparent !important;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
@@ -219,8 +198,7 @@ body {
     color: var(--custom-muted) !important;
 }
 
-.dataTables_wrapper .dataTables_paginate .paginate_button.current,
-.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
     background: var(--custom-primary) !important;
     border-color: var(--custom-primary) !important;
     color: #fff !important;
@@ -228,10 +206,9 @@ body {
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-    background: rgba(200,169,107,0.15) !important;
-    border-color: var(--custom-border) !important;
+    background: transparent !important;
+    border-color: transparent !important;
     color: var(--custom-text) !important;
-    border-radius: 4px;
 }
 
 .dataTables_wrapper .dataTables_empty {
@@ -332,20 +309,13 @@ input[type="datetime-local"]:focus {
    ============================================================ */
 
 /* Primary buttons */
-.btn-primary {
+.btn-primary,
+.btn-primary.btn-flat {
     background-color: var(--custom-primary) !important;
     border-color: var(--custom-primary) !important;
-    color: #fff !important;
+    color: #2A2520 !important;
     border-radius: 6px !important;
     font-weight: 600;
-}
-
-.btn-primary:hover,
-.btn-primary:focus {
-    background-color: var(--custom-primary-hover) !important;
-    border-color: var(--custom-primary-hover) !important;
-    color: #fff !important;
-    box-shadow: 0 2px 6px rgba(200,169,107,0.35) !important;
 }
 
 .btn-primary:active,
@@ -363,31 +333,13 @@ input[type="datetime-local"]:focus {
 
 /* Secondary buttons */
 .btn-secondary,
-.btn-default {
+.btn-secondary.btn-flat,
+.btn-default,
+.btn-default.btn-flat {
     background-color: var(--custom-secondary) !important;
     border-color: var(--custom-secondary) !important;
-    color: #fff !important;
+    color: #2A2520 !important;
     border-radius: 6px !important;
-    font-weight: 600;
-}
-
-.btn-secondary:hover,
-.btn-default:hover,
-.btn-secondary:focus,
-.btn-default:focus {
-    background-color: var(--custom-secondary-hover) !important;
-    border-color: var(--custom-secondary-hover) !important;
-    color: #fff !important;
-    box-shadow: 0 2px 6px rgba(138,106,71,0.3) !important;
-}
-
-.btn-secondary:active,
-.btn-default:active,
-.btn-secondary.active,
-.btn-default.active {
-    background-color: #6d5438 !important;
-    border-color: #6d5438 !important;
-    color: #fff !important;
 }
 
 /* Success buttons (keep green for status) */
@@ -397,21 +349,12 @@ input[type="datetime-local"]:focus {
     border-radius: 6px !important;
 }
 
-.btn-success:hover {
-    background-color: #4d7d4f !important;
-    border-color: #4d7d4f !important;
-}
-
 /* Danger buttons */
 .btn-danger {
     background-color: #c0392b !important;
     border-color: #c0392b !important;
     border-radius: 6px !important;
-}
-
-.btn-danger:hover {
-    background-color: #a93226 !important;
-    border-color: #a93226 !important;
+    color: #fff !important;
 }
 
 /* Info buttons */
@@ -419,11 +362,7 @@ input[type="datetime-local"]:focus {
     background-color: #7a9bb5 !important;
     border-color: #7a9bb5 !important;
     border-radius: 6px !important;
-}
-
-.btn-info:hover {
-    background-color: #6a8ba5 !important;
-    border-color: #6a8ba5 !important;
+    color: #fff !important;
 }
 
 /* Warning buttons */
@@ -442,12 +381,6 @@ input[type="datetime-local"]:focus {
     border-radius: 6px !important;
 }
 
-.btn-light:hover {
-    background-color: rgba(228,214,194,0.5) !important;
-    border-color: var(--custom-border) !important;
-    color: var(--custom-text) !important;
-}
-
 /* ============================================================
    9. Typography
    ============================================================ */
@@ -463,10 +396,6 @@ h1, h2, h3, h4, h5, h6,
 
 a {
     color: var(--custom-secondary);
-}
-
-a:hover {
-    color: var(--custom-primary);
 }
 
 /* ============================================================
@@ -528,12 +457,6 @@ a:hover {
     border-color: transparent !important;
 }
 
-.nav-tabs .nav-link:hover {
-    color: var(--custom-text) !important;
-    border-color: var(--custom-border) !important;
-    background-color: rgba(200,169,107,0.08) !important;
-}
-
 .nav-tabs .nav-link.active {
     color: var(--custom-primary) !important;
     border-color: var(--custom-border) !important;
@@ -572,12 +495,6 @@ a:hover {
     color: var(--custom-text) !important;
 }
 
-.dropdown-item:hover,
-.dropdown-item:focus {
-    background-color: rgba(200,169,107,0.12) !important;
-    color: var(--custom-text) !important;
-}
-
 .dropdown-item.active,
 .dropdown-item:active {
     background-color: var(--custom-primary) !important;
@@ -595,11 +512,6 @@ a:hover {
 .page-item.active .page-link {
     background-color: var(--custom-primary) !important;
     border-color: var(--custom-primary) !important;
-}
-
-.page-link:hover {
-    background-color: rgba(200,169,107,0.12) !important;
-    color: var(--custom-primary) !important;
 }
 
 /* ============================================================
@@ -674,11 +586,10 @@ a:hover {
    ============================================================ */
 #sub-menu .breadcrumb,
 #sub-menu a {
-    color: var(--custom-muted) !important;
+    color: #fff !important;
 }
-
 #sub-menu a:hover {
-    color: var(--custom-primary) !important;
+    color: rgba(255,255,255,0.8) !important;
 }
 
 /* ============================================================

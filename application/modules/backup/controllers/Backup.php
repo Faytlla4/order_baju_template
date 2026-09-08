@@ -42,6 +42,37 @@ class Backup extends App_Controller
 		Template::render();
 	}
 
+	/**
+	 * JSON daftar file terbaru dari folder fisik satu transaksi.
+	 * Endpoint ini tidak membaca atau mengubah kolom transaksi.dokumen.
+	 *
+	 * @param int $id ID transaksi.
+	 * @return void
+	 */
+	public function dokumen_per_id_files($id = 0)
+	{
+		$id = (int) $id;
+		$this->load->model('backup/backup_model');
+
+		$exists = $id > 0 && $this->db
+			->where('id', $id)
+			->count_all_results('transaksi') > 0;
+		if (!$exists) {
+			$this->output->set_content_type('application/json')
+				->set_output(json_encode(array('success' => false, 'message' => 'Transaksi tidak ditemukan.')));
+			return;
+		}
+
+		$files = $this->backup_model->get_physical_transaction_files($id);
+		$this->output->set_content_type('application/json')
+			->set_output(json_encode(array(
+				'success' => true,
+				'id'      => $id,
+				'files'   => is_array($files) ? $files : array(),
+				'count'   => is_array($files) ? count($files) : 0,
+			)));
+	}
+
 	// --------------------------------------------------------------------
 	// AJAX FILTER â€” return Riwayat Cetak rows as JSON
 	// --------------------------------------------------------------------
@@ -393,6 +424,15 @@ class Backup extends App_Controller
 
 			foreach ($map as $id => $files) {
 				$id = (int) $id;
+				$folder = FCPATH . 'assets/dokumen/dokumen_transaksi/' . $id;
+				if (is_dir($folder)) {
+					// Scan at backup time so Explorer additions, renames, and
+					// deletions are reflected without updating the database.
+					$this->add_dir_recursive($zip, $folder, 'ID_' . $id, realpath($folder), $added);
+					continue;
+				}
+
+				// Keep compatibility with legacy transactions stored elsewhere.
 				foreach ($files as $file) {
 					$filePath = $this->resolve_transaksi_file($id, $file);
 					$fileName = basename((string) $file);
@@ -490,33 +530,8 @@ class Backup extends App_Controller
 		Template::set_block('sub_nav', 'backup/_sub_nav');
 		$this->load->model('backup/backup_model');
 
-		// Define the selectable folders. Backend fixes the real paths â€” the
-		// request never supplies a free-form path.
-		$trxRoot = FCPATH . 'assets/dokumen/dokumen_transaksi/';
-		$reportRoot = FCPATH . 'assets/dokumen/report/';
-
-		$folders = array(
-			'transaksi' => array(
-				'label' => 'Dokumen Transaksi',
-				'path'  => $trxRoot,
-				'icon'  => 'fas fa-folder-open',
-			),
-			'report' => array(
-				'label' => 'Report',
-				'path'  => $reportRoot,
-				'icon'  => 'fas fa-file-alt',
-			),
-		);
-
-		// Determine presence + counts per folder for display.
-		foreach ($folders as $key => $folder) {
-			$count = 0;
-			if (is_dir($folder['path'])) {
-				$count = $this->count_files_recursive($folder['path']);
-			}
-			$folders[$key]['exists'] = is_dir($folder['path']);
-			$folders[$key]['count'] = $count;
-		}
+		// Scan langsung folder dokumen utama di file system.
+		$folders = $this->backup_model->get_document_folders();
 
 		$backup_history = $this->backup_model->get_document_history();
 
@@ -526,6 +541,35 @@ class Backup extends App_Controller
 		Template::set('toolbar_title', 'Backup Dokumen Folder');
 		Template::set_view('backup/dokumen_per_folder');
 		Template::render();
+	}
+
+	/**
+	 * JSON isi folder terbaru untuk modal Backup Dokumen Folder.
+	 *
+	 * @return void
+	 */
+	public function dokumen_per_folder_files()
+	{
+		$this->load->model('backup/backup_model');
+		$key = trim((string) $this->input->get('folder'));
+		$files = $this->backup_model->get_document_folder_files($key);
+
+		if ($files === null) {
+			$this->output->set_content_type('application/json')
+				->set_output(json_encode(array(
+					'success' => false,
+					'message' => 'Folder tidak ditemukan atau sudah berubah.',
+				)));
+			return;
+		}
+
+		$this->output->set_content_type('application/json')
+			->set_output(json_encode(array(
+				'success' => true,
+				'folder'  => $key,
+				'files'   => $files,
+				'count'   => count($files),
+			)));
 	}
 
 	// --------------------------------------------------------------------
@@ -563,17 +607,14 @@ class Backup extends App_Controller
 			return;
 		}
 
-		// Only allow whitelisted folders. Backend resolves the real path.
-		$allowed = array(
-			'transaksi' => FCPATH . 'assets/dokumen/dokumen_transaksi/',
-			'report'    => FCPATH . 'assets/dokumen/report/',
-		);
+		// Scan ulang daftar folder yang tersedia tepat sebelum proses backup.
+		$availableFolders = $this->backup_model->get_document_folders();
 
 		$chosen = array();
 		foreach ($selected as $key) {
 			$key = (string) $key;
-			if (isset($allowed[$key])) {
-				$chosen[$key] = $allowed[$key];
+			if (isset($availableFolders[$key]) && !empty($availableFolders[$key]['path'])) {
+				$chosen[$key] = $availableFolders[$key]['path'];
 			}
 		}
 		if (empty($chosen)) {
@@ -603,8 +644,7 @@ class Backup extends App_Controller
 
 			foreach ($chosen as $key => $rootPath) {
 				$rootPath = rtrim($rootPath, '/\\');
-				// Strip any symlink/security concern â€” rootPath is backend-defined.
-				$label = ($key === 'transaksi') ? 'dokumen_transaksi' : 'report';
+				$label = $key;
 
 				if (!is_dir($rootPath)) {
 					$skippedEmpty[] = $label;
@@ -1275,33 +1315,6 @@ class Backup extends App_Controller
 			return '<= ' . date('d-m-Y', strtotime($tgl_akhir));
 		}
 		return 'Semua';
-	}
-
-	/**
-	 * Hitung jumlah file (rekursif) di dalam sebuah folder.
-	 *
-	 * @param string $dir
-	 * @return int
-	 */
-	private function count_files_recursive($dir)
-	{
-		$count = 0;
-		$items = @scandir($dir);
-		if ($items === false) {
-			return 0;
-		}
-		foreach ($items as $item) {
-			if ($item === '.' || $item === '..') {
-				continue;
-			}
-			$full = $dir . DIRECTORY_SEPARATOR . $item;
-			if (is_dir($full)) {
-				$count += $this->count_files_recursive($full);
-			} elseif (is_file($full)) {
-				$count++;
-			}
-		}
-		return $count;
 	}
 
 	/**

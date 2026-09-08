@@ -10,9 +10,9 @@ $('#transaksi_order_table').bfDataTable({
         { data: 'kode_order', render: function(data, type, row) {
             var editUrl = site_url + 'admin/transaksi/transaksi/edit/' + row.id;
             var link = '<a href="' + editUrl + '">' + data + '</a>';
-            return link + ' <button type="button" class="btn btn-xs btn-warning btn-edit-transaksi" data-id="' + (parseInt(row.id, 10) || 0) + '" title="Edit Transaksi"><i class="fas fa-edit"></i> Edit</button>' +
-                ' <button type="button" class="btn btn-xs btn-info btn-copy-kode" data-kode="' + data + '"><i class="far fa-copy"></i> Copy</button>' +
-                ' <button type="button" class="btn btn-xs btn-primary btn-detail-transaksi" data-id="' + (parseInt(row.id, 10) || 0) + '" title="Lihat Detail"><i class="fas fa-eye"></i> Detail</button>';
+            return link + ' <button type="button" class="btn btn-sm btn-warning btn-edit-transaksi" data-id="' + (parseInt(row.id, 10) || 0) + '" title="Edit Transaksi"><i class="fas fa-edit"></i></button>' +
+                ' <button type="button" class="btn btn-sm btn-info btn-copy-kode" data-kode="' + data + '" title="Salin Kode"><i class="far fa-copy"></i></button>' +
+                ' <button type="button" class="btn btn-sm btn-primary btn-detail-transaksi" data-id="' + (parseInt(row.id, 10) || 0) + '" title="Lihat Detail"><i class="fas fa-eye"></i></button>';
         } },
         { data: 'nama_customer' },
         { data: 'produk' },
@@ -27,7 +27,7 @@ $('#transaksi_order_table').bfDataTable({
             if (!count) {
                 return '<span class="text-muted">Tidak ada dokumen</span>';
             }
-            return '<button type="button" class="btn btn-xs btn-secondary btn-lihat-dokumen" data-id="' + (parseInt(row.id, 10) || 0) + '" data-kode="' + $('<div>').text(row.kode_order || '').html() + '"><i class="fas fa-folder-open"></i> ' + count + ' Dokumen</button>';
+            return '<button type="button" class="btn btn-sm btn-secondary btn-lihat-dokumen" data-id="' + (parseInt(row.id, 10) || 0) + '" data-kode="' + $('<div>').text(row.kode_order || '').html() + '"><i class="fas fa-folder-open"></i> ' + count + ' Dokumen</button>';
         } },
         { data: 'status_transaksi' },
         { data: 'created_on', render: function(data) {
@@ -204,7 +204,7 @@ function renderDetailTransaksi($body, d) {
     var html = '';
     html += '<table class="table table-sm table-bordered mb-3">';
     html += '<tr><th style="width:30%">Kode Order</th><td>' + esc(d.kode_order) +
-        ' <button type="button" class="btn btn-xs btn-info btn-copy-detail-kode" data-kode="' + esc(d.kode_order).replace(/"/g, '&quot;') + '" title="Salin Kode Order"><i class="far fa-copy"></i> Copy</button></td></tr>';
+        ' <button type="button" class="btn btn-sm btn-info btn-copy-detail-kode" data-kode="' + esc(d.kode_order).replace(/"/g, '&quot;') + '" title="Salin Kode Order"><i class="far fa-copy"></i> Copy</button></td></tr>';
     html += '<tr><th>Customer</th><td>' + esc(d.nama_customer) + '</td></tr>';
     html += '<tr><th>Produk</th><td>' + esc(d.produk) + '</td></tr>';
     html += '<tr><th>Jenis Baju</th><td>' + esc(d.jenis_nama) + '</td></tr>';

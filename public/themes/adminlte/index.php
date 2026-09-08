@@ -42,7 +42,7 @@
 
     <link
         rel="stylesheet"
-        href="<?php echo base_url('assets/css/fashioner-dashboard.css?v=18'); ?>"
+        href="<?php echo base_url('assets/css/fashioner-dashboard.css?v=37'); ?>"
     >
 
     <!--

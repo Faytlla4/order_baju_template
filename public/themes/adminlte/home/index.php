@@ -169,54 +169,19 @@ $trend_pct = '+12%';
         </div>
     </div>
 
-    <!-- 05 / 06 — Activity + Customers -->
-    <div class="fdb-row fdb-row--2">
-
-        <!-- 05 Aktivitas Terbaru -->
-        <div class="fdb-card">
-            <div class="fdb-card-head">
-                <div>
-                    <span class="fdb-eyebrow"><span class="fdb-eyebrow-num">05</span> AKTIVITAS</span>
-                    <h3 class="fdb-card-title">Aktivitas Terbaru</h3>
-                </div>
+    <!-- 06 Data Pelanggan -->
+    <div class="fdb-card">
+        <div class="fdb-card-head">
+            <div>
+                <span class="fdb-eyebrow"><span class="fdb-eyebrow-num">05</span> NASABAH</span>
+                <h3 class="fdb-card-title">Data Pelanggan</h3>
             </div>
-            <div class="fdb-card-body">
-                <?php if (!empty($recent_activity)): ?>
-                <ol class="fdb-timeline" style="list-style:none;padding:0;margin:0;">
-                    <?php foreach ($recent_activity as $act):
-                        $when = !empty($act->created_on) ? date('d M Y · H.i', strtotime($act->created_on)) : '';
-                        $user = !empty($act->username) ? $act->username : 'System';
-                        $mod  = !empty($act->module) ? $act->module : 'umum';
-                    ?>
-                    <li class="fdb-timeline-item">
-                        <div class="fdb-time"><?php echo htmlspecialchars($when, ENT_QUOTES, 'UTF-8'); ?></div>
-                        <div class="fdb-act"><?php echo htmlspecialchars($act->activity, ENT_QUOTES, 'UTF-8'); ?></div>
-                        <div class="fdb-meta">
-                            <span><i class="far fa-user" style="margin-right:4px"></i><?php echo htmlspecialchars($user, ENT_QUOTES, 'UTF-8'); ?></span>
-                            <span class="fdb-tag"><?php echo htmlspecialchars($mod, ENT_QUOTES, 'UTF-8'); ?></span>
-                        </div>
-                    </li>
-                    <?php endforeach; ?>
-                </ol>
-                <?php else: ?>
-                <div class="fdb-empty">Belum ada aktivitas.</div>
-                <?php endif; ?>
-            </div>
+            <a class="fdb-link" href="<?php echo site_url(SITE_AREA . '/content/order_baju'); ?>">Lihat semua <i class="fas fa-arrow-right"></i></a>
         </div>
-
-        <!-- 06 Data Pelanggan -->
-        <div class="fdb-card">
-            <div class="fdb-card-head">
-                <div>
-                    <span class="fdb-eyebrow"><span class="fdb-eyebrow-num">06</span> NASABAH</span>
-                    <h3 class="fdb-card-title">Data Pelanggan</h3>
-                </div>
-                <a class="fdb-link" href="<?php echo site_url(SITE_AREA . '/content/order_baju'); ?>">Lihat semua <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="fdb-card-body fdb-card-body--flush">
-                <?php if (!empty($customers)): ?>
-                <div class="table-responsive">
-                    <table class="fdb-table">
+        <div class="fdb-card-body fdb-card-body--flush">
+            <?php if (!empty($customers)): ?>
+            <div class="table-responsive">
+                <table class="fdb-table">
                         <thead>
                             <tr>
                                 <th class="fdb-idx">No</th>

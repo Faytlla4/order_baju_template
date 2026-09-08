@@ -84,10 +84,10 @@
 									</td>
 									<td><?php echo date('d/m/Y', strtotime($r['tanggal_order'])); ?></td>
 									<td>
-										<a href="<?php echo site_url(SITE_AREA . '/transaksi/edit/' . $r['id']); ?>" class="btn btn-warning btn-xs">
+										<a href="<?php echo site_url(SITE_AREA . '/transaksi/edit/' . $r['id']); ?>" class="btn btn-warning btn-sm">
 											<i class="fas fa-edit"></i>
 										</a>
-										<a href="<?php echo site_url(SITE_AREA . '/transaksi/delete/' . $r['id']); ?>" class="btn btn-danger btn-xs" onclick="return confirm('Hapus order ini?');">
+										<a href="<?php echo site_url(SITE_AREA . '/transaksi/delete/' . $r['id']); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Hapus order ini?');">
 											<i class="fas fa-trash"></i>
 										</a>
 									</td>

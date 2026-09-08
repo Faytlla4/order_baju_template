@@ -1081,7 +1081,7 @@ $(function () {
                 +
                 'class="btn btn-danger '
                 +
-                'btn-xs '
+                'btn-sm '
                 +
                 'btn-remove-product">'
 
