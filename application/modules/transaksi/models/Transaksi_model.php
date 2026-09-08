@@ -286,18 +286,20 @@ array(
 			}
 
 			$dokumen_files = array();
-			$physical_files = $this->get_physical_dokumen_files((int) $row->id);
-			if ($physical_files !== null) {
-				$dokumen_files = $physical_files;
-			} elseif (isset($row->dokumen) && $row->dokumen !== '') {
-				$decoded = json_decode($row->dokumen, true);
-				if (is_array($decoded)) {
-					foreach ($decoded as $file) {
-						$file = basename((string) $file);
-						if ($file !== '') {
-							$dokumen_files[] = $file;
-						}
+			// Prioritas JSON database, fallback folder fisik bila JSON kosong.
+			$decoded = json_decode(isset($row->dokumen) ? $row->dokumen : '', true);
+			if (is_array($decoded)) {
+				foreach ($decoded as $file) {
+					$file = basename((string) $file);
+					if ($file !== '') {
+						$dokumen_files[] = $file;
 					}
+				}
+			}
+			if (empty($dokumen_files)) {
+				$physical_files = $this->get_physical_dokumen_files((int) $row->id);
+				if ($physical_files !== null) {
+					$dokumen_files = $physical_files;
 				}
 			}
 

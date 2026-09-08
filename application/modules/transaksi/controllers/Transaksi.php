@@ -315,10 +315,9 @@ class Transaksi extends App_Controller
 		if (!is_array($existing_dokumen)) {
 			$existing_dokumen = array();
 		}
-		// Tampilkan kondisi folder terbaru pada form edit. JSON tetap dipakai
-		// sebagai fallback untuk transaksi lama tanpa folder fisik.
-		$physical_dokumen = $this->transaksi_model->get_physical_dokumen_files($id);
-		$display_dokumen = ($physical_dokumen !== null) ? $physical_dokumen : $existing_dokumen;
+		// Prioritas: daftar file dari database JSON. Folder fisik hanya fallback
+		// bila JSON kosong (transaksi lama tanpa folder fisik).
+		$display_dokumen = (!empty($existing_dokumen)) ? $existing_dokumen : $physical_dokumen;
 
 		if (isset($_POST['save'])) {
 			$jumlah = $this->input->post('jumlah');
@@ -869,18 +868,23 @@ class Transaksi extends App_Controller
 	private function build_dokumen_files($dokumen_json, $id)
 	{
 		$files = array();
-		$physical_files = $this->transaksi_model->get_physical_dokumen_files($id);
-		$source_files = ($physical_files !== null) ? $physical_files : array();
-		if ($physical_files === null && isset($dokumen_json) && $dokumen_json !== '') {
+		$source_files = array();
+		// Prioritas JSON database, fallback folder fisik bila JSON kosong.
+		if (isset($dokumen_json) && $dokumen_json !== '') {
 			$decoded = json_decode($dokumen_json, true);
 			if (is_array($decoded)) {
 				foreach ($decoded as $item) {
 					$item = basename((string) $item);
-					if ($item === '') {
-						continue;
+					if ($item !== '') {
+						$source_files[] = $item;
 					}
-					$source_files[] = $item;
 				}
+			}
+		}
+		if (empty($source_files)) {
+			$physical_files = $this->transaksi_model->get_physical_dokumen_files($id);
+			if ($physical_files !== null) {
+				$source_files = $physical_files;
 			}
 		}
 
