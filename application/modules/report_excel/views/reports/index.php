@@ -50,6 +50,7 @@ $(function() {
 
     // Konversi DD-MM-YYYY -> YYYY-MM-DD untuk dibandingkan.
     function toIso(v) {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(v || '')) return v;
         var m = /^(\d{2})-(\d{2})-(\d{4})$/.exec(v || '');
         return m ? m[3] + '-' + m[2] + '-' + m[1] : '';
     }
@@ -144,15 +145,15 @@ $(function() {
         });
     }
 
-    if ($('#dp_mulai').length && $.fn.datetimepicker) {
-        $('#dp_mulai').datetimepicker({ format: 'DD-MM-YYYY' });
-    }
-    if ($('#dp_akhir').length && $.fn.datetimepicker) {
-        $('#dp_akhir').datetimepicker({ format: 'DD-MM-YYYY' });
-    }
+    $('.date-filter-trigger').on('click', function() {
+        var input = document.getElementById($(this).data('date-input'));
+        if (!input) return;
+        if (typeof input.showPicker === 'function') input.showPicker();
+        else input.focus();
+    });
 
-    // Satu handler bersama untuk kedua date picker: tidak refresh terpisah.
-    $(document).on('change.datetimepicker', '#dp_mulai, #dp_akhir', function() {
+    // Refresh setelah kedua tanggal native dipilih.
+    $(document).on('change', '#tgl_mulai, #tgl_akhir', function() {
         if (document.getElementById('periode') && document.getElementById('periode').value === 'custom') {
             maybeRefresh();
         }
@@ -217,8 +218,8 @@ Assets::add_js($inline_js, 'inline');
                                 <div class="form-group">
                                     <label>Tanggal Mulai</label>
                                     <div class="input-group date" id="dp_mulai" data-target-input="nearest">
-                                        <input type="text" name="tgl_mulai" id="tgl_mulai" class="form-control datetimepicker-input" data-target="#dp_mulai" placeholder="DD-MM-YYYY" value="<?php echo html_escape($tgl_mulai ? date('d-m-Y', strtotime($tgl_mulai)) : ''); ?>" />
-                                        <div class="input-group-append" data-target="#dp_mulai" data-toggle="datetimepicker">
+                                        <input type="date" name="tgl_mulai" id="tgl_mulai" class="form-control" value="<?php echo html_escape($tgl_mulai); ?>" />
+                                        <div class="input-group-append date-filter-trigger" data-date-input="tgl_mulai">
                                             <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                         </div>
                                     </div>
@@ -228,8 +229,8 @@ Assets::add_js($inline_js, 'inline');
                                 <div class="form-group">
                                     <label>Tanggal Akhir</label>
                                     <div class="input-group date" id="dp_akhir" data-target-input="nearest">
-                                        <input type="text" name="tgl_akhir" id="tgl_akhir" class="form-control datetimepicker-input" data-target="#dp_akhir" placeholder="DD-MM-YYYY" value="<?php echo html_escape($tgl_akhir ? date('d-m-Y', strtotime($tgl_akhir)) : ''); ?>" />
-                                        <div class="input-group-append" data-target="#dp_akhir" data-toggle="datetimepicker">
+                                        <input type="date" name="tgl_akhir" id="tgl_akhir" class="form-control" value="<?php echo html_escape($tgl_akhir); ?>" />
+                                        <div class="input-group-append date-filter-trigger" data-date-input="tgl_akhir">
                                             <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                         </div>
                                     </div>
