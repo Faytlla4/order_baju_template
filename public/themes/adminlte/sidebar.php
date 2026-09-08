@@ -1,3 +1,13 @@
+<style>
+.main-sidebar .main-menu-header {
+    color: #8A6A47 !important;
+}
+
+.main-sidebar .system-nav-header {
+    color: #8A6A47 !important;
+}
+</style>
+
 <aside class="main-sidebar sidebar-dark-primary elevation-1">
     <a href="<?php echo base_url(); ?>" class="brand-link">
         <img src="<?php echo base_url('assets/images/logo-transparent.png'); ?>" class="brand-image">
@@ -545,9 +555,9 @@
                     . "</a>\n"
                     . "</li>\n";
                 $navMenus = substr($navMenus, 0, $firstUlEnd + 1)
-                    . "\n<li class='nav-header'>MENU UTAMA</li>\n"
-                    . $dashboardSection
-                    . substr($navMenus, $firstUlEnd + 1);
+    . "\n<li class='nav-header main-menu-header'>MENU UTAMA</li>\n"
+    . $dashboardSection
+    . substr($navMenus, $firstUlEnd + 1);
             }
             if ($settingsBlock !== '') {
                 $lastUlClose = strrpos($navMenus, '</ul>');

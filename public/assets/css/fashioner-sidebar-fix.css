@@ -1,0 +1,394 @@
+/*
+ * FASHIONER SIDEBAR FIX
+ *
+ * Scope: sidebar layout only.
+ *
+ * The project uses AdminLTE PushMenu. AdminLTE owns the state classes:
+ *   - sidebar-collapse : sidebar is closed on desktop
+ *   - sidebar-open     : sidebar is open on mobile
+ *
+ * IMPORTANT:
+ * This file does not change routes, controllers, models, database code,
+ * authentication, or any other application feature.
+ *
+ * Desktop requirement:
+ *   OPEN   = 290px visible
+ *   CLOSED = completely outside the viewport
+ *
+ * The previous implementation used AdminLTE's mini-sidebar width (4.6rem)
+ * while the project uses a 290px custom sidebar. That left a visible strip
+ * when collapsed. We intentionally use the normal off-canvas pattern instead:
+ * the complete 290px sidebar moves to -290px.
+ */
+
+
+/* --------------------------------------------------------------------------
+ * Shared geometry
+ * -------------------------------------------------------------------------- */
+
+.main-sidebar,
+.main-sidebar::before {
+    box-sizing: border-box !important;
+
+    transition:
+        margin-left 0.30s ease-in-out,
+        width 0.30s ease-in-out,
+        transform 0.30s ease-in-out,
+        opacity 0.20s ease-in-out !important;
+}
+
+
+/* --------------------------------------------------------------------------
+ * DESKTOP: expanded
+ * -------------------------------------------------------------------------- */
+
+@media (min-width: 992px) {
+
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar,
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar::before {
+
+        width: 290px !important;
+        min-width: 290px !important;
+        max-width: 290px !important;
+
+        margin-left: 0 !important;
+
+        transform: translateX(0) !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+    }
+
+
+    /*
+     * When sidebar is open, the page content reserves exactly 290px.
+     */
+
+    body.sidebar-mini:not(.sidebar-collapse) .content-wrapper,
+    body.sidebar-mini:not(.sidebar-collapse) .main-header,
+    body.sidebar-mini:not(.sidebar-collapse) .main-footer {
+
+        margin-left: 290px !important;
+    }
+
+
+    /*
+     * Brand follows the same 290px geometry.
+     */
+
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .brand-link {
+
+        width: 290px !important;
+        min-width: 290px !important;
+        max-width: 290px !important;
+    }
+
+
+    /*
+     * Expanded sidebar content.
+     */
+
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .brand-text,
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .user-panel > .info,
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .nav-sidebar .nav-link p,
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .nav-header {
+
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .brand-text,
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .user-panel > .info {
+
+        display: block !important;
+    }
+
+
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .nav-sidebar .nav-link p {
+
+        display: flex !important;
+        width: auto !important;
+
+        overflow: visible !important;
+    }
+
+
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .nav-header {
+
+        display: block !important;
+    }
+
+
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .nav-treeview {
+
+        overflow: visible !important;
+    }
+}
+
+
+/* --------------------------------------------------------------------------
+ * DESKTOP: CLOSED
+ *
+ * IMPORTANT:
+ *
+ * DO NOT use AdminLTE's 4.6rem mini-sidebar here.
+ *
+ * The whole 290px sidebar is moved outside the viewport:
+ *
+ *     margin-left: -290px
+ *
+ * Therefore no icon, border, background, shadow, or 1px strip remains visible.
+ * -------------------------------------------------------------------------- */
+
+@media (min-width: 992px) {
+
+    body.sidebar-mini.sidebar-collapse .main-sidebar,
+    body.sidebar-mini.sidebar-collapse .main-sidebar::before,
+    body.sidebar-mini.sidebar-collapse .main-sidebar:hover,
+    body.sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused,
+    body.sidebar-mini.sidebar-collapse .main-sidebar[style] {
+
+        width: 290px !important;
+        min-width: 290px !important;
+        max-width: 290px !important;
+
+        /*
+         * THE IMPORTANT FIX.
+         *
+         * Entire sidebar width is moved outside the left side of the viewport.
+         */
+        margin-left: -290px !important;
+
+        transform: translateX(0) !important;
+
+        opacity: 0 !important;
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+
+        overflow-x: hidden !important;
+    }
+
+
+    /*
+     * When closed, the page must use the full viewport.
+     */
+
+    body.sidebar-mini.sidebar-collapse .content-wrapper,
+    body.sidebar-mini.sidebar-collapse .main-header,
+    body.sidebar-mini.sidebar-collapse .main-footer {
+
+        margin-left: 0 !important;
+    }
+
+
+    /*
+     * Keep brand geometry consistent while the sidebar is off-screen.
+     */
+
+    body.sidebar-mini.sidebar-collapse .main-sidebar .brand-link,
+    body.sidebar-mini.sidebar-collapse .main-sidebar[style] .brand-link {
+
+        width: 290px !important;
+        min-width: 290px !important;
+        max-width: 290px !important;
+    }
+
+
+    /*
+     * AdminLTE normally expands a collapsed sidebar when the mouse
+     * hovers over it.
+     *
+     * That behavior must NOT bring this sidebar back.
+     */
+
+    body.sidebar-mini.sidebar-collapse .main-sidebar:hover .brand-link,
+    body.sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused .brand-link {
+
+        width: 290px !important;
+        min-width: 290px !important;
+        max-width: 290px !important;
+    }
+
+
+    /*
+     * Submenus must not occupy layout while closed.
+     */
+
+    body.sidebar-mini.sidebar-collapse .main-sidebar .nav-treeview {
+
+        display: none !important;
+    }
+}
+
+
+/* --------------------------------------------------------------------------
+ * MOBILE: off-canvas sidebar
+ * -------------------------------------------------------------------------- */
+
+@media (max-width: 991.98px) {
+
+    /*
+     * Mobile sidebar width.
+     */
+
+    body .main-sidebar,
+    body .main-sidebar::before {
+
+        width: 250px !important;
+        min-width: 250px !important;
+        max-width: 250px !important;
+
+        margin-left: -250px !important;
+
+        transform: translateX(0) !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+    }
+
+
+    /*
+     * Mobile content always occupies the full viewport.
+     */
+
+    body .content-wrapper,
+    body .main-header,
+    body .main-footer {
+
+        margin-left: 0 !important;
+    }
+
+
+    /*
+     * Mobile CLOSED.
+     */
+
+    body:not(.sidebar-open) .main-sidebar,
+    body:not(.sidebar-open) .main-sidebar::before {
+
+        margin-left: -250px !important;
+    }
+
+
+    /*
+     * Mobile OPEN.
+     */
+
+    body.sidebar-open .main-sidebar,
+    body.sidebar-open .main-sidebar::before {
+
+        margin-left: 0 !important;
+    }
+
+
+    /*
+     * On mobile, sidebar-collapse means CLOSED unless
+     * sidebar-open is simultaneously present.
+     */
+
+    body.sidebar-collapse:not(.sidebar-open) .main-sidebar,
+    body.sidebar-collapse:not(.sidebar-open) .main-sidebar::before {
+
+        width: 250px !important;
+        min-width: 250px !important;
+        max-width: 250px !important;
+
+        margin-left: -250px !important;
+    }
+
+
+    /*
+     * Mobile sidebar can be opened even if sidebar-collapse exists.
+     */
+
+    body.sidebar-collapse.sidebar-open .main-sidebar,
+    body.sidebar-collapse.sidebar-open .main-sidebar::before {
+
+        margin-left: 0 !important;
+    }
+
+
+    /*
+     * Mobile brand.
+     */
+
+    .main-sidebar .brand-link {
+
+        width: 250px !important;
+        min-width: 250px !important;
+        max-width: 250px !important;
+    }
+
+
+    /*
+     * Mobile sidebar content remains normal.
+     */
+
+    .main-sidebar .brand-text,
+    .main-sidebar .nav-sidebar .nav-link p {
+
+        display: flex !important;
+
+        width: auto !important;
+        max-width: none !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+
+    /*
+     * AdminLTE overlay.
+     */
+
+    body.sidebar-open #sidebar-overlay {
+
+        display: block !important;
+        opacity: 1 !important;
+
+        z-index: 1039 !important;
+    }
+}
+
+
+/* --------------------------------------------------------------------------
+ * Prevent browser focus state from visually resurrecting the desktop sidebar.
+ * -------------------------------------------------------------------------- */
+
+@media (min-width: 992px) {
+
+    body.sidebar-mini.sidebar-collapse .main-sidebar:focus,
+    body.sidebar-mini.sidebar-collapse .main-sidebar:focus-within {
+
+        width: 290px !important;
+        min-width: 290px !important;
+        max-width: 290px !important;
+
+        margin-left: -290px !important;
+
+        opacity: 0 !important;
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+    }
+}
+
+
+/* --------------------------------------------------------------------------
+ * Hamburger accessibility.
+ *
+ * The hamburger remains usable because the HEADER is moved back to 0px
+ * when the sidebar is closed.
+ * -------------------------------------------------------------------------- */
+
+.main-header [data-widget="pushmenu"]:focus-visible {
+
+    outline: 2px solid #C8A96B !important;
+    outline-offset: 2px !important;
+}
