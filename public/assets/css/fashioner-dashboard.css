@@ -1097,6 +1097,11 @@ body.sidebar-collapse .main-header {
 }
 
 /* DateTimePicker dropdown z-index fix */
-.datetimepicker-dropdown {
+.datetimepicker-dropdown,
+.bootstrap-datetimepicker-widget {
     z-index: 1060 !important;
+}
+#custom-range {
+    position: relative;
+    z-index: 1050 !important;
 }
