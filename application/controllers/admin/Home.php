@@ -12,7 +12,7 @@ class Home extends Admin_Controller
 	{
 		// Summary cards
 		$total_order   = $this->db->count_all('order_baju');
-		$total_customer = $this->db->select('COUNT(DISTINCT nama_customer) as total')->get('order_baju')->row()->total;
+		$total_customer = $this->db->select('COUNT(DISTINCT TRIM(nama_customer)) as total')->get('order_baju')->row()->total;
 		$total_transaksi = $this->db->count_all('transaksi');
 
 		$status_diproses = $this->db->where('status_order', 'Diproses')->count_all_results('order_baju');
@@ -37,10 +37,10 @@ class Home extends Admin_Controller
 			->result();
 		Template::set('recent_orders', $recent_orders);
 
-		// Customer data (top 10 by order count)
-		$customers = $this->db->select('nama_customer, COUNT(*) as order_count, SUM(total_harga) as total_spend')
-			->group_by('nama_customer')
-			->order_by('order_count', 'desc')
+		// Customer data (top 10) - urut sama seperti order_baju (order terbaru dulu)
+		$customers = $this->db->select('TRIM(nama_customer) as nama_customer, COUNT(*) as order_count, SUM(total_harga) as total_spend, MAX(id) as latest_order_id')
+			->group_by('TRIM(nama_customer)')
+			->order_by('latest_order_id', 'desc')
 			->limit(10)
 			->get('order_baju')
 			->result();
