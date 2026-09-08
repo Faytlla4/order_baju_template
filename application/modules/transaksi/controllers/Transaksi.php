@@ -315,6 +315,7 @@ class Transaksi extends App_Controller
 		if (!is_array($existing_dokumen)) {
 			$existing_dokumen = array();
 		}
+		$physical_dokumen = $this->transaksi_model->get_physical_dokumen_files($id);
 		// Prioritas: daftar file dari database JSON. Folder fisik hanya fallback
 		// bila JSON kosong (transaksi lama tanpa folder fisik).
 		$display_dokumen = (!empty($existing_dokumen)) ? $existing_dokumen : $physical_dokumen;
