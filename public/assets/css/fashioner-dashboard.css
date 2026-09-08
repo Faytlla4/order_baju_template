@@ -1095,3 +1095,8 @@ body.sidebar-collapse .main-header {
     .sidebar .user-panel { margin: 14px 12px 10px !important; padding: 12px !important; }
     .nav-sidebar > .nav-item > .nav-link { margin-left: 8px !important; margin-right: 8px !important; }
 }
+
+/* DateTimePicker dropdown z-index fix */
+.datetimepicker-dropdown {
+    z-index: 1060 !important;
+}
