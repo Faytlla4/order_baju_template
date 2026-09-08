@@ -181,7 +181,7 @@
             // --- Section LAPORAN TRANSAKSI (dropdown) ---
             $isPdf   = ($this->uri->segment(2) == 'reports' && $this->uri->segment(3) == 'report_pdf');
             $isExcel = ($this->uri->segment(2) == 'reports' && $this->uri->segment(3) == 'report_excel');
-            $isLaporan = $isPdf || $isExcel || in_array($this->uri->segment(2), array('laporan-dokumen', 'laporan-database', 'laporan-history'), true);
+            $isLaporan = $isPdf || $isExcel;
             $laporanParentClass = $isLaporan ? "nav-item menu-is-opening menu-open" : "nav-item";
             $laporanParentLink  = $isLaporan ? ' active' : '';
             $laporanPdfActive   = $isPdf ? ' active' : '';
@@ -248,7 +248,7 @@
 
             $laporanDokumenSection = "<li class='{$lapDocParentClass}'>\n"
                 . "<a href='" . site_url(SITE_AREA . '/laporan-dokumen') . "' class='nav-link{$lapDocParentLink}'>\n"
-                . "<i class='nav-icon fas fa-file-pdf-o'></i>\n"
+                . "<i class='nav-icon fas fa-file-pdf'></i>\n"
                 . "<p>\nLaporan Dokumen\n<i class='right fas fa-angle-left'></i>\n</p>\n"
                 . "</a>\n"
                 . "<ul class='nav nav-treeview'>\n"
@@ -267,7 +267,7 @@
 
             // --- Section LAPORAN DATABASE (dropdown) ---
             $isLapDb    = ($this->uri->segment(2) == 'laporan-database');
-            $lapDbParentClass = $isLapDb ? "nav-item menu-is-opening menu-open" : "nav-item";
+            $lapDbParentClass = "nav-item";
             $lapDbParentLink  = $isLapDb ? ' active' : '';
 
             $laporanDatabaseSection = "<li class='{$lapDbParentClass}'>\n"
