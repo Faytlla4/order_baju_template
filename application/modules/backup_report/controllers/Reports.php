@@ -211,16 +211,21 @@ class Reports extends App_Controller
 
 		$rows = $this->backup_report_model->get_database_history($tgl_mulai, $tgl_akhir);
 
-		$page_type  = isset($page_type) ? $page_type : 'excel';
+		$page_type  = $this->input->get('page_type');
+		$page_type  = in_array($page_type, array('pdf', 'excel'), true) ? $page_type : 'excel';
+		$export_url = ($page_type === 'excel')
+			? site_url(SITE_AREA . '/laporan-database/cetak-excel')
+			: site_url(SITE_AREA . '/laporan-database/cetak-pdf');
+		if ($tgl_mulai !== '' || $tgl_akhir !== '') {
+			$export_url .= '?tgl_mulai=' . rawurlencode($tgl_mulai) . '&tgl_akhir=' . rawurlencode($tgl_akhir);
+		}
 		$html = $this->load->view('reports/_data_database', array(
 			'rows'       => $rows,
 			'tgl_mulai'  => $tgl_mulai,
 			'tgl_akhir'  => $tgl_akhir,
 			'show_pdf'   => ($page_type === 'pdf'),
 			'show_excel' => ($page_type === 'excel'),
-			'export_url' => ($page_type === 'excel')
-				? site_url(SITE_AREA . '/laporan-database/cetak-excel')
-				: site_url(SITE_AREA . '/laporan-database/cetak-pdf'),
+			'export_url' => $export_url,
 		), true);
 
 		$this->output->set_content_type('application/json')

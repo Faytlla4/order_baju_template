@@ -44,7 +44,7 @@ $(function() {
         $.ajax({
             url: filterUrl,
             method: 'GET',
-            data: { tgl_mulai: mulai, tgl_akhir: akhir },
+            data: { tgl_mulai: mulai, tgl_akhir: akhir, page_type: '<?php echo $page_type; ?>' },
             dataType: 'json'
         }).done(function(res) {
             filterBusy = false;
