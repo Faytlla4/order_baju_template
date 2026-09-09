@@ -1,30 +1,42 @@
 /*
  * FASHIONER SIDEBAR FIX
  *
- * Scope: sidebar layout only.
+ * Project : order_baju_template
  *
- * The project uses AdminLTE PushMenu. AdminLTE owns the state classes:
- *   - sidebar-collapse : sidebar is closed on desktop
- *   - sidebar-open     : sidebar is open on mobile
+ * SCOPE:
+ * - Sidebar layout
+ * - Sidebar visibility / PushMenu
+ * - Sidebar navigation color
  *
  * IMPORTANT:
- * This file does not change routes, controllers, models, database code,
- * authentication, or any other application feature.
+ * File ini TIDAK mengubah:
+ * - database
+ * - model
+ * - controller
+ * - route
+ * - authentication
+ * - transaksi
+ * - laporan
+ * - backup
+ * - API
+ * - backend logic
  *
- * Desktop requirement:
- *   OPEN   = 290px visible
- *   CLOSED = completely outside the viewport
- *
- * The previous implementation used AdminLTE's mini-sidebar width (4.6rem)
- * while the project uses a 290px custom sidebar. That left a visible strip
- * when collapsed. We intentionally use the normal off-canvas pattern instead:
- * the complete 290px sidebar moves to -290px.
+ * AdminLTE PushMenu tetap menjadi pengendali state sidebar.
  */
 
 
-/* --------------------------------------------------------------------------
- * Shared geometry
- * -------------------------------------------------------------------------- */
+/* ==========================================================================
+ * SIDEBAR COLOR SYSTEM
+ * ========================================================================== */
+
+:root {
+    --fashioner-sidebar-brown: #8A6A47;
+}
+
+
+/* ==========================================================================
+ * SHARED SIDEBAR GEOMETRY
+ * ========================================================================== */
 
 .main-sidebar,
 .main-sidebar::before {
@@ -38,9 +50,152 @@
 }
 
 
-/* --------------------------------------------------------------------------
- * DESKTOP: expanded
- * -------------------------------------------------------------------------- */
+/* ==========================================================================
+ * SIDEBAR NAVIGATION — BROWN
+ *
+ * Target hanya menu navigasi.
+ *
+ * Tidak menyentuh:
+ * - logo
+ * - username
+ * - search box
+ * - content
+ * - footer
+ * ========================================================================== */
+
+
+/*
+ * Semua text menu.
+ */
+
+.main-sidebar .nav-sidebar > .nav-item > .nav-link,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link p,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link p {
+    color: #8A6A47 !important;
+}
+
+
+/*
+ * Semua icon menu.
+ */
+
+.main-sidebar .nav-sidebar .nav-icon,
+.main-sidebar .nav-sidebar .nav-link .nav-icon {
+    color: #8A6A47 !important;
+}
+
+
+/*
+ * Icon arrow dropdown.
+ */
+
+.main-sidebar .nav-sidebar .nav-link .right {
+    color: #8A6A47 !important;
+}
+
+
+/*
+ * Hover.
+ *
+ * Tetap brown sesuai permintaan.
+ */
+
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:hover,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:hover p,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:hover .nav-icon,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:hover .right,
+
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link:hover,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link:hover p,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link:hover .nav-icon,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link:hover .right {
+    color: #8A6A47 !important;
+}
+
+
+/*
+ * Focus.
+ */
+
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:focus,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:focus p,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:focus .nav-icon,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:focus .right,
+
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link:focus,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link:focus p,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link:focus .nav-icon,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link:focus .right {
+    color: #8A6A47 !important;
+}
+
+
+/*
+ * Active menu.
+ */
+
+.main-sidebar .nav-sidebar > .nav-item > .nav-link.active,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link.active p,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link.active .nav-icon,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link.active .right,
+
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link.active,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link.active p,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link.active .nav-icon,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link.active .right {
+    color: #8A6A47 !important;
+}
+
+
+/*
+ * Parent dropdown ketika sedang terbuka.
+ */
+
+.main-sidebar .nav-sidebar > .nav-item.menu-open > .nav-link,
+.main-sidebar .nav-sidebar > .nav-item.menu-open > .nav-link p,
+.main-sidebar .nav-sidebar > .nav-item.menu-open > .nav-link .nav-icon,
+.main-sidebar .nav-sidebar > .nav-item.menu-open > .nav-link .right {
+    color: #8A6A47 !important;
+}
+
+
+/*
+ * AdminLTE kadang memberikan warna langsung pada element aktif.
+ *
+ * Selector dibuat lebih spesifik supaya warna brown tetap menang.
+ */
+
+.main-sidebar .nav-sidebar .nav-link.active *,
+.main-sidebar .nav-sidebar .nav-link:hover *,
+.main-sidebar .nav-sidebar .nav-link:focus *,
+.main-sidebar .nav-sidebar .menu-open > .nav-link * {
+    color: #8A6A47 !important;
+}
+
+
+/*
+ * Jangan biarkan background bawaan active AdminLTE mengubah
+ * identitas warna text/icon.
+ *
+ * Background tidak dipaksa brown karena permintaan hanya
+ * mengubah warna text dan icon.
+ */
+
+
+/* ==========================================================================
+ * SIDEBAR SECTION HEADER
+ * ========================================================================== */
+
+.main-sidebar .main-menu-header,
+.main-sidebar .nav-header {
+    color: #8A6A47 !important;
+}
+
+
+/* ==========================================================================
+ * DESKTOP: SIDEBAR OPEN
+ * ========================================================================== */
 
 @media (min-width: 992px) {
 
@@ -63,7 +218,7 @@
 
 
     /*
-     * When sidebar is open, the page content reserves exactly 290px.
+     * Content menggunakan ruang penuh sidebar.
      */
 
     body.sidebar-mini:not(.sidebar-collapse) .content-wrapper,
@@ -75,7 +230,7 @@
 
 
     /*
-     * Brand follows the same 290px geometry.
+     * Brand mengikuti lebar sidebar.
      */
 
     body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .brand-link {
@@ -87,7 +242,7 @@
 
 
     /*
-     * Expanded sidebar content.
+     * Sidebar expanded.
      */
 
     body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .brand-text,
@@ -110,6 +265,7 @@
     body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .nav-sidebar .nav-link p {
 
         display: flex !important;
+
         width: auto !important;
 
         overflow: visible !important;
@@ -129,19 +285,13 @@
 }
 
 
-/* --------------------------------------------------------------------------
- * DESKTOP: CLOSED
+/* ==========================================================================
+ * DESKTOP: SIDEBAR CLOSED
  *
- * IMPORTANT:
+ * Sidebar harus benar-benar hilang.
  *
- * DO NOT use AdminLTE's 4.6rem mini-sidebar here.
- *
- * The whole 290px sidebar is moved outside the viewport:
- *
- *     margin-left: -290px
- *
- * Therefore no icon, border, background, shadow, or 1px strip remains visible.
- * -------------------------------------------------------------------------- */
+ * Tidak menggunakan mini-sidebar 4.6rem AdminLTE.
+ * ========================================================================== */
 
 @media (min-width: 992px) {
 
@@ -155,11 +305,6 @@
         min-width: 290px !important;
         max-width: 290px !important;
 
-        /*
-         * THE IMPORTANT FIX.
-         *
-         * Entire sidebar width is moved outside the left side of the viewport.
-         */
         margin-left: -290px !important;
 
         transform: translateX(0) !important;
@@ -174,7 +319,7 @@
 
 
     /*
-     * When closed, the page must use the full viewport.
+     * Content kembali menggunakan seluruh viewport.
      */
 
     body.sidebar-mini.sidebar-collapse .content-wrapper,
@@ -186,7 +331,7 @@
 
 
     /*
-     * Keep brand geometry consistent while the sidebar is off-screen.
+     * Brand tetap memiliki geometry yang konsisten.
      */
 
     body.sidebar-mini.sidebar-collapse .main-sidebar .brand-link,
@@ -199,10 +344,7 @@
 
 
     /*
-     * AdminLTE normally expands a collapsed sidebar when the mouse
-     * hovers over it.
-     *
-     * That behavior must NOT bring this sidebar back.
+     * Hover tidak boleh membuka sidebar kembali.
      */
 
     body.sidebar-mini.sidebar-collapse .main-sidebar:hover .brand-link,
@@ -215,7 +357,7 @@
 
 
     /*
-     * Submenus must not occupy layout while closed.
+     * Submenu tidak boleh mengambil layout ketika sidebar tertutup.
      */
 
     body.sidebar-mini.sidebar-collapse .main-sidebar .nav-treeview {
@@ -225,14 +367,14 @@
 }
 
 
-/* --------------------------------------------------------------------------
- * MOBILE: off-canvas sidebar
- * -------------------------------------------------------------------------- */
+/* ==========================================================================
+ * MOBILE: OFF-CANVAS SIDEBAR
+ * ========================================================================== */
 
 @media (max-width: 991.98px) {
 
     /*
-     * Mobile sidebar width.
+     * Lebar sidebar mobile.
      */
 
     body .main-sidebar,
@@ -254,7 +396,7 @@
 
 
     /*
-     * Mobile content always occupies the full viewport.
+     * Content mobile selalu full width.
      */
 
     body .content-wrapper,
@@ -288,8 +430,8 @@
 
 
     /*
-     * On mobile, sidebar-collapse means CLOSED unless
-     * sidebar-open is simultaneously present.
+     * sidebar-collapse pada mobile berarti CLOSED,
+     * kecuali sidebar-open aktif.
      */
 
     body.sidebar-collapse:not(.sidebar-open) .main-sidebar,
@@ -304,7 +446,7 @@
 
 
     /*
-     * Mobile sidebar can be opened even if sidebar-collapse exists.
+     * sidebar tetap bisa dibuka ketika sidebar-collapse aktif.
      */
 
     body.sidebar-collapse.sidebar-open .main-sidebar,
@@ -315,7 +457,7 @@
 
 
     /*
-     * Mobile brand.
+     * Brand mobile.
      */
 
     .main-sidebar .brand-link {
@@ -327,7 +469,7 @@
 
 
     /*
-     * Mobile sidebar content remains normal.
+     * Text menu mobile tetap terlihat.
      */
 
     .main-sidebar .brand-text,
@@ -344,12 +486,13 @@
 
 
     /*
-     * AdminLTE overlay.
+     * Overlay AdminLTE.
      */
 
     body.sidebar-open #sidebar-overlay {
 
         display: block !important;
+
         opacity: 1 !important;
 
         z-index: 1039 !important;
@@ -357,9 +500,9 @@
 }
 
 
-/* --------------------------------------------------------------------------
- * Prevent browser focus state from visually resurrecting the desktop sidebar.
- * -------------------------------------------------------------------------- */
+/* ==========================================================================
+ * ACCESSIBILITY / FOCUS
+ * ========================================================================== */
 
 @media (min-width: 992px) {
 
@@ -380,15 +523,13 @@
 }
 
 
-/* --------------------------------------------------------------------------
- * Hamburger accessibility.
- *
- * The hamburger remains usable because the HEADER is moved back to 0px
- * when the sidebar is closed.
- * -------------------------------------------------------------------------- */
+/* ==========================================================================
+ * HAMBURGER ACCESSIBILITY
+ * ========================================================================== */
 
 .main-header [data-widget="pushmenu"]:focus-visible {
 
     outline: 2px solid #C8A96B !important;
+
     outline-offset: 2px !important;
 }

@@ -1,561 +1,897 @@
-<style>
-.main-sidebar .main-menu-header {
-    color: #8A6A47 !important;
-}
+<?php defined('BASEPATH') || exit('No direct script access allowed');
 
-.main-sidebar .system-nav-header {
-    color: #8A6A47 !important;
-}
+/**
+ * AdminLTE Sidebar
+ * Project: order_baju_template
+ *
+ * Sidebar ini sengaja tidak menggunakan:
+ *
+ *     Contexts::render_menu()
+ *
+ * dan tidak melakukan manipulasi HTML hasil generator menu.
+ *
+ * Alasannya:
+ * - Struktur sidebar aplikasi sudah ditentukan secara eksplisit.
+ * - Semua URL diarahkan langsung ke route aplikasi.
+ * - Parent menu hanya berfungsi sebagai dropdown.
+ * - Child menu langsung menuju controller/module masing-masing.
+ * - Menu Laporan Database sengaja disembunyikan.
+ * - Settings dan Developer tidak ditampilkan.
+ *
+ * Jangan menambahkan Contexts::render_menu() kembali ke file ini
+ * kecuali seluruh struktur menu memang ingin dikembalikan ke
+ * sistem menu generator Bonfire.
+ */
+
+/*
+|--------------------------------------------------------------------------
+| Current URL
+|--------------------------------------------------------------------------
+|
+| Digunakan hanya untuk menentukan menu active/open.
+|
+*/
+$currentUri = trim($this->uri->uri_string(), '/');
+
+/*
+|--------------------------------------------------------------------------
+| Helper URL
+|--------------------------------------------------------------------------
+*/
+$adminUrl = function ($path = '') {
+    $path = trim((string) $path, '/');
+
+    if ($path === '') {
+        return site_url(SITE_AREA);
+    }
+
+    return site_url(SITE_AREA . '/' . $path);
+};
+
+/*
+|--------------------------------------------------------------------------
+| Active helpers
+|--------------------------------------------------------------------------
+*/
+$isAdminRoot = ($currentUri === trim(SITE_AREA, '/'));
+
+$isOrderBaju = (
+    $currentUri === trim(SITE_AREA . '/content', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/content/order_baju', '/') . '/'
+    ) === 0 ||
+    $currentUri === trim(SITE_AREA . '/content/order_baju', '/')
+);
+
+$isMaster = (
+    $currentUri === trim(SITE_AREA . '/master', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/master/', '/')
+    ) === 0
+);
+
+$isJenisBaju = (
+    $currentUri === trim(SITE_AREA . '/master/jenis_baju', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/master/jenis_baju/', '/')
+    ) === 0
+);
+
+$isUkuran = (
+    $currentUri === trim(SITE_AREA . '/master/ukuran', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/master/ukuran/', '/')
+    ) === 0
+);
+
+$isWarna = (
+    $currentUri === trim(SITE_AREA . '/master/warna', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/master/warna/', '/')
+    ) === 0
+);
+
+$isTransaksi = (
+    $currentUri === trim(SITE_AREA . '/transaksi', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/transaksi/', '/')
+    ) === 0
+);
+
+$isLaporanTransaksi = (
+    $currentUri === trim(SITE_AREA . '/reports', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/reports/', '/')
+    ) === 0
+);
+
+$isLaporanDokumen = (
+    $currentUri === trim(SITE_AREA . '/laporan-dokumen', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/laporan-dokumen/', '/')
+    ) === 0
+);
+
+$isRiwayatLaporan = (
+    $currentUri === trim(SITE_AREA . '/laporan-history', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/laporan-history/', '/')
+    ) === 0
+);
+
+$isBackup = (
+    $currentUri === trim(SITE_AREA . '/backup', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/backup/', '/')
+    ) === 0
+);
+
+/*
+|--------------------------------------------------------------------------
+| Specific active states
+|--------------------------------------------------------------------------
+*/
+$isOrderBajuPage = (
+    $currentUri === trim(SITE_AREA . '/content/order_baju', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/content/order_baju/', '/')
+    ) === 0
+);
+
+$isReportPdf = (
+    $currentUri === trim(SITE_AREA . '/reports/report_pdf', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/reports/report_pdf/', '/')
+    ) === 0
+);
+
+$isReportExcel = (
+    $currentUri === trim(SITE_AREA . '/reports/report_excel', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/reports/report_excel/', '/')
+    ) === 0
+);
+
+$isLaporanDokumenPdf = (
+    $currentUri === trim(SITE_AREA . '/laporan-dokumen/pdf', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/laporan-dokumen/pdf/', '/')
+    ) === 0
+);
+
+$isLaporanDokumenExcel = (
+    $currentUri === trim(SITE_AREA . '/laporan-dokumen/excel', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/laporan-dokumen/excel/', '/')
+    ) === 0
+);
+
+$isBackupPerId = (
+    $currentUri === trim(SITE_AREA . '/backup/per_id', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/backup/per_id/', '/')
+    ) === 0
+);
+
+$isBackupPerFolder = (
+    $currentUri === trim(SITE_AREA . '/backup/per_folder', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/backup/per_folder/', '/')
+    ) === 0
+);
+
+$isBackupDatabase = (
+    $currentUri === trim(SITE_AREA . '/backup/database', '/') ||
+    strpos(
+        $currentUri,
+        trim(SITE_AREA . '/backup/database/', '/')
+    ) === 0
+);
+
+/*
+|--------------------------------------------------------------------------
+| Parent state
+|--------------------------------------------------------------------------
+*/
+$orderBajuOpen = $isOrderBaju;
+$masterOpen = $isMaster;
+$transaksiOpen = $isTransaksi;
+$laporanTransaksiOpen = $isLaporanTransaksi;
+$laporanDokumenOpen = $isLaporanDokumen;
+$backupOpen = $isBackup;
+
+/*
+|--------------------------------------------------------------------------
+| CSS helpers
+|--------------------------------------------------------------------------
+*/
+$orderBajuParentClass = $orderBajuOpen
+    ? 'nav-item menu-is-opening menu-open'
+    : 'nav-item';
+
+$masterParentClass = $masterOpen
+    ? 'nav-item menu-is-opening menu-open'
+    : 'nav-item';
+
+$transaksiParentClass = $transaksiOpen
+    ? 'nav-item menu-is-opening menu-open'
+    : 'nav-item';
+
+$laporanTransaksiParentClass = $laporanTransaksiOpen
+    ? 'nav-item menu-is-opening menu-open'
+    : 'nav-item';
+
+$laporanDokumenParentClass = $laporanDokumenOpen
+    ? 'nav-item menu-is-opening menu-open'
+    : 'nav-item';
+
+$backupParentClass = $backupOpen
+    ? 'nav-item menu-is-opening menu-open'
+    : 'nav-item';
+?>
+
+<style>
+    /*
+     * Sidebar section heading.
+     */
+    .main-sidebar .main-menu-header {
+        color: #8A6A47 !important;
+    }
+
+    /*
+     * Brand.
+     */
+    .main-sidebar .brand-link {
+        display: flex;
+        align-items: center;
+        min-height: 58px;
+    }
+
+    .main-sidebar .brand-image {
+        width: 34px;
+        height: 34px;
+        object-fit: contain;
+        margin-left: 4px;
+        margin-right: 10px;
+        opacity: 1;
+    }
+
+    .main-sidebar .brand-text {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.1;
+    }
+
+    .main-sidebar .brand-subtitle {
+        display: block;
+        margin-top: 4px;
+        font-size: 10px;
+        font-weight: 400;
+        opacity: .65;
+    }
+
+    /*
+     * Parent menu.
+     */
+    .main-sidebar .nav-sidebar > .nav-item > .nav-link {
+        cursor: pointer;
+    }
+
+    /*
+     * Child menu indentation.
+     */
+    .main-sidebar .nav-treeview {
+        padding-left: 0;
+    }
+
+    .main-sidebar .nav-treeview > .nav-item > .nav-link {
+        padding-left: 2.5rem;
+    }
+
+    .main-sidebar .nav-treeview > .nav-item > .nav-link .nav-icon {
+        font-size: .65rem;
+    }
+
+    /*
+     * Header spacing.
+     */
+    .main-sidebar .nav-header {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    /*
+     * Prevent the sidebar's parent links from looking like normal
+     * destination links because they are dropdown controls.
+     */
+    .main-sidebar .sidebar-parent-link {
+        user-select: none;
+    }
 </style>
 
 <aside class="main-sidebar sidebar-dark-primary elevation-1">
-    <a href="<?php echo base_url(); ?>" class="brand-link">
-        <img src="<?php echo base_url('assets/images/logo-transparent.png'); ?>" class="brand-image">
+
+    <!-- ==========================================================
+         BRAND
+         ========================================================== -->
+    <a href="<?php echo html_escape($adminUrl('')); ?>" class="brand-link">
+
+        <img
+            src="<?php echo html_escape(base_url('assets/images/logo-transparent.png')); ?>"
+            class="brand-image"
+            alt="Fashioner"
+        >
+
         <div class="brand-text">
             <span>FASHIONER</span>
-            <small class="brand-subtitle">Fashion Management System</small>
+            <small class="brand-subtitle">
+                Fashion Management System
+            </small>
         </div>
+
     </a>
 
+
+    <!-- ==========================================================
+         SIDEBAR
+         ========================================================== -->
     <div class="sidebar">
-        <?php $userDisplayName = isset($current_user->display_name) && !empty($current_user->display_name) ? $current_user->display_name : ($this->settings_lib->item('auth.use_usernames') ? $current_user->username : $current_user->email); ?>
-        <div class="user-panel">
+
+        <?php
+        $userDisplayName = '';
+
+        if (
+            isset($current_user->display_name) &&
+            !empty($current_user->display_name)
+        ) {
+            $userDisplayName = $current_user->display_name;
+        } elseif (
+            isset($current_user->username) &&
+            !empty($current_user->username)
+        ) {
+            $userDisplayName = $current_user->username;
+        } elseif (
+            isset($current_user->email) &&
+            !empty($current_user->email)
+        ) {
+            $userDisplayName = $current_user->email;
+        } else {
+            $userDisplayName = 'Administrator';
+        }
+        ?>
+
+        <!-- ======================================================
+             USER PANEL
+             ====================================================== -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+
             <div class="image">
-                <img src="<?php echo base_url('assets/images/anonym.png'); ?>" class="img-circle elevation-2">
+                <img
+                    src="<?php echo html_escape(base_url('assets/images/anonym.png')); ?>"
+                    class="img-circle elevation-2"
+                    alt="User"
+                >
             </div>
+
             <div class="info">
-                <?php
-                	$userDisplayName = isset($current_user->display_name) && !empty($current_user->display_name) ? $current_user->display_name : ($this->settings_lib->item('auth.use_usernames') ? $current_user->username : $current_user->email);
-                ?>
-                <a href="#" class="d-block"><?php echo $userDisplayName; ?></a>
-                <small>Administrator</small>
+
+                <a href="#" class="d-block">
+                    <?php echo html_escape($userDisplayName); ?>
+                </a>
+
+                <small>
+                    Administrator
+                </small>
+
             </div>
+
         </div>
 
+
+        <!-- ======================================================
+             SEARCH
+             ====================================================== -->
         <div class="form-inline">
-            <div class="input-group" data-widget="sidebar-search">
-                <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+
+            <div
+                class="input-group"
+                data-widget="sidebar-search"
+            >
+
+                <input
+                    class="form-control form-control-sidebar"
+                    type="search"
+                    placeholder="Search"
+                    aria-label="Search"
+                >
+
                 <div class="input-group-append">
-                    <button class="btn btn-sidebar">
+
+                    <button
+                        type="button"
+                        class="btn btn-sidebar"
+                        aria-label="Search sidebar"
+                    >
                         <i class="fas fa-search fa-fw"></i>
                     </button>
+
                 </div>
+
             </div>
+
         </div>
 
+
+        <!-- ======================================================
+             NAVIGATION
+             ====================================================== -->
         <nav class="mt-2">
-            <?php
-            if (!class_exists('Contexts', false)) {
-                require_once APPPATH . '../bonfire/modules/ui/libraries/Contexts.php';
-                new Contexts();
-            }
-            $navMenus = Contexts::render_menu('text', 'normal');
 
-            // Menu SK Tidak Mampu sementara disembunyikan dari navigasi.
-            // Source code dan fitur tetap dipertahankan.
-            // Untuk menampilkan kembali, hapus baris preg_replace berikut.
-            $navMenus = preg_replace(
-                '/<li class=\'nav-item\'>\s*<a href=\'[^\']*sk_tidak_mampu[^\']*\'[^>]*>.*?<\/li>\s*/is',
-                '',
-                $navMenus
-            );
+            <ul
+                class="nav nav-pills nav-sidebar flex-column"
+                data-widget="treeview"
+                role="menu"
+                data-accordion="false"
+            >
 
-            // Hapus context "reports" dan "developer" dari menu utama sidebar
-            // (akan dipindahkan ke dalam Settings).
-            // Menggunakan pendekatan string-based untuk menghapus elemen <li> secara akurat.
-            foreach (array('/reports', '/developer') as $ctxPath) {
-                $marker = strpos($ctxPath, 'reports') !== false ? '/reports' : '/developer';
-                $searchPos = strpos($navMenus, "href='" . site_url(SITE_AREA . $marker) . "'");
-                if ($searchPos !== false) {
-                    // Cari pembuka <li> sebelum link
-                    $liOpenPos = strrpos(substr($navMenus, 0, $searchPos), '<li');
-                    if ($liOpenPos !== false) {
-                        // Hitung kedalaman nested <li> untuk menemukan closing yang tepat
-                        $depth = 0;
-                        $scanPos = $liOpenPos;
-                        $len = strlen($navMenus);
-                        while ($scanPos < $len) {
-                            $nextLiOpen = strpos($navMenus, '<li', $scanPos);
-                            $nextLiClose = strpos($navMenus, '</li>', $scanPos);
-                            if ($nextLiClose === false) break;
-                            if ($nextLiOpen !== false && $nextLiOpen < $nextLiClose) {
-                                $depth++;
-                                $scanPos = $nextLiOpen + 3;
-                            } else {
-                                $depth--;
-                                $scanPos = $nextLiClose + 5;
-                                if ($depth <= 0) {
-                                    // Sertakan whitespace setelah closing </li>
-                                    while ($scanPos < $len && ctype_space($navMenus[$scanPos])) {
-                                        $scanPos++;
-                                    }
-                                    $navMenus = substr($navMenus, 0, $liOpenPos) . substr($navMenus, $scanPos);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+                <!-- ==================================================
+                     MENU UTAMA
+                     ================================================== -->
+                <li class="nav-header main-menu-header">
+                    MENU UTAMA
+                </li>
 
-            // --- CONTENT dropdown (replace empty context) ---
-            $isContent = ($this->uri->segment(2) == 'content');
-            $isContentOrder = ($this->uri->segment(2) == 'content' && $this->uri->segment(3) == 'order_baju');
-            $contentParentClass = ($isContent || $isContentOrder) ? "nav-item menu-is-opening menu-open" : "nav-item";
-            $contentParentLink  = ($isContent && !$isContentOrder) ? ' active' : '';
-            $contentOrderActive = $isContentOrder ? ' active' : '';
 
-            $contentSection = "<li class='{$contentParentClass}'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/content') . "' class='nav-link{$contentParentLink}'>\n"
-                . "<i class='nav-icon fas fa-tshirt'></i>\n"
-                . "<p>\nOrder Baju\n<i class='right fas fa-angle-left'></i>\n</p>\n"
-                . "</a>\n"
-                . "<ul class='nav nav-treeview'>\n"
-                . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/content/order_baju') . "' class='nav-link{$contentOrderActive}'>\n"
-                . "<i class='nav-icon far fa-circle'></i>\n<p>Order Baju</p>\n"
-                . "</a>\n"
-                . "</li>\n"
-                . "</ul>\n"
-                . "</li>\n";
+                <!-- ==================================================
+                     DASHBOARD
+                     ================================================== -->
+                <li class="nav-item">
 
-            $pos0 = strrpos($navMenus, '</ul>');
-            if ($pos0 !== false) {
-                $navMenus = substr($navMenus, 0, $pos0) . $contentSection . substr($navMenus, $pos0);
-            }
+                    <a
+                        href="<?php echo html_escape($adminUrl('')); ?>"
+                        class="nav-link<?php echo $isAdminRoot ? ' active' : ''; ?>"
+                    >
 
-            // --- MASTER dropdown (replace empty context) ---
-            $isMaster       = ($this->uri->segment(2) == 'master');
-            $isMasterJenis  = ($this->uri->segment(2) == 'master' && $this->uri->segment(3) == 'jenis_baju');
-            $isMasterUkuran = ($this->uri->segment(2) == 'master' && $this->uri->segment(3) == 'ukuran');
-            $isMasterWarna  = ($this->uri->segment(2) == 'master' && $this->uri->segment(3) == 'warna');
-            $masterParentClass = $isMaster ? "nav-item menu-is-opening menu-open" : "nav-item";
-            $masterParentLink  = $isMaster && !$isMasterJenis && !$isMasterUkuran && !$isMasterWarna ? ' active' : '';
-            $masterJenisActive  = $isMasterJenis ? ' active' : '';
-            $masterUkuranActive = $isMasterUkuran ? ' active' : '';
-            $masterWarnaActive  = $isMasterWarna ? ' active' : '';
+                        <i class="nav-icon fas fa-th-large"></i>
 
-            $masterSection = "<li class='{$masterParentClass}'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/master') . "' class='nav-link{$masterParentLink}'>\n"
-                . "<i class='nav-icon fas fa-database'></i>\n"
-                . "<p>\nMaster\n<i class='right fas fa-angle-left'></i>\n</p>\n"
-                . "</a>\n"
-                . "<ul class='nav nav-treeview'>\n"
-                . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/master/jenis_baju') . "' class='nav-link{$masterJenisActive}'>\n"
-                . "<i class='nav-icon far fa-circle'></i>\n<p>Jenis Baju</p>\n"
-                . "</a>\n"
-                . "</li>\n"
-                . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/master/ukuran') . "' class='nav-link{$masterUkuranActive}'>\n"
-                . "<i class='nav-icon far fa-circle'></i>\n<p>Ukuran</p>\n"
-                . "</a>\n"
-                . "</li>\n"
-                . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/master/warna') . "' class='nav-link{$masterWarnaActive}'>\n"
-                . "<i class='nav-icon far fa-circle'></i>\n<p>Warna</p>\n"
-                . "</a>\n"
-                . "</li>\n"
-                . "</ul>\n"
-                . "</li>\n";
+                        <p>
+                            Dashboard
+                        </p>
 
-            $pos00 = strrpos($navMenus, '</ul>');
-            if ($pos00 !== false) {
-                $navMenus = substr($navMenus, 0, $pos00) . $masterSection . substr($navMenus, $pos00);
-            }
+                    </a>
 
-            // --- Transaksi menu ---
-            $isTransaksi = $this->uri->segment(2) == 'transaksi';
-            $transaksiLink = $isTransaksi ? ' active' : '';
-            $transaksiParentClass = $isTransaksi ? "nav-item menu-is-opening menu-open" : "nav-item";
-            $transaksiChildLink1 = $isTransaksi ? ' active' : '';
-            $transaksiMenu = "<li class='{$transaksiParentClass}'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/transaksi/transaksi') . "' class='nav-link{$transaksiLink}'>\n"
-                . "<i class='nav-icon fas fa-shopping-cart'></i>\n"
-                . "<p>\nTransaksi\n<i class='right fas fa-angle-left'></i>\n</p>\n"
-                . "</a>\n"
-                . "<ul class='nav nav-treeview'>\n"
-                . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/transaksi/transaksi') . "' class='nav-link{$transaksiChildLink1}'>\n"
-                . "<i class='nav-icon far fa-circle'></i>\n<p>Daftar Transaksi</p>\n"
-                . "</a>\n"
-                . "</li>\n"
-                . "</ul>\n"
-                . "</li>\n";
+                </li>
 
-            $pos = strrpos($navMenus, '</ul>');
-            if ($pos !== false) {
-                $navMenus = substr($navMenus, 0, $pos) . $transaksiMenu . substr($navMenus, $pos);
-            }
 
-            // --- Section LAPORAN TRANSAKSI (dropdown) ---
-            $isPdf   = ($this->uri->segment(2) == 'reports' && $this->uri->segment(3) == 'report_pdf');
-            $isExcel = ($this->uri->segment(2) == 'reports' && $this->uri->segment(3) == 'report_excel');
-            $isLaporan = $isPdf || $isExcel || in_array($this->uri->segment(2), array('laporan-dokumen', 'laporan-database', 'laporan-history'), true);
-            $laporanParentClass = $isLaporan ? "nav-item menu-is-opening menu-open" : "nav-item";
-            $laporanParentLink  = $isLaporan ? ' active' : '';
-            $laporanPdfActive   = $isPdf ? ' active' : '';
-            $laporanExcelActive = $isExcel ? ' active' : '';
+                <!-- ==================================================
+                     ORDER BAJU
+                     ================================================== -->
+                <li class="<?php echo $orderBajuParentClass; ?>">
 
-            $laporanSection = "<li class='{$laporanParentClass}'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/reports') . "' class='nav-link{$laporanParentLink}'>\n"
-                . "<i class='nav-icon fas fa-file-invoice'></i>\n"
-                . "<p>\nLaporan Transaksi\n<i class='right fas fa-angle-left'></i>\n</p>\n"
-                . "</a>\n"
-                . "<ul class='nav nav-treeview'>\n"
-                . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/reports/report_pdf') . "' class='nav-link{$laporanPdfActive}'>\n"
-                . "<i class='nav-icon far fa-circle'></i>\n<p>Laporan Transaksi PDF</p>\n"
-                . "</a>\n"
-                . "</li>\n"
-                . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/reports/report_excel') . "' class='nav-link{$laporanExcelActive}'>\n"
-                . "<i class='nav-icon far fa-circle'></i>\n<p>Laporan Transaksi Excel</p>\n"
-                . "</a>\n"
-                . "</li>\n"
-                . "</ul>\n"
-                . "</li>\n";
+                    <a
+                        href="#"
+                        class="nav-link sidebar-parent-link<?php echo $orderBajuOpen ? ' active' : ''; ?>"
+                        aria-expanded="<?php echo $orderBajuOpen ? 'true' : 'false'; ?>"
+                    >
 
-            // --- Section BACKUP (dropdown) ---
-            $isBackup       = ($this->uri->segment(2) == 'backup');
-            $isBackupDb     = ($this->uri->segment(2) == 'backup' && in_array($this->uri->segment(3), array('database', 'database-page'), true));
-            $isBackupPerId  = ($this->uri->segment(2) == 'backup' && $this->uri->segment(3) == 'per_id');
-            $isBackupPerFld = ($this->uri->segment(2) == 'backup' && $this->uri->segment(3) == 'per_folder');
-            $backupParentClass = $isBackup ? "nav-item menu-is-opening menu-open" : "nav-item";
-            $backupParentLink  = $isBackup ? ' active' : '';
-            $backupDbActive    = $isBackupDb ? ' active' : '';
-            $backupPerIdActive = $isBackupPerId ? ' active' : '';
-            $backupPerFldActive= $isBackupPerFld ? ' active' : '';
+                        <i class="nav-icon fas fa-tshirt"></i>
 
-            $backupSection = "<li class='{$backupParentClass}'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/backup') . "' class='nav-link{$backupParentLink}'>\n"
-                . "<i class='nav-icon fas fa-download'></i>\n"
-                . "<p>\nBackup\n<i class='right fas fa-angle-left'></i>\n</p>\n"
-                . "</a>\n"
-                . "<ul class='nav nav-treeview'>\n"
-                . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/backup/per_id') . "' class='nav-link{$backupPerIdActive}'>\n"
-                . "<i class='nav-icon far fa-circle'></i>\n<p>Backup Dokumen ID</p>\n"
-                . "</a>\n"
-                . "</li>\n"
-                . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/backup/per_folder') . "' class='nav-link{$backupPerFldActive}'>\n"
-                . "<i class='nav-icon far fa-circle'></i>\n<p>Backup Dokumen Folder</p>\n"
-                . "</a>\n"
-                . "</li>\n"
-                . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/backup/database') . "' class='nav-link{$backupDbActive}'>\n"
-                . "<i class='nav-icon far fa-circle'></i>\n<p>Backup Database</p>\n"
-                . "</a>\n"
-                . "</li>\n"
-                . "</ul>\n"
-                . "</li>\n";
+                        <p>
+                            Order Baju
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
 
-            // --- Section LAPORAN DOKUMEN (dropdown) ---
-            $isLapDoc    = ($this->uri->segment(2) == 'laporan-dokumen');
-            $lapDocParentClass = $isLapDoc ? "nav-item menu-is-opening menu-open" : "nav-item";
-            $lapDocParentLink  = $isLapDoc ? ' active' : '';
+                    </a>
 
-            $laporanDokumenSection = "<li class='{$lapDocParentClass}'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/laporan-dokumen') . "' class='nav-link{$lapDocParentLink}'>\n"
-                . "<i class='nav-icon fas fa-file-pdf-o'></i>\n"
-                . "<p>\nLaporan Dokumen\n<i class='right fas fa-angle-left'></i>\n</p>\n"
-                . "</a>\n"
-                . "<ul class='nav nav-treeview'>\n"
-                . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/laporan-dokumen/pdf') . "' class='nav-link'>\n"
-                . "<i class='nav-icon far fa-circle'></i>\n<p>Cetak PDF</p>\n"
-                . "</a>\n"
-                . "</li>\n"
-                . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/laporan-dokumen/excel') . "' class='nav-link'>\n"
-                . "<i class='nav-icon far fa-circle'></i>\n<p>Cetak Excel</p>\n"
-                . "</a>\n"
-                . "</li>\n"
-                . "</ul>\n"
-                . "</li>\n";
+                    <ul class="nav nav-treeview">
 
-            // --- Section LAPORAN DATABASE (dropdown) ---
-            $isLapDb    = ($this->uri->segment(2) == 'laporan-database');
-            $lapDbParentClass = $isLapDb ? "nav-item menu-is-opening menu-open" : "nav-item";
-            $lapDbParentLink  = $isLapDb ? ' active' : '';
+                        <li class="nav-item">
 
-            $laporanDatabaseSection = "<li class='{$lapDbParentClass}'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/laporan-database') . "' class='nav-link{$lapDbParentLink}'>\n"
-                . "<i class='nav-icon fas fa-database'></i>\n"
-                . "<p>\nLaporan Database\n<i class='right fas fa-angle-left'></i>\n</p>\n"
-                . "</a>\n"
-                . "<ul class='nav nav-treeview'>\n"
-                . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/laporan-database/pdf') . "' class='nav-link'>\n"
-                . "<i class='nav-icon far fa-circle'></i>\n<p>Cetak PDF</p>\n"
-                . "</a>\n"
-                . "</li>\n"
-                . "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/laporan-database/excel') . "' class='nav-link'>\n"
-                . "<i class='nav-icon far fa-circle'></i>\n<p>Cetak Excel</p>\n"
-                . "</a>\n"
-                . "</li>\n"
-                . "</ul>\n"
-                . "</li>\n";
+                            <a
+                                href="<?php echo html_escape($adminUrl('content/order_baju')); ?>"
+                                class="nav-link<?php echo $isOrderBajuPage ? ' active' : ''; ?>"
+                            >
 
-            // --- Section RIWAYAT CETAK LAPORAN (standalone) ---
-            $isRiwayat = ($this->uri->segment(2) == 'laporan-history');
-            $riwayatClass = $isRiwayat ? ' active' : '';
+                                <i class="nav-icon far fa-circle"></i>
 
-            $riwayatSection = "<li class='nav-item'>\n"
-                . "<a href='" . site_url(SITE_AREA . '/laporan-history') . "' class='nav-link{$riwayatClass}'>\n"
-                . "<i class='nav-icon fas fa-history'></i>\n"
-                . "<p>\nRiwayat Cetak Laporan\n</p>\n"
-                . "</a>\n"
-                . "</li>\n";
+                                <p>
+                                    Order Baju
+                                </p>
 
-            // Add Laporan Dokumen, Laporan Database, and Riwayat as SEPARATE top-level menu items.
-            $pos2 = strrpos($navMenus, '</ul>');
-            if ($pos2 !== false) {
-                $navMenus = substr($navMenus, 0, $pos2) . $laporanSection . $laporanDokumenSection . $laporanDatabaseSection . $riwayatSection . substr($navMenus, $pos2);
-            }
+                            </a>
 
-            // Keep Backup after the complete Laporan group, matching the sidebar order.
-            $pos3 = strrpos($navMenus, '</ul>');
-            if ($pos3 !== false) {
-                $navMenus = substr($navMenus, 0, $pos3) . $backupSection . substr($navMenus, $pos3);
-            }
+                        </li>
 
-            // --- Inject Reports and Developer as sub-items under Settings ---
-            // Reports dan Developer dipindahkan dari menu utama sidebar ke dalam Settings.
-            $isSettings = ($this->uri->segment(2) == 'settings');
-            $isReportsCtx = ($this->uri->segment(2) == 'reports');
-            $isDeveloperCtx = ($this->uri->segment(2) == 'developer');
+                    </ul>
 
-            // Build Reports sub-items
-            $isRptPdf   = ($isReportsCtx && $this->uri->segment(3) == 'report_pdf');
-            $isRptExcel = ($isReportsCtx && $this->uri->segment(3) == 'report_excel');
-            $isRptMain  = ($isReportsCtx && empty($this->uri->segment(3)));
-            $reportsSubItems = '';
-            if ($this->auth->has_permission('Bonfire.reports.View') || $this->auth->has_permission('Reports.Reports.View') || $isReportsCtx) {
-                $rptActive = $isRptMain ? ' active' : '';
-                $reportsSubItems .= "<li class='nav-item'>\n"
-                    . "<a href='" . site_url(SITE_AREA . '/reports') . "' class='nav-link{$rptActive}'>\n"
-                    . "<i class='nav-icon far fa-circle'></i>\n<p>Reports</p>\n"
-                    . "</a>\n"
-                    . "</li>\n";
-            }
-            if ($this->auth->has_permission('Bonfire.report_pdf.View') || $this->auth->has_permission('Report_pdf.Reports.View') || $isRptPdf) {
-                $rptPdfActive = $isRptPdf ? ' active' : '';
-                $reportsSubItems .= "<li class='nav-item'>\n"
-                    . "<a href='" . site_url(SITE_AREA . '/reports/report_pdf') . "' class='nav-link{$rptPdfActive}'>\n"
-                    . "<i class='nav-icon far fa-circle'></i>\n<p>Laporan Transaksi PDF</p>\n"
-                    . "</a>\n"
-                    . "</li>\n";
-            }
-            if ($this->auth->has_permission('Bonfire.report_excel.View') || $this->auth->has_permission('Report_excel.Reports.View') || $isRptExcel) {
-                $rptExcelActive = $isRptExcel ? ' active' : '';
-                $reportsSubItems .= "<li class='nav-item'>\n"
-                    . "<a href='" . site_url(SITE_AREA . '/reports/report_excel') . "' class='nav-link{$rptExcelActive}'>\n"
-                    . "<i class='nav-icon far fa-circle'></i>\n<p>Laporan Transaksi Excel</p>\n"
-                    . "</a>\n"
-                    . "</li>\n";
-            }
+                </li>
 
-            // Build Developer sub-items
-            $isDevDb      = ($isDeveloperCtx && $this->uri->segment(3) == 'database');
-            $isDevBuilder = ($isDeveloperCtx && $this->uri->segment(3) == 'builder');
-            $isDevLogs    = ($isDeveloperCtx && $this->uri->segment(3) == 'logs');
-            $isDevSysinfo = ($isDeveloperCtx && $this->uri->segment(3) == 'sysinfo');
-            $isDevTrans   = ($isDeveloperCtx && $this->uri->segment(3) == 'translate');
-            $devSubItems = '';
-            if ($this->auth->has_permission('Bonfire.database.View') || $this->auth->has_permission('Database.Developer.View') || $isDevDb) {
-                $devDbActive = $isDevDb ? ' active' : '';
-                $devSubItems .= "<li class='nav-item'>\n"
-                    . "<a href='" . site_url(SITE_AREA . '/developer/database') . "' class='nav-link{$devDbActive}'>\n"
-                    . "<i class='nav-icon far fa-circle'></i>\n<p>Database Tools</p>\n"
-                    . "</a>\n"
-                    . "</li>\n";
-            }
-            if ($this->auth->has_permission('Bonfire.builder.View') || $this->auth->has_permission('Builder.Developer.View') || $isDevBuilder) {
-                $devBuilderActive = $isDevBuilder ? ' active' : '';
-                $devSubItems .= "<li class='nav-item'>\n"
-                    . "<a href='" . site_url(SITE_AREA . '/developer/builder') . "' class='nav-link{$devBuilderActive}'>\n"
-                    . "<i class='nav-icon far fa-circle'></i>\n<p>Code Builder</p>\n"
-                    . "</a>\n"
-                    . "</li>\n";
-            }
-            if ($this->auth->has_permission('Bonfire.logs.View') || $this->auth->has_permission('Logs.Developer.View') || $isDevLogs) {
-                $devLogsActive = $isDevLogs ? ' active' : '';
-                $devSubItems .= "<li class='nav-item'>\n"
-                    . "<a href='" . site_url(SITE_AREA . '/developer/logs') . "' class='nav-link{$devLogsActive}'>\n"
-                    . "<i class='nav-icon far fa-circle'></i>\n<p>Logs</p>\n"
-                    . "</a>\n"
-                    . "</li>\n";
-            }
-            if ($this->auth->has_permission('Bonfire.sysinfo.View') || $this->auth->has_permission('Sysinfo.Developer.View') || $isDevSysinfo) {
-                $devSysinfoActive = $isDevSysinfo ? ' active' : '';
-                $devSubItems .= "<li class='nav-item'>\n"
-                    . "<a href='" . site_url(SITE_AREA . '/developer/sysinfo') . "' class='nav-link{$devSysinfoActive}'>\n"
-                    . "<i class='nav-icon far fa-circle'></i>\n<p>System Information</p>\n"
-                    . "</a>\n"
-                    . "</li>\n";
-            }
-            if ($this->auth->has_permission('Bonfire.translate.View') || $this->auth->has_permission('Translate.Developer.View') || $isDevTrans) {
-                $devTransActive = $isDevTrans ? ' active' : '';
-                $devSubItems .= "<li class='nav-item'>\n"
-                    . "<a href='" . site_url(SITE_AREA . '/developer/translate') . "' class='nav-link{$devTransActive}'>\n"
-                    . "<i class='nav-icon far fa-circle'></i>\n<p>Translate</p>\n"
-                    . "</a>\n"
-                    . "</li>\n";
-            }
 
-            // Build the Reports grouping inside Settings (if any sub-items)
-            $reportsGroup = '';
-            if (!empty($reportsSubItems)) {
-                $reportsGroup = "<li class='nav-item'>\n"
-                    . "<a href='#' class='nav-link'>\n"
-                    . "<i class='nav-icon far fa-circle'></i>\n"
-                    . "<p>\nReports\n<i class='right fas fa-angle-left'></i>\n</p>\n"
-                    . "</a>\n"
-                    . "<ul class='nav nav-treeview'>\n"
-                    . $reportsSubItems
-                    . "</ul>\n"
-                    . "</li>\n";
-            }
+                <!-- ==================================================
+                     MASTER
+                     ================================================== -->
+                <li class="<?php echo $masterParentClass; ?>">
 
-            // Build the Developer grouping inside Settings (if any sub-items)
-            $developerGroup = '';
-            if (!empty($devSubItems)) {
-                $isDevAny = $isDevDb || $isDevBuilder || $isDevLogs || $isDevSysinfo || $isDevTrans;
-                $devGroupClass = $isDevAny ? "nav-item menu-is-opening menu-open" : "nav-item";
-                $devGroupActive = $isDevAny ? ' active' : '';
-                $developerGroup = "<li class='{$devGroupClass}'>\n"
-                    . "<a href='#' class='nav-link{$devGroupActive}'>\n"
-                    . "<i class='nav-icon far fa-circle'></i>\n"
-                    . "<p>\nDeveloper\n<i class='right fas fa-angle-left'></i>\n</p>\n"
-                    . "</a>\n"
-                    . "<ul class='nav nav-treeview'>\n"
-                    . $devSubItems
-                    . "</ul>\n"
-                    . "</li>\n";
-            }
+                    <a
+                        href="#"
+                        class="nav-link sidebar-parent-link<?php echo $masterOpen ? ' active' : ''; ?>"
+                        aria-expanded="<?php echo $masterOpen ? 'true' : 'false'; ?>"
+                    >
 
-            // Inject Reports and Developer into the Settings <li> submenu.
-            // Find the Settings context <li> and insert Reports/Developer before its closing </ul>.
-            $settingsUrl = site_url(SITE_AREA . '/settings');
-            $settingsLiPos = strpos($navMenus, "href='" . $settingsUrl . "'");
-            if ($settingsLiPos !== false) {
-                // Cari pembuka <li> dari settings
-                $settingsLiOpen = strrpos(substr($navMenus, 0, $settingsLiPos), '<li');
-                if ($settingsLiOpen !== false) {
-                    // Hitung seimbang <li>/</li> dan <ul>/</ul> untuk menemukan penutup yang tepat
-                    $depthLi = 0;
-                    $depthUl = 0;
-                    $scanPos = $settingsLiOpen;
-                    $len = strlen($navMenus);
-                    $insertPos = -1;
-                    while ($scanPos < $len) {
-                        $liOpen  = strpos($navMenus, '<li', $scanPos);
-                        $liClose = strpos($navMenus, '</li>', $scanPos);
-                        $ulOpen  = strpos($navMenus, '<ul', $scanPos);
-                        $ulClose = strpos($navMenus, '</ul>', $scanPos);
+                        <i class="nav-icon fas fa-database"></i>
 
-                        $nextPositions = array_filter(array($liOpen, $liClose, $ulOpen, $ulClose), function($p) { return $p !== false; });
-                        if (empty($nextPositions)) break;
-                        $nextPos = min($nextPositions);
+                        <p>
+                            Master
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
 
-                        if (($liOpen !== false && $liOpen === $nextPos)) {
-                            $depthLi++;
-                            $scanPos = $liOpen + 3;
-                        } elseif (($ulOpen !== false && $ulOpen === $nextPos)) {
-                            $depthUl++;
-                            $scanPos = $ulOpen + 3;
-                        } elseif (($liClose !== false && $liClose === $nextPos)) {
-                            $depthLi--;
-                            $scanPos = $liClose + 5;
-                        } elseif (($ulClose !== false && $ulClose === $nextPos)) {
-                            $depthUl--;
-                            $scanPos = $ulClose + 5;
-                            // Ketika treeview settings ditutup (depthUl kembali ke 0) dan
-                            // masih dalam settings <li> (depthLi=1), ini titik injection.
-                            if ($depthLi === 1 && $depthUl === 0) {
-                                $insertPos = $ulClose;
-                                break;
-                            }
-                        }
-                    }
-                    if ($insertPos > 0) {
-                        // Insert Reports dan Developer sebelum penutup </ul> dari treeview settings
-                        $navMenus = substr($navMenus, 0, $insertPos) . $reportsGroup . $developerGroup . substr($navMenus, $insertPos);
-                    }
-                }
-            }
+                    </a>
 
-            // Keep the generated permission-aware Settings menu at the bottom,
-            // after the custom main menu sections.
-            $settingsBlock = '';
-            $settingsUrl = site_url(SITE_AREA . '/settings');
-            $settingsLinkPos = strpos($navMenus, "href='" . $settingsUrl . "'");
-            if ($settingsLinkPos !== false) {
-                $settingsOpenPos = strrpos(substr($navMenus, 0, $settingsLinkPos), '<li');
-                if ($settingsOpenPos !== false) {
-                    $depth = 0;
-                    $scanPos = $settingsOpenPos;
-                    $navLength = strlen($navMenus);
-                    $settingsEndPos = false;
-                    while ($scanPos < $navLength) {
-                        $nextOpen = strpos($navMenus, '<li', $scanPos);
-                        $nextClose = strpos($navMenus, '</li>', $scanPos);
-                        if ($nextClose === false) {
-                            break;
-                        }
-                        if ($nextOpen !== false && $nextOpen < $nextClose) {
-                            $depth++;
-                            $scanPos = $nextOpen + 3;
-                        } else {
-                            $depth--;
-                            $scanPos = $nextClose + 5;
-                            if ($depth === 0) {
-                                $settingsEndPos = $scanPos;
-                                break;
-                            }
-                        }
-                    }
-                    if ($settingsEndPos !== false) {
-                        $settingsBlock = substr($navMenus, $settingsOpenPos, $settingsEndPos - $settingsOpenPos);
-                        $navMenus = substr($navMenus, 0, $settingsOpenPos) . substr($navMenus, $settingsEndPos);
+                    <ul class="nav nav-treeview">
 
-                        // Rebuild only the Settings parent to prevent generated styles from
-                        // moving its icon into the SISTEM heading. Keep its permission-aware submenu.
-                        $settingsTreeStart = strpos($settingsBlock, '<ul');
-                        $settingsTreeEnd = strrpos($settingsBlock, '</ul>');
-                        if ($settingsTreeStart !== false && $settingsTreeEnd !== false) {
-                            $settingsTree = substr($settingsBlock, $settingsTreeStart, $settingsTreeEnd - $settingsTreeStart + 5);
-                            $settingsBlock = "<li class='nav-item settings-menu-item'>\n"
-                                . "<a href='" . $settingsUrl . "' class='nav-link" . ($isSettings ? ' active' : '') . "'>\n"
-                                . "<i class='nav-icon fas fa-cog'></i>\n"
-                                . "<p>Settings<i class='right fas fa-angle-left'></i></p>\n"
-                                . "</a>\n"
-                                . $settingsTree
-                                . "\n</li>\n";
-                        }
-                    }
-                }
-            }
+                        <!-- Jenis Baju -->
+                        <li class="nav-item">
 
-            // Add the two visual section labels used by the reference design.
-            $firstUlEnd = strpos($navMenus, '>');
-            if ($firstUlEnd !== false) {
-                $dashboardActive = ($this->uri->segment(2) === '') ? ' active' : '';
-                $dashboardSection = "<li class='nav-item'>\n"
-                    . "<a href='" . site_url(SITE_AREA) . "' class='nav-link{$dashboardActive}'>\n"
-                    . "<i class='nav-icon fas fa-th-large'></i>\n<p>Dashboard</p>\n"
-                    . "</a>\n"
-                    . "</li>\n";
-                $navMenus = substr($navMenus, 0, $firstUlEnd + 1)
-    . "\n<li class='nav-header main-menu-header'>MENU UTAMA</li>\n"
-    . $dashboardSection
-    . substr($navMenus, $firstUlEnd + 1);
-            }
-            echo $navMenus;
-            ?>
+                            <a
+                                href="<?php echo html_escape($adminUrl('master/jenis_baju')); ?>"
+                                class="nav-link<?php echo $isJenisBaju ? ' active' : ''; ?>"
+                            >
+
+                                <i class="nav-icon far fa-circle"></i>
+
+                                <p>
+                                    Jenis Baju
+                                </p>
+
+                            </a>
+
+                        </li>
+
+                        <!-- Ukuran -->
+                        <li class="nav-item">
+
+                            <a
+                                href="<?php echo html_escape($adminUrl('master/ukuran')); ?>"
+                                class="nav-link<?php echo $isUkuran ? ' active' : ''; ?>"
+                            >
+
+                                <i class="nav-icon far fa-circle"></i>
+
+                                <p>
+                                    Ukuran
+                                </p>
+
+                            </a>
+
+                        </li>
+
+                        <!-- Warna -->
+                        <li class="nav-item">
+
+                            <a
+                                href="<?php echo html_escape($adminUrl('master/warna')); ?>"
+                                class="nav-link<?php echo $isWarna ? ' active' : ''; ?>"
+                            >
+
+                                <i class="nav-icon far fa-circle"></i>
+
+                                <p>
+                                    Warna
+                                </p>
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </li>
+
+
+                <!-- ==================================================
+                     TRANSAKSI
+                     ================================================== -->
+                <li class="<?php echo $transaksiParentClass; ?>">
+
+                    <a
+                        href="#"
+                        class="nav-link sidebar-parent-link<?php echo $transaksiOpen ? ' active' : ''; ?>"
+                        aria-expanded="<?php echo $transaksiOpen ? 'true' : 'false'; ?>"
+                    >
+
+                        <i class="nav-icon fas fa-shopping-cart"></i>
+
+                        <p>
+                            Transaksi
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        <li class="nav-item">
+
+                            <a
+                                href="<?php echo html_escape($adminUrl('transaksi/transaksi')); ?>"
+                                class="nav-link<?php echo $isTransaksi ? ' active' : ''; ?>"
+                            >
+
+                                <i class="nav-icon far fa-circle"></i>
+
+                                <p>
+                                    Daftar Transaksi
+                                </p>
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </li>
+
+
+                <!-- ==================================================
+                     LAPORAN TRANSAKSI
+                     ================================================== -->
+                <li class="<?php echo $laporanTransaksiParentClass; ?>">
+
+                    <a
+                        href="#"
+                        class="nav-link sidebar-parent-link<?php echo $laporanTransaksiOpen ? ' active' : ''; ?>"
+                        aria-expanded="<?php echo $laporanTransaksiOpen ? 'true' : 'false'; ?>"
+                    >
+
+                        <i class="nav-icon fas fa-file-invoice"></i>
+
+                        <p>
+                            Laporan Transaksi
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        <!-- PDF -->
+                        <li class="nav-item">
+
+                            <a
+                                href="<?php echo html_escape($adminUrl('reports/report_pdf')); ?>"
+                                class="nav-link<?php echo $isReportPdf ? ' active' : ''; ?>"
+                            >
+
+                                <i class="nav-icon far fa-circle"></i>
+
+                                <p>
+                                    Laporan Transaksi PDF
+                                </p>
+
+                            </a>
+
+                        </li>
+
+                        <!-- Excel -->
+                        <li class="nav-item">
+
+                            <a
+                                href="<?php echo html_escape($adminUrl('reports/report_excel')); ?>"
+                                class="nav-link<?php echo $isReportExcel ? ' active' : ''; ?>"
+                            >
+
+                                <i class="nav-icon far fa-circle"></i>
+
+                                <p>
+                                    Laporan Transaksi Excel
+                                </p>
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </li>
+
+
+                <!-- ==================================================
+                     LAPORAN DOKUMEN
+                     ================================================== -->
+                <li class="<?php echo $laporanDokumenParentClass; ?>">
+
+                    <a
+                        href="#"
+                        class="nav-link sidebar-parent-link<?php echo $laporanDokumenOpen ? ' active' : ''; ?>"
+                        aria-expanded="<?php echo $laporanDokumenOpen ? 'true' : 'false'; ?>"
+                    >
+
+                        <i class="nav-icon fas fa-file-alt"></i>
+
+                        <p>
+                            Laporan Dokumen
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        <!-- Cetak PDF -->
+                        <li class="nav-item">
+
+                            <a
+                                href="<?php echo html_escape($adminUrl('laporan-dokumen/pdf')); ?>"
+                                class="nav-link<?php echo $isLaporanDokumenPdf ? ' active' : ''; ?>"
+                            >
+
+                                <i class="nav-icon far fa-circle"></i>
+
+                                <p>
+                                    Cetak PDF
+                                </p>
+
+                            </a>
+
+                        </li>
+
+                        <!-- Cetak Excel -->
+                        <li class="nav-item">
+
+                            <a
+                                href="<?php echo html_escape($adminUrl('laporan-dokumen/excel')); ?>"
+                                class="nav-link<?php echo $isLaporanDokumenExcel ? ' active' : ''; ?>"
+                            >
+
+                                <i class="nav-icon far fa-circle"></i>
+
+                                <p>
+                                    Cetak Excel
+                                </p>
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </li>
+
+
+                <!-- ==================================================
+                     LAPORAN DATABASE
+                     ==================================================
+
+                     SENGAJA TIDAK DITAMPILKAN.
+
+                     Route dan backend tetap dipertahankan.
+                     Jadi fitur tidak dihapus dari aplikasi, hanya
+                     tidak muncul pada navigasi sidebar.
+                     ================================================== -->
+
+
+                <!-- ==================================================
+                     RIWAYAT CETAK LAPORAN
+                     ================================================== -->
+                <li class="nav-item">
+
+                    <a
+                        href="<?php echo html_escape($adminUrl('laporan-history')); ?>"
+                        class="nav-link<?php echo $isRiwayatLaporan ? ' active' : ''; ?>"
+                    >
+
+                        <i class="nav-icon fas fa-history"></i>
+
+                        <p>
+                            Riwayat Cetak Laporan
+                        </p>
+
+                    </a>
+
+                </li>
+
+
+                <!-- ==================================================
+                     BACKUP
+                     ================================================== -->
+                <li class="<?php echo $backupParentClass; ?>">
+
+                    <a
+                        href="#"
+                        class="nav-link sidebar-parent-link<?php echo $backupOpen ? ' active' : ''; ?>"
+                        aria-expanded="<?php echo $backupOpen ? 'true' : 'false'; ?>"
+                    >
+
+                        <i class="nav-icon fas fa-download"></i>
+
+                        <p>
+                            Backup
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        <!-- Backup Dokumen ID -->
+                        <li class="nav-item">
+
+                            <a
+                                href="<?php echo html_escape($adminUrl('backup/per_id')); ?>"
+                                class="nav-link<?php echo $isBackupPerId ? ' active' : ''; ?>"
+                            >
+
+                                <i class="nav-icon far fa-circle"></i>
+
+                                <p>
+                                    Backup Dokumen ID
+                                </p>
+
+                            </a>
+
+                        </li>
+
+                        <!-- Backup Dokumen Folder -->
+                        <li class="nav-item">
+
+                            <a
+                                href="<?php echo html_escape($adminUrl('backup/per_folder')); ?>"
+                                class="nav-link<?php echo $isBackupPerFolder ? ' active' : ''; ?>"
+                            >
+
+                                <i class="nav-icon far fa-circle"></i>
+
+                                <p>
+                                    Backup Dokumen Folder
+                                </p>
+
+                            </a>
+
+                        </li>
+
+                        <!-- Backup Database -->
+                        <li class="nav-item">
+
+                            <a
+                                href="<?php echo html_escape($adminUrl('backup/database')); ?>"
+                                class="nav-link<?php echo $isBackupDatabase ? ' active' : ''; ?>"
+                            >
+
+                                <i class="nav-icon far fa-circle"></i>
+
+                                <p>
+                                    Backup Database
+                                </p>
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </li>
+
+            </ul>
+
         </nav>
+
     </div>
+
 </aside>
