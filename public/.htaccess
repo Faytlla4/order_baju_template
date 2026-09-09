@@ -1,0 +1,45 @@
+# ----------------------------------------------------------------------
+# Order Baju Template - Public Web Root
+# CodeIgniter / Bonfire
+# ----------------------------------------------------------------------
+
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
+
+<IfModule mod_rewrite.c>
+
+    Options +FollowSymLinks
+    RewriteEngine On
+
+    RewriteBase /
+
+    # ------------------------------------------------------------------
+    # Protect hidden files and directories
+    # ------------------------------------------------------------------
+
+    RewriteCond %{REQUEST_FILENAME} -d [OR]
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule "(^|/)\." - [F,L]
+
+    # ------------------------------------------------------------------
+    # Remove www
+    # ------------------------------------------------------------------
+
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
+
+    # ------------------------------------------------------------------
+    # CodeIgniter / Bonfire front controller
+    # ------------------------------------------------------------------
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php?/$1 [L]
+
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+    ErrorDocument 404 index.php
+</IfModule>

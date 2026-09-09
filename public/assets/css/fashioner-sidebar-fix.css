@@ -1,0 +1,535 @@
+/*
+ * FASHIONER SIDEBAR FIX
+ *
+ * Project : order_baju_template
+ *
+ * SCOPE:
+ * - Sidebar layout
+ * - Sidebar visibility / PushMenu
+ * - Sidebar navigation color
+ *
+ * IMPORTANT:
+ * File ini TIDAK mengubah:
+ * - database
+ * - model
+ * - controller
+ * - route
+ * - authentication
+ * - transaksi
+ * - laporan
+ * - backup
+ * - API
+ * - backend logic
+ *
+ * AdminLTE PushMenu tetap menjadi pengendali state sidebar.
+ */
+
+
+/* ==========================================================================
+ * SIDEBAR COLOR SYSTEM
+ * ========================================================================== */
+
+:root {
+    --fashioner-sidebar-brown: #8A6A47;
+}
+
+
+/* ==========================================================================
+ * SHARED SIDEBAR GEOMETRY
+ * ========================================================================== */
+
+.main-sidebar,
+.main-sidebar::before {
+    box-sizing: border-box !important;
+
+    transition:
+        margin-left 0.30s ease-in-out,
+        width 0.30s ease-in-out,
+        transform 0.30s ease-in-out,
+        opacity 0.20s ease-in-out !important;
+}
+
+
+/* ==========================================================================
+ * SIDEBAR NAVIGATION — BROWN
+ *
+ * Target hanya menu navigasi.
+ *
+ * Tidak menyentuh:
+ * - logo
+ * - username
+ * - search box
+ * - content
+ * - footer
+ * ========================================================================== */
+
+
+/*
+ * Semua text menu.
+ */
+
+.main-sidebar .nav-sidebar > .nav-item > .nav-link,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link p,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link p {
+    color: #8A6A47 !important;
+}
+
+
+/*
+ * Semua icon menu.
+ */
+
+.main-sidebar .nav-sidebar .nav-icon,
+.main-sidebar .nav-sidebar .nav-link .nav-icon {
+    color: #8A6A47 !important;
+}
+
+
+/*
+ * Icon arrow dropdown.
+ */
+
+.main-sidebar .nav-sidebar .nav-link .right {
+    color: #8A6A47 !important;
+}
+
+
+/*
+ * Hover.
+ *
+ * Tetap brown sesuai permintaan.
+ */
+
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:hover,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:hover p,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:hover .nav-icon,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:hover .right,
+
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link:hover,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link:hover p,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link:hover .nav-icon,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link:hover .right {
+    color: #8A6A47 !important;
+}
+
+
+/*
+ * Focus.
+ */
+
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:focus,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:focus p,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:focus .nav-icon,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:focus .right,
+
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link:focus,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link:focus p,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link:focus .nav-icon,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link:focus .right {
+    color: #8A6A47 !important;
+}
+
+
+/*
+ * Active menu.
+ */
+
+.main-sidebar .nav-sidebar > .nav-item > .nav-link.active,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link.active p,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link.active .nav-icon,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link.active .right,
+
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link.active,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link.active p,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link.active .nav-icon,
+.main-sidebar .nav-sidebar .nav-treeview > .nav-item > .nav-link.active .right {
+    color: #8A6A47 !important;
+}
+
+
+/*
+ * Parent dropdown ketika sedang terbuka.
+ */
+
+.main-sidebar .nav-sidebar > .nav-item.menu-open > .nav-link,
+.main-sidebar .nav-sidebar > .nav-item.menu-open > .nav-link p,
+.main-sidebar .nav-sidebar > .nav-item.menu-open > .nav-link .nav-icon,
+.main-sidebar .nav-sidebar > .nav-item.menu-open > .nav-link .right {
+    color: #8A6A47 !important;
+}
+
+
+/*
+ * AdminLTE kadang memberikan warna langsung pada element aktif.
+ *
+ * Selector dibuat lebih spesifik supaya warna brown tetap menang.
+ */
+
+.main-sidebar .nav-sidebar .nav-link.active *,
+.main-sidebar .nav-sidebar .nav-link:hover *,
+.main-sidebar .nav-sidebar .nav-link:focus *,
+.main-sidebar .nav-sidebar .menu-open > .nav-link * {
+    color: #8A6A47 !important;
+}
+
+
+/*
+ * Jangan biarkan background bawaan active AdminLTE mengubah
+ * identitas warna text/icon.
+ *
+ * Background tidak dipaksa brown karena permintaan hanya
+ * mengubah warna text dan icon.
+ */
+
+
+/* ==========================================================================
+ * SIDEBAR SECTION HEADER
+ * ========================================================================== */
+
+.main-sidebar .main-menu-header,
+.main-sidebar .nav-header {
+    color: #8A6A47 !important;
+}
+
+
+/* ==========================================================================
+ * DESKTOP: SIDEBAR OPEN
+ * ========================================================================== */
+
+@media (min-width: 992px) {
+
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar,
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar::before {
+
+        width: 290px !important;
+        min-width: 290px !important;
+        max-width: 290px !important;
+
+        margin-left: 0 !important;
+
+        transform: translateX(0) !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+    }
+
+
+    /*
+     * Content menggunakan ruang penuh sidebar.
+     */
+
+    body.sidebar-mini:not(.sidebar-collapse) .content-wrapper,
+    body.sidebar-mini:not(.sidebar-collapse) .main-header,
+    body.sidebar-mini:not(.sidebar-collapse) .main-footer {
+
+        margin-left: 290px !important;
+    }
+
+
+    /*
+     * Brand mengikuti lebar sidebar.
+     */
+
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .brand-link {
+
+        width: 290px !important;
+        min-width: 290px !important;
+        max-width: 290px !important;
+    }
+
+
+    /*
+     * Sidebar expanded.
+     */
+
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .brand-text,
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .user-panel > .info,
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .nav-sidebar .nav-link p,
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .nav-header {
+
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .brand-text,
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .user-panel > .info {
+
+        display: block !important;
+    }
+
+
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .nav-sidebar .nav-link p {
+
+        display: flex !important;
+
+        width: auto !important;
+
+        overflow: visible !important;
+    }
+
+
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .nav-header {
+
+        display: block !important;
+    }
+
+
+    body.sidebar-mini:not(.sidebar-collapse) .main-sidebar .nav-treeview {
+
+        overflow: visible !important;
+    }
+}
+
+
+/* ==========================================================================
+ * DESKTOP: SIDEBAR CLOSED
+ *
+ * Sidebar harus benar-benar hilang.
+ *
+ * Tidak menggunakan mini-sidebar 4.6rem AdminLTE.
+ * ========================================================================== */
+
+@media (min-width: 992px) {
+
+    body.sidebar-mini.sidebar-collapse .main-sidebar,
+    body.sidebar-mini.sidebar-collapse .main-sidebar::before,
+    body.sidebar-mini.sidebar-collapse .main-sidebar:hover,
+    body.sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused,
+    body.sidebar-mini.sidebar-collapse .main-sidebar[style] {
+
+        width: 290px !important;
+        min-width: 290px !important;
+        max-width: 290px !important;
+
+        margin-left: -290px !important;
+
+        transform: translateX(0) !important;
+
+        opacity: 0 !important;
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+
+        overflow-x: hidden !important;
+    }
+
+
+    /*
+     * Content kembali menggunakan seluruh viewport.
+     */
+
+    body.sidebar-mini.sidebar-collapse .content-wrapper,
+    body.sidebar-mini.sidebar-collapse .main-header,
+    body.sidebar-mini.sidebar-collapse .main-footer {
+
+        margin-left: 0 !important;
+    }
+
+
+    /*
+     * Brand tetap memiliki geometry yang konsisten.
+     */
+
+    body.sidebar-mini.sidebar-collapse .main-sidebar .brand-link,
+    body.sidebar-mini.sidebar-collapse .main-sidebar[style] .brand-link {
+
+        width: 290px !important;
+        min-width: 290px !important;
+        max-width: 290px !important;
+    }
+
+
+    /*
+     * Hover tidak boleh membuka sidebar kembali.
+     */
+
+    body.sidebar-mini.sidebar-collapse .main-sidebar:hover .brand-link,
+    body.sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused .brand-link {
+
+        width: 290px !important;
+        min-width: 290px !important;
+        max-width: 290px !important;
+    }
+
+
+    /*
+     * Submenu tidak boleh mengambil layout ketika sidebar tertutup.
+     */
+
+    body.sidebar-mini.sidebar-collapse .main-sidebar .nav-treeview {
+
+        display: none !important;
+    }
+}
+
+
+/* ==========================================================================
+ * MOBILE: OFF-CANVAS SIDEBAR
+ * ========================================================================== */
+
+@media (max-width: 991.98px) {
+
+    /*
+     * Lebar sidebar mobile.
+     */
+
+    body .main-sidebar,
+    body .main-sidebar::before {
+
+        width: 250px !important;
+        min-width: 250px !important;
+        max-width: 250px !important;
+
+        margin-left: -250px !important;
+
+        transform: translateX(0) !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+    }
+
+
+    /*
+     * Content mobile selalu full width.
+     */
+
+    body .content-wrapper,
+    body .main-header,
+    body .main-footer {
+
+        margin-left: 0 !important;
+    }
+
+
+    /*
+     * Mobile CLOSED.
+     */
+
+    body:not(.sidebar-open) .main-sidebar,
+    body:not(.sidebar-open) .main-sidebar::before {
+
+        margin-left: -250px !important;
+    }
+
+
+    /*
+     * Mobile OPEN.
+     */
+
+    body.sidebar-open .main-sidebar,
+    body.sidebar-open .main-sidebar::before {
+
+        margin-left: 0 !important;
+    }
+
+
+    /*
+     * sidebar-collapse pada mobile berarti CLOSED,
+     * kecuali sidebar-open aktif.
+     */
+
+    body.sidebar-collapse:not(.sidebar-open) .main-sidebar,
+    body.sidebar-collapse:not(.sidebar-open) .main-sidebar::before {
+
+        width: 250px !important;
+        min-width: 250px !important;
+        max-width: 250px !important;
+
+        margin-left: -250px !important;
+    }
+
+
+    /*
+     * sidebar tetap bisa dibuka ketika sidebar-collapse aktif.
+     */
+
+    body.sidebar-collapse.sidebar-open .main-sidebar,
+    body.sidebar-collapse.sidebar-open .main-sidebar::before {
+
+        margin-left: 0 !important;
+    }
+
+
+    /*
+     * Brand mobile.
+     */
+
+    .main-sidebar .brand-link {
+
+        width: 250px !important;
+        min-width: 250px !important;
+        max-width: 250px !important;
+    }
+
+
+    /*
+     * Text menu mobile tetap terlihat.
+     */
+
+    .main-sidebar .brand-text,
+    .main-sidebar .nav-sidebar .nav-link p {
+
+        display: flex !important;
+
+        width: auto !important;
+        max-width: none !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+
+    /*
+     * Overlay AdminLTE.
+     */
+
+    body.sidebar-open #sidebar-overlay {
+
+        display: block !important;
+
+        opacity: 1 !important;
+
+        z-index: 1039 !important;
+    }
+}
+
+
+/* ==========================================================================
+ * ACCESSIBILITY / FOCUS
+ * ========================================================================== */
+
+@media (min-width: 992px) {
+
+    body.sidebar-mini.sidebar-collapse .main-sidebar:focus,
+    body.sidebar-mini.sidebar-collapse .main-sidebar:focus-within {
+
+        width: 290px !important;
+        min-width: 290px !important;
+        max-width: 290px !important;
+
+        margin-left: -290px !important;
+
+        opacity: 0 !important;
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+    }
+}
+
+
+/* ==========================================================================
+ * HAMBURGER ACCESSIBILITY
+ * ========================================================================== */
+
+.main-header [data-widget="pushmenu"]:focus-visible {
+
+    outline: 2px solid #C8A96B !important;
+
+    outline-offset: 2px !important;
+}
