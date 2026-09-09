@@ -39,12 +39,13 @@ $(function() {
     function loadData() {
         var mulai = $('#tgl_mulai').val();
         var akhir = $('#tgl_akhir').val();
+        var pageType = $('#page_type').val();
         if (filterBusy) return;
         filterBusy = true;
         $.ajax({
             url: filterUrl,
             method: 'GET',
-            data: { tgl_mulai: mulai, tgl_akhir: akhir },
+            data: { tgl_mulai: mulai, tgl_akhir: akhir, page_type: pageType },
             dataType: 'json'
         }).done(function(res) {
             filterBusy = false;
@@ -86,10 +87,11 @@ Assets::add_js($inline_js, 'inline');
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-database text-primary"></i> LAPORAN DATABASE</h3>
+                <h3 class="card-title"><i class="fas fa-file-<?php echo $page_type === 'excel' ? 'excel text-success' : 'pdf text-danger'; ?>"></i> LAPORAN DATABASE <?php echo strtoupper($page_type); ?></h3>
             </div>
             <div class="card-body">
                 <form id="filterForm" class="form-inline">
+                    <input type="hidden" id="page_type" value="<?php echo html_escape($page_type); ?>">
                     <div class="form-group">
                         <label>Tanggal Mulai</label>
                         <input type="date" class="form-control" id="tgl_mulai" name="tgl_mulai" value="<?php echo html_escape($tgl_mulai); ?>">

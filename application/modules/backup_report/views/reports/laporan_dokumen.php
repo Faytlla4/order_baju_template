@@ -36,17 +36,18 @@ $(function() {
         }
     }
 
-    function loadData() {
-        var mulai = $('#tgl_mulai').val();
-        var akhir = $('#tgl_akhir').val();
-        if (filterBusy) return;
-        filterBusy = true;
-        $.ajax({
-            url: filterUrl,
-            method: 'GET',
-            data: { tgl_mulai: mulai, tgl_akhir: akhir },
-            dataType: 'json'
-        }).done(function(res) {
+     function loadData() {
+         var mulai = $('#tgl_mulai').val();
+         var akhir = $('#tgl_akhir').val();
+         var pageType = $('#page_type').val();
+         if (filterBusy) return;
+         filterBusy = true;
+         $.ajax({
+             url: filterUrl,
+             method: 'GET',
+             data: { tgl_mulai: mulai, tgl_akhir: akhir, page_type: pageType },
+             dataType: 'json'
+         }).done(function(res) {
             filterBusy = false;
             if (res && res.ok) {
                 var \$card = $('#card-data');
@@ -89,8 +90,9 @@ Assets::add_js($inline_js, 'inline');
                 <h3 class="card-title"><i class="fas fa-file-<?php echo $page_type === 'excel' ? 'excel text-success' : 'pdf text-danger'; ?>"></i> LAPORAN DOKUMEN <?php echo strtoupper($page_type); ?></h3>
             </div>
             <div class="card-body">
-                <form id="filterForm" class="form-inline">
-                    <div class="form-group">
+     <form id="filterForm" class="form-inline">
+                     <input type="hidden" id="page_type" value="<?php echo html_escape($page_type); ?>">
+                     <div class="form-group">
                         <label>Tanggal Mulai</label>
                         <input type="date" class="form-control" id="tgl_mulai" name="tgl_mulai" value="<?php echo html_escape($tgl_mulai); ?>">
                     </div>
