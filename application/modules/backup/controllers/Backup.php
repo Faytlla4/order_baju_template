@@ -54,16 +54,21 @@ class Backup extends App_Controller
 		$id = (int) $id;
 		$this->load->model('backup/backup_model');
 
-		$exists = $id > 0 && $this->db
+		$row = $this->db
+			->select('id, dokumen')
 			->where('id', $id)
-			->count_all_results('transaksi') > 0;
-		if (!$exists) {
+			->get('transaksi')
+			->row();
+		if (!$row) {
 			$this->output->set_content_type('application/json')
 				->set_output(json_encode(array('success' => false, 'message' => 'Transaksi tidak ditemukan.')));
 			return;
 		}
 
-		$files = $this->backup_model->get_physical_transaction_files($id);
+		$files = $this->backup_model->clean_json_files($row->dokumen);
+		if (empty($files)) {
+			$files = $this->backup_model->get_physical_transaction_files($id);
+		}
 		$this->output->set_content_type('application/json')
 			->set_output(json_encode(array(
 				'success' => true,
@@ -424,22 +429,13 @@ class Backup extends App_Controller
 
 			foreach ($map as $id => $files) {
 				$id = (int) $id;
-				$folder = FCPATH . 'assets/dokumen/dokumen_transaksi/' . $id;
-				if (is_dir($folder)) {
-					// Scan at backup time so Explorer additions, renames, and
-					// deletions are reflected without updating the database.
-					$this->add_dir_recursive($zip, $folder, 'ID_' . $id, realpath($folder), $added);
-					continue;
-				}
-
-				// Keep compatibility with legacy transactions stored elsewhere.
 				foreach ($files as $file) {
 					$filePath = $this->resolve_transaksi_file($id, $file);
 					$fileName = basename((string) $file);
 
 					if ($filePath === null || !is_file($filePath) || filesize($filePath) <= 0) {
 						$missing[] = 'ID_' . $id . '/' . $fileName;
-						log_message('error', 'Backup Per ID: file tidak ditemukan â€” transaksi #' . $id . ', file ' . $fileName);
+						log_message('error', 'Backup Per ID: file tidak ditemukan — transaksi #' . $id . ', file ' . $fileName);
 						continue;
 					}
 

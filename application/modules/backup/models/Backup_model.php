@@ -261,9 +261,9 @@ class Backup_model extends CI_Model
 
 		$out = array();
 		foreach ($rows as $r) {
-			$clean = $this->get_physical_transaction_files((int) $r->id);
+			$clean = $this->clean_json_files($r->dokumen);
 			if (empty($clean)) {
-				$clean = $this->clean_json_files($r->dokumen);
+				$clean = $this->get_physical_transaction_files((int) $r->id);
 			}
 			if (empty($clean)) {
 				continue;
@@ -309,9 +309,9 @@ class Backup_model extends CI_Model
 		$rows = $this->db->get('transaksi')->result();
 
 		foreach ($rows as $row) {
-			$clean = $this->get_physical_transaction_files((int) $row->id);
+			$clean = $this->clean_json_files($row->dokumen);
 			if (empty($clean)) {
-				$clean = $this->clean_json_files($row->dokumen);
+				$clean = $this->get_physical_transaction_files((int) $row->id);
 			}
 			if (!empty($clean)) {
 				$out[(int) $row->id] = $clean;
@@ -358,7 +358,7 @@ class Backup_model extends CI_Model
 		}
 	}
 
-	private function clean_json_files($json)
+	public function clean_json_files($json)
 	{
 		$files = json_decode((string) $json, true);
 		$clean = array();
