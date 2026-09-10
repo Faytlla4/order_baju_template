@@ -89,14 +89,28 @@ $defaultTimezone = isset($user->timezone) ? $user->timezone : strtoupper(setting
                             <div class="row">
                                 <div class="col-md-6 mb-3 mb-md-0">
                                     <label for="password" class="small text-muted font-weight-bold"><?php echo lang('bf_password'); ?></label>
-                                    <input class="form-control <?php echo form_error('password') ? 'is-invalid' : ''; ?>" style="border-radius:8px; border:1px solid #E4D6C2;" type="password" id="password" name="password" value="" placeholder="Password baru" />
+                                    <div class="input-group">
+                                        <input class="form-control <?php echo form_error('password') ? 'is-invalid' : ''; ?>" style="border-radius:8px 0 0 8px; border:1px solid #E4D6C2;" type="password" id="password" name="password" value="" placeholder="Password baru" />
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-light toggle-password" data-target="password" aria-label="Tampilkan password" aria-pressed="false" style="border:1px solid #E4D6C2; border-left:0; border-radius:0 8px 8px 0; color:#8A6A47;">
+                                                <i class="fas fa-eye" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                     <?php if (form_error('password')): ?>
                                         <div class="invalid-feedback"><?php echo form_error('password'); ?></div>
                                     <?php endif; ?>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="pass_confirm" class="small text-muted font-weight-bold"><?php echo lang('bf_password_confirm'); ?></label>
-                                    <input class="form-control <?php echo form_error('pass_confirm') ? 'is-invalid' : ''; ?>" style="border-radius:8px; border:1px solid #E4D6C2;" type="password" id="pass_confirm" name="pass_confirm" value="" placeholder="Ulangi password baru" />
+                                    <div class="input-group">
+                                        <input class="form-control <?php echo form_error('pass_confirm') ? 'is-invalid' : ''; ?>" style="border-radius:8px 0 0 8px; border:1px solid #E4D6C2;" type="password" id="pass_confirm" name="pass_confirm" value="" placeholder="Ulangi password baru" />
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-light toggle-password" data-target="pass_confirm" aria-label="Tampilkan konfirmasi password" aria-pressed="false" style="border:1px solid #E4D6C2; border-left:0; border-radius:0 8px 8px 0; color:#8A6A47;">
+                                                <i class="fas fa-eye" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                     <?php if (form_error('pass_confirm')): ?>
                                         <div class="invalid-feedback"><?php echo form_error('pass_confirm'); ?></div>
                                     <?php endif; ?>
@@ -169,3 +183,31 @@ $defaultTimezone = isset($user->timezone) ? $user->timezone : strtoupper(setting
         </div>
     </div>
 </div>
+
+<script>
+(function () {
+    function bindPasswordToggles() {
+        document.addEventListener('click', function (event) {
+            var button = event.target.closest('.toggle-password');
+            if (!button) return;
+
+            var input = document.getElementById(button.getAttribute('data-target'));
+            var icon = button.querySelector('i');
+            if (!input) return;
+
+            var isVisible = input.type === 'text';
+            input.type = isVisible ? 'password' : 'text';
+            button.setAttribute('aria-label', isVisible ? 'Tampilkan password' : 'Sembunyikan password');
+            button.setAttribute('aria-pressed', String(!isVisible));
+            icon.classList.toggle('fa-eye', isVisible);
+            icon.classList.toggle('fa-eye-slash', !isVisible);
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bindPasswordToggles);
+    } else {
+        bindPasswordToggles();
+    }
+}());
+</script>
