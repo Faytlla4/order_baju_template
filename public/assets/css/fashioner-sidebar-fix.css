@@ -286,82 +286,13 @@
 
 
 /* ==========================================================================
- * DESKTOP: SIDEBAR CLOSED
- *
- * Sidebar harus benar-benar hilang.
- *
- * Tidak menggunakan mini-sidebar 4.6rem AdminLTE.
+ * DESKTOP: SIDEBAR CLOSED (MINI MODE)
  * ========================================================================== */
 
 @media (min-width: 992px) {
 
-    body.sidebar-mini.sidebar-collapse .main-sidebar,
-    body.sidebar-mini.sidebar-collapse .main-sidebar::before,
-    body.sidebar-mini.sidebar-collapse .main-sidebar:hover,
-    body.sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused,
-    body.sidebar-mini.sidebar-collapse .main-sidebar[style] {
-
-        width: 290px !important;
-        min-width: 290px !important;
-        max-width: 290px !important;
-
-        margin-left: -290px !important;
-
-        transform: translateX(0) !important;
-
-        opacity: 0 !important;
-        visibility: hidden !important;
-
-        pointer-events: none !important;
-
-        overflow-x: hidden !important;
-    }
-
-
-    /*
-     * Content kembali menggunakan seluruh viewport.
-     */
-
-    body.sidebar-mini.sidebar-collapse .content-wrapper,
-    body.sidebar-mini.sidebar-collapse .main-header,
-    body.sidebar-mini.sidebar-collapse .main-footer {
-
-        margin-left: 0 !important;
-    }
-
-
-    /*
-     * Brand tetap memiliki geometry yang konsisten.
-     */
-
-    body.sidebar-mini.sidebar-collapse .main-sidebar .brand-link,
-    body.sidebar-mini.sidebar-collapse .main-sidebar[style] .brand-link {
-
-        width: 290px !important;
-        min-width: 290px !important;
-        max-width: 290px !important;
-    }
-
-
-    /*
-     * Hover tidak boleh membuka sidebar kembali.
-     */
-
-    body.sidebar-mini.sidebar-collapse .main-sidebar:hover .brand-link,
-    body.sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused .brand-link {
-
-        width: 290px !important;
-        min-width: 290px !important;
-        max-width: 290px !important;
-    }
-
-
-    /*
-     * Submenu tidak boleh mengambil layout ketika sidebar tertutup.
-     */
-
-    body.sidebar-mini.sidebar-collapse .main-sidebar .nav-treeview {
-
+    /* Submenu tidak boleh mengambil layout ketika sidebar tertutup */
+    body.sidebar-mini.sidebar-collapse .main-sidebar:not(:hover) .nav-treeview {
         display: none !important;
     }
 }
@@ -505,21 +436,7 @@
  * ========================================================================== */
 
 @media (min-width: 992px) {
-
-    body.sidebar-mini.sidebar-collapse .main-sidebar:focus,
-    body.sidebar-mini.sidebar-collapse .main-sidebar:focus-within {
-
-        width: 290px !important;
-        min-width: 290px !important;
-        max-width: 290px !important;
-
-        margin-left: -290px !important;
-
-        opacity: 0 !important;
-        visibility: hidden !important;
-
-        pointer-events: none !important;
-    }
+    /* Accessibility/focus rules */
 }
 
 
