@@ -39,7 +39,7 @@ $config['user_meta_fields'] =  array(
 	array(
 		'name'   => 'country',
 		'label'   => lang('user_meta_country'),
-		'rules'   => 'required|trim|max_length[100]',
+		'rules'   => 'trim|max_length[100]',
         'admin_only'    => false,
 		'form_detail' => array(
 			'type' => 'country_select',
