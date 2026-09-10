@@ -190,8 +190,14 @@ class Users extends Front_Controller
 		// Generate password hint messages.
 		$this->user_model->password_hints();
 
+		Template::set('toolbar_title', 'Profil Pengguna');
 		Template::set('user', $user);
 		Template::set('languages', unserialize($this->settings_lib->item('site.languages')));
+
+		// Use AdminLTE theme when user is logged in / accessing admin area
+		if ($this->auth->is_logged_in()) {
+			Template::set_theme($this->config->item('template.admin_theme'), $this->config->item('template.default_theme'));
+		}
 
 		Template::set_view('profile');
 		Template::render();
